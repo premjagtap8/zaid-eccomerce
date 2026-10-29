@@ -1,18 +1,44 @@
 /* =========================================================
-   LEAVE POLICIES PAGE
+   LEAVE POLICIES
+   Content-only styles. Sidebar, ZAID INFOTECH logo and top bar
+   come from the shared HR layout, so this page sets no page
+   background, no min-height and no fixed widths.
+   Theme matches the HR dashboard (green accent, soft cards).
    ========================================================= */
 
 .leave-policies-page {
+  --lp-primary: #3d9a1a;
+  --lp-primary-dark: #2f7d12;
+  --lp-primary-light: #e6f4dc;
+  --lp-primary-soft: #f2f9ec;
+  --lp-ink: #1f2a24;
+  --lp-muted: #6b7a70;
+  --lp-border: #e7ece4;
+  --lp-surface: #ffffff;
+  --lp-danger: #c34e55;
+  --lp-danger-bg: #fff0f1;
+  --lp-radius: 16px;
+  --lp-shadow: 0 2px 6px rgba(31, 42, 36, 0.04), 0 10px 28px rgba(31, 42, 36, 0.06);
+
   width: 100%;
-  min-height: 100%;
-  padding: 24px;
+  min-width: 0;
+  padding: clamp(14px, 2.2vw, 30px);
+  display: flex;
+  flex-direction: column;
+  gap: clamp(14px, 1.8vw, 22px);
+  color: var(--lp-ink);
+  font-family: "Poppins", "Inter", "Segoe UI", system-ui, -apple-system, sans-serif;
   box-sizing: border-box;
-  background: #f8fafc;
-  color: #1e293b;
+}
+
+.leave-policies-page *,
+.leave-policies-page *::before,
+.leave-policies-page *::after {
+  box-sizing: border-box;
 }
 
 /* =========================================================
-   HEADER
+   HEADER (same look as the "HR dashboard" hero banner)
    ========================================================= */
 
 .leave-policies-header {
@@ -20,54 +46,62 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 20px;
-  margin-bottom: 24px;
+  gap: 16px;
+  padding: clamp(18px, 2.6vw, 34px) clamp(18px, 3vw, 40px);
+  border: 1px solid #dcebd0;
+  border-radius: 20px;
+  background:
+    radial-gradient(circle at 92% 20%, rgba(76, 175, 36, 0.14), transparent 45%),
+    linear-gradient(135deg, #eef8e6 0%, #f7fbf3 100%);
+}
+
+.leave-policies-header > div:first-child {
+  min-width: 0;
 }
 
 .leave-policies-header h1 {
-  margin: 0;
-  font-size: 28px;
-  line-height: 1.25;
+  margin: 0 0 6px;
+  font-size: clamp(1.5rem, 3.4vw, 2.6rem);
+  line-height: 1.1;
   font-weight: 700;
-  color: #0f172a;
+  letter-spacing: -0.02em;
+  color: var(--lp-ink);
 }
 
 .leave-policies-header p {
-  margin: 7px 0 0;
-  font-size: 14px;
-  color: #64748b;
+  margin: 0;
+  font-size: clamp(0.85rem, 1.4vw, 1rem);
+  color: var(--lp-muted);
 }
 
 /* =========================================================
-   ADD BUTTON
+   PRIMARY BUTTON
    ========================================================= */
 
 .leave-policy-add-btn {
-  min-height: 46px;
-  padding: 0 20px;
-  border: none;
-  border-radius: 9px;
-  background: #1d4ed8;
-  color: #ffffff;
-  font-size: 14px;
-  font-weight: 600;
-  cursor: pointer;
-
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 8px;
-
-  transition:
-    background 0.2s ease,
-    transform 0.2s ease,
-    box-shadow 0.2s ease;
+  flex-shrink: 0;
+  min-height: 46px;
+  padding: 0 22px;
+  border: 1px solid var(--lp-primary);
+  border-radius: 999px;
+  background: var(--lp-primary);
+  color: #fff;
+  font-family: inherit;
+  font-size: 0.9rem;
+  font-weight: 600;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
 }
 
 .leave-policy-add-btn:hover {
-  background: #1e40af;
+  background: var(--lp-primary-dark);
   transform: translateY(-1px);
-  box-shadow: 0 6px 15px rgba(29, 78, 216, 0.18);
+  box-shadow: 0 8px 18px rgba(61, 154, 26, 0.3);
 }
 
 .leave-policy-add-btn:active {
@@ -75,14 +109,14 @@
 }
 
 .leave-policy-add-btn:disabled {
-  opacity: 0.65;
+  opacity: 0.6;
   cursor: not-allowed;
   transform: none;
   box-shadow: none;
 }
 
 .leave-policy-add-btn span {
-  font-size: 20px;
+  font-size: 1.25rem;
   line-height: 1;
 }
 
@@ -92,14 +126,12 @@
 
 .leave-policy-error {
   width: 100%;
-  box-sizing: border-box;
-  margin-bottom: 20px;
-  padding: 12px 15px;
-  border: 1px solid #fecaca;
-  border-radius: 8px;
-  background: #fef2f2;
-  color: #b91c1c;
-  font-size: 14px;
+  padding: 12px 16px;
+  border: 1px solid #efc4c7;
+  border-radius: 12px;
+  background: var(--lp-danger-bg);
+  color: var(--lp-danger);
+  font-size: 0.88rem;
   line-height: 1.5;
 }
 
@@ -111,36 +143,50 @@
   width: 100%;
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 18px;
-  margin-bottom: 24px;
+  gap: clamp(10px, 1.5vw, 18px);
 }
 
 .leave-policy-summary-card {
-  min-height: 105px;
-  padding: 20px;
-  box-sizing: border-box;
-
-  background: #ffffff;
-  border: 1px solid #e2e8f0;
-  border-radius: 12px;
-
+  position: relative;
+  min-width: 0;
+  min-height: 108px;
+  padding: clamp(16px, 1.8vw, 22px);
+  overflow: hidden;
   display: flex;
   flex-direction: column;
   justify-content: center;
+  gap: 8px;
+  background: var(--lp-surface);
+  border: 1px solid var(--lp-border);
+  border-radius: var(--lp-radius);
+  box-shadow: var(--lp-shadow);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
 
-  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04);
+.leave-policy-summary-card::before {
+  content: "";
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 4px;
+  background: var(--lp-primary);
+}
+
+.leave-policy-summary-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 14px 32px rgba(31, 42, 36, 0.1);
 }
 
 .leave-policy-summary-card span {
-  margin-bottom: 8px;
-  font-size: 13px;
-  color: #64748b;
+  color: var(--lp-muted);
+  font-size: 0.82rem;
+  font-weight: 500;
 }
 
 .leave-policy-summary-card strong {
-  font-size: 26px;
-  line-height: 1;
-  color: #0f172a;
+  font-size: clamp(1.6rem, 2.6vw, 2.2rem);
+  line-height: 1.1;
+  font-weight: 700;
+  color: var(--lp-primary-dark);
 }
 
 /* =========================================================
@@ -149,69 +195,56 @@
 
 .leave-policy-table-card {
   width: 100%;
-  background: #ffffff;
-  border: 1px solid #e2e8f0;
-  border-radius: 12px;
+  min-width: 0;
+  background: var(--lp-surface);
+  border: 1px solid var(--lp-border);
+  border-radius: var(--lp-radius);
+  box-shadow: var(--lp-shadow);
   overflow: hidden;
-  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04);
 }
 
-/* =========================================================
-   TABLE HEADER
-   ========================================================= */
-
 .leave-policy-table-header {
-  min-height: 75px;
-  padding: 18px 20px;
-  box-sizing: border-box;
-
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 15px;
-
-  border-bottom: 1px solid #e2e8f0;
+  padding: 18px clamp(14px, 2vw, 24px);
+  border-bottom: 1px solid var(--lp-border);
 }
 
 .leave-policy-table-header h2 {
   margin: 0;
-  font-size: 17px;
-  font-weight: 700;
-  color: #0f172a;
+  padding-left: 12px;
+  border-left: 4px solid var(--lp-primary);
+  font-size: 1.05rem;
+  font-weight: 600;
 }
 
 .leave-policy-table-header p {
-  margin: 5px 0 0;
-  font-size: 13px;
-  color: #64748b;
+  margin: 4px 0 0 16px;
+  font-size: 0.8rem;
+  color: var(--lp-muted);
 }
 
-/* =========================================================
-   REFRESH BUTTON
-   ========================================================= */
-
 .leave-policy-refresh-btn {
-  min-height: 38px;
-  padding: 0 13px;
-
-  border: 1px solid #cbd5e1;
-  border-radius: 7px;
-
-  background: #ffffff;
-  color: #334155;
-
-  font-size: 13px;
+  min-height: 40px;
+  padding: 0 18px;
+  border: 1px solid var(--lp-border);
+  border-radius: 999px;
+  background: var(--lp-surface);
+  color: var(--lp-primary-dark);
+  font-family: inherit;
+  font-size: 0.85rem;
   font-weight: 600;
+  white-space: nowrap;
   cursor: pointer;
-
-  transition:
-    background 0.2s ease,
-    border-color 0.2s ease;
+  transition: background 0.2s, color 0.2s;
 }
 
 .leave-policy-refresh-btn:hover {
-  background: #f8fafc;
-  border-color: #94a3b8;
+  background: var(--lp-primary);
+  border-color: var(--lp-primary);
+  color: #fff;
 }
 
 .leave-policy-refresh-btn:disabled {
@@ -220,52 +253,42 @@
 }
 
 /* =========================================================
-   TABLE WRAPPER
+   TABLE
    ========================================================= */
 
 .leave-policy-table-wrapper {
   width: 100%;
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
+  scrollbar-color: #c5d3bd transparent;
 }
-
-/* =========================================================
-   TABLE
-   ========================================================= */
 
 .leave-policy-table {
   width: 100%;
-  min-width: 850px;
-  border-collapse: collapse;
+  min-width: 820px;
+  border-collapse: separate;
+  border-spacing: 0;
   text-align: left;
 }
 
-.leave-policy-table thead {
-  background: #f8fafc;
-}
-
 .leave-policy-table th {
-  padding: 14px 16px;
-
-  border-bottom: 1px solid #e2e8f0;
-
-  color: #64748b;
-  font-size: 12px;
-  font-weight: 700;
+  padding: 14px 18px;
+  background: var(--lp-primary-soft);
+  border-bottom: 1px solid var(--lp-border);
+  color: var(--lp-primary-dark);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
   text-transform: uppercase;
-  letter-spacing: 0.03em;
-
   white-space: nowrap;
 }
 
 .leave-policy-table td {
-  padding: 16px;
-
-  border-bottom: 1px solid #f1f5f9;
-
-  color: #475569;
-  font-size: 14px;
-
+  padding: 16px 18px;
+  border-bottom: 1px solid var(--lp-border);
+  color: #3b4b41;
+  font-size: 0.88rem;
   vertical-align: middle;
 }
 
@@ -274,15 +297,15 @@
 }
 
 .leave-policy-table tbody tr:hover {
-  background: #f8fafc;
+  background: var(--lp-primary-soft);
 }
 
 .leave-policy-table tbody tr:last-child td {
-  border-bottom: none;
+  border-bottom: 0;
 }
 
 /* =========================================================
-   POLICY NAME
+   CELLS
    ========================================================= */
 
 .leave-policy-name {
@@ -293,67 +316,46 @@
 }
 
 .leave-policy-icon {
-  width: 36px;
-  height: 36px;
+  width: 38px;
+  height: 38px;
   flex-shrink: 0;
-
-  border-radius: 8px;
-  background: #eff6ff;
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  font-size: 17px;
+  border-radius: 12px;
+  display: grid;
+  place-items: center;
+  background: var(--lp-primary-light);
+  font-size: 1.05rem;
 }
 
 .leave-policy-name strong {
-  color: #0f172a;
-  font-size: 14px;
-}
-
-/* =========================================================
-   BADGES
-   ========================================================= */
-
-.leave-policy-badge {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-
-  min-width: 42px;
-  padding: 5px 10px;
-
-  border-radius: 999px;
-
-  font-size: 12px;
+  color: var(--lp-ink);
   font-weight: 600;
 }
 
-.leave-policy-badge.yes {
-  background: #dcfce7;
-  color: #15803d;
-}
-
-.leave-policy-badge.no {
-  background: #f1f5f9;
-  color: #64748b;
-}
-
-/* =========================================================
-   STATUS
-   ========================================================= */
-
+.leave-policy-badge,
 .leave-policy-status {
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   gap: 6px;
-
-  padding: 5px 10px;
+  padding: 5px 12px;
   border-radius: 999px;
-
-  font-size: 12px;
+  font-size: 0.74rem;
   font-weight: 600;
+  white-space: nowrap;
+}
+
+.leave-policy-badge {
+  min-width: 46px;
+}
+
+.leave-policy-badge.yes {
+  background: #e7f7ef;
+  color: #16845a;
+}
+
+.leave-policy-badge.no {
+  background: #eef1ec;
+  color: var(--lp-muted);
 }
 
 .leave-policy-status::before {
@@ -365,17 +367,17 @@
 }
 
 .leave-policy-status.active {
-  background: #dcfce7;
-  color: #15803d;
+  background: #e7f7ef;
+  color: #16845a;
 }
 
 .leave-policy-status.inactive {
-  background: #fee2e2;
-  color: #b91c1c;
+  background: var(--lp-danger-bg);
+  color: var(--lp-danger);
 }
 
 /* =========================================================
-   ACTIONS
+   ROW ACTIONS
    ========================================================= */
 
 .leave-policy-actions {
@@ -388,40 +390,36 @@
 .leave-policy-edit-btn,
 .leave-policy-delete-btn {
   min-height: 34px;
-  padding: 0 11px;
-
-  border-radius: 6px;
-
-  font-size: 12px;
+  padding: 0 16px;
+  border-radius: 999px;
+  font-family: inherit;
+  font-size: 0.78rem;
   font-weight: 600;
-
   cursor: pointer;
-
-  transition:
-    background 0.2s ease,
-    border-color 0.2s ease;
+  transition: background 0.2s, color 0.2s, border-color 0.2s;
 }
 
 .leave-policy-edit-btn {
-  border: 1px solid #bfdbfe;
-  background: #eff6ff;
-  color: #1d4ed8;
+  border: 1px solid var(--lp-primary);
+  background: transparent;
+  color: var(--lp-primary-dark);
 }
 
 .leave-policy-edit-btn:hover {
-  background: #dbeafe;
-  border-color: #93c5fd;
+  background: var(--lp-primary);
+  color: #fff;
 }
 
 .leave-policy-delete-btn {
-  border: 1px solid #fecaca;
-  background: #fef2f2;
-  color: #dc2626;
+  border: 1px solid #efc4c7;
+  background: var(--lp-danger-bg);
+  color: var(--lp-danger);
 }
 
 .leave-policy-delete-btn:hover {
-  background: #fee2e2;
-  border-color: #fca5a5;
+  background: var(--lp-danger);
+  border-color: var(--lp-danger);
+  color: #fff;
 }
 
 .leave-policy-edit-btn:disabled,
@@ -431,182 +429,128 @@
 }
 
 /* =========================================================
-   LOADING
+   LOADING / EMPTY
    ========================================================= */
 
 .leave-policy-loading {
   min-height: 220px;
-
   display: flex;
   align-items: center;
   justify-content: center;
-
-  color: #64748b;
-  font-size: 14px;
+  color: var(--lp-muted);
+  font-size: 0.9rem;
 }
-
-/* =========================================================
-   EMPTY STATE
-   ========================================================= */
 
 .leave-policy-empty {
   min-height: 300px;
   padding: 30px 20px;
-  box-sizing: border-box;
-
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-
   text-align: center;
 }
 
 .leave-policy-empty-icon {
-  width: 58px;
-  height: 58px;
+  width: 64px;
+  height: 64px;
   margin-bottom: 14px;
-
   border-radius: 50%;
-  background: #eff6ff;
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  font-size: 25px;
+  display: grid;
+  place-items: center;
+  background: var(--lp-primary-light);
+  font-size: 1.7rem;
 }
 
 .leave-policy-empty h3 {
   margin: 0;
-  font-size: 17px;
-  color: #0f172a;
+  font-size: 1.1rem;
+  font-weight: 600;
 }
 
 .leave-policy-empty p {
-  margin: 7px 0 18px;
-  color: #64748b;
-  font-size: 13px;
-}
-
-/* =========================================================
-   MODAL OVERLAY
-   ========================================================= */
-
-.leave-policy-modal-overlay {
-  position: fixed;
-  inset: 0;
-  z-index: 9999;
-
-  padding: 20px;
-  box-sizing: border-box;
-
-  background: rgba(15, 23, 42, 0.55);
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  overflow-y: auto;
+  margin: 6px 0 18px;
+  color: var(--lp-muted);
+  font-size: 0.88rem;
 }
 
 /* =========================================================
    MODAL
    ========================================================= */
 
+.leave-policy-modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  padding: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow-y: auto;
+  background: rgba(20, 30, 24, 0.5);
+  backdrop-filter: blur(4px);
+}
+
 .leave-policy-modal {
   width: 100%;
   max-width: 580px;
   max-height: calc(100vh - 40px);
-
-  background: #ffffff;
-  border-radius: 14px;
-
+  display: flex;
+  flex-direction: column;
   overflow: hidden;
-
-  box-shadow:
-    0 20px 50px rgba(15, 23, 42, 0.25);
-
+  background: var(--lp-surface);
+  border-radius: 20px;
+  box-shadow: 0 24px 64px rgba(0, 0, 0, 0.22);
   animation: leavePolicyModalIn 0.18s ease-out;
 }
 
 @keyframes leavePolicyModalIn {
-  from {
-    opacity: 0;
-    transform: translateY(10px) scale(0.98);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
+  from { opacity: 0; transform: translateY(10px) scale(0.98); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
 }
 
-/* =========================================================
-   MODAL HEADER
-   ========================================================= */
-
 .leave-policy-modal-header {
-  min-height: 75px;
-  padding: 18px 22px;
-
-  box-sizing: border-box;
-
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
   gap: 15px;
-
-  border-bottom: 1px solid #e2e8f0;
+  padding: 20px 24px;
+  background: linear-gradient(135deg, #eef8e6 0%, #f7fbf3 100%);
+  border-bottom: 1px solid var(--lp-border);
 }
 
 .leave-policy-modal-header h2 {
   margin: 0;
-
-  color: #0f172a;
-  font-size: 20px;
+  font-size: 1.25rem;
   font-weight: 700;
 }
 
 .leave-policy-modal-header p {
-  margin: 5px 0 0;
-
-  color: #64748b;
-  font-size: 13px;
+  margin: 4px 0 0;
+  color: var(--lp-muted);
+  font-size: 0.82rem;
 }
-
-/* =========================================================
-   MODAL CLOSE
-   ========================================================= */
 
 .leave-policy-modal-close {
   width: 36px;
   height: 36px;
   flex-shrink: 0;
-
-  border: none;
-  border-radius: 7px;
-
-  background: #f1f5f9;
-  color: #334155;
-
-  font-size: 25px;
+  display: grid;
+  place-items: center;
+  border: 1px solid var(--lp-border);
+  border-radius: 50%;
+  background: var(--lp-surface);
+  color: #4b5a50;
+  font-size: 22px;
   line-height: 1;
-
   cursor: pointer;
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  transition:
-    background 0.2s ease,
-    color 0.2s ease;
+  transition: background 0.2s, color 0.2s;
 }
 
 .leave-policy-modal-close:hover {
-  background: #e2e8f0;
-  color: #0f172a;
+  background: var(--lp-primary);
+  border-color: var(--lp-primary);
+  color: #fff;
 }
 
 .leave-policy-modal-close:disabled {
@@ -619,79 +563,58 @@
    ========================================================= */
 
 .leave-policy-form {
-  padding: 22px;
-
-  max-height: calc(100vh - 115px);
-
+  padding: 22px 24px 24px;
   overflow-y: auto;
 }
 
-/* =========================================================
-   FORM GROUP
-   ========================================================= */
-
 .leave-policy-form-group {
-  margin-bottom: 20px;
+  margin-bottom: 18px;
 }
 
 .leave-policy-form-group label {
   display: block;
-  margin-bottom: 8px;
-
-  color: #334155;
-  font-size: 13px;
-  font-weight: 700;
+  margin-bottom: 7px;
+  color: #44554a;
+  font-size: 0.78rem;
+  font-weight: 600;
 }
 
 .leave-policy-form-group label span {
   margin-left: 3px;
-  color: #dc2626;
+  color: var(--lp-danger);
 }
 
-/* =========================================================
-   SELECT
-   ========================================================= */
-
-.leave-policy-form-group select {
+.leave-policy-form-group select,
+.leave-policy-input-wrapper input {
   width: 100%;
   height: 46px;
-
-  padding: 0 13px;
-
-  box-sizing: border-box;
-
-  border: 1px solid #cbd5e1;
-  border-radius: 8px;
-
-  background: #ffffff;
-  color: #475569;
-
-  font-size: 14px;
-
+  padding: 0 14px;
+  border: 1px solid var(--lp-border);
+  border-radius: 12px;
   outline: none;
+  background: #f6f8f5;
+  color: var(--lp-ink);
+  font-family: inherit;
+  font-size: 0.9rem;
+  transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
+}
 
+.leave-policy-form-group select {
   cursor: pointer;
-
-  transition:
-    border-color 0.2s ease,
-    box-shadow 0.2s ease;
 }
 
-.leave-policy-form-group select:focus {
-  border-color: #2563eb;
-
-  box-shadow:
-    0 0 0 3px rgba(37, 99, 235, 0.1);
+.leave-policy-form-group select:focus,
+.leave-policy-input-wrapper input:focus {
+  background: #fff;
+  border-color: var(--lp-primary);
+  box-shadow: 0 0 0 3px rgba(61, 154, 26, 0.18);
 }
 
-.leave-policy-form-group select:disabled {
-  background: #f8fafc;
+.leave-policy-form-group select:disabled,
+.leave-policy-input-wrapper input:disabled {
+  background: #eef1ec;
   cursor: not-allowed;
 }
-
-/* =========================================================
-   NUMBER INPUT
-   ========================================================= */
 
 .leave-policy-input-wrapper {
   position: relative;
@@ -699,57 +622,20 @@
 }
 
 .leave-policy-input-wrapper input {
-  width: 100%;
-  height: 46px;
-
-  padding: 0 70px 0 13px;
-
-  box-sizing: border-box;
-
-  border: 1px solid #cbd5e1;
-  border-radius: 8px;
-
-  background: #ffffff;
-  color: #0f172a;
-
-  font-size: 14px;
-
-  outline: none;
-
-  transition:
-    border-color 0.2s ease,
-    box-shadow 0.2s ease;
-}
-
-.leave-policy-input-wrapper input:focus {
-  border-color: #2563eb;
-
-  box-shadow:
-    0 0 0 3px rgba(37, 99, 235, 0.1);
-}
-
-.leave-policy-input-wrapper input:disabled {
-  background: #f8fafc;
-  cursor: not-allowed;
+  padding-right: 70px;
 }
 
 .leave-policy-input-wrapper span {
   position: absolute;
   top: 50%;
-  right: 13px;
-
+  right: 14px;
   transform: translateY(-50%);
-
-  color: #64748b;
-  font-size: 13px;
-
+  color: var(--lp-muted);
+  font-size: 0.82rem;
   pointer-events: none;
 }
 
-/* =========================================================
-   REMOVE NUMBER INPUT ARROWS
-   ========================================================= */
-
+/* Hide number spinners */
 .leave-policy-input-wrapper input::-webkit-outer-spin-button,
 .leave-policy-input-wrapper input::-webkit-inner-spin-button {
   margin: 0;
@@ -760,37 +646,24 @@
   -moz-appearance: textfield;
 }
 
-/* =========================================================
-   CHECKBOX
-   ========================================================= */
-
+/* Checkbox card */
 .leave-policy-checkbox {
   width: 100%;
-  min-height: 72px;
-
-  padding: 13px;
-
-  box-sizing: border-box;
-
+  padding: 14px;
   display: flex;
   align-items: flex-start;
-  gap: 11px;
-
-  border: 1px solid #e2e8f0;
-  border-radius: 9px;
-
-  background: #f8fafc;
+  gap: 12px;
+  border: 1px solid var(--lp-border);
+  border-radius: 12px;
+  background: var(--lp-primary-soft);
 }
 
 .leave-policy-checkbox input {
   width: 20px;
   height: 20px;
   flex-shrink: 0;
-
   margin: 1px 0 0;
-
-  accent-color: #2563eb;
-
+  accent-color: var(--lp-primary);
   cursor: pointer;
 }
 
@@ -800,83 +673,67 @@
 
 .leave-policy-checkbox label {
   min-width: 0;
-
+  margin: 0;
   display: flex;
   flex-direction: column;
-
   cursor: pointer;
 }
 
 .leave-policy-checkbox label strong {
-  color: #334155;
-  font-size: 14px;
-  line-height: 1.4;
+  color: var(--lp-ink);
+  font-size: 0.88rem;
+  font-weight: 600;
 }
 
 .leave-policy-checkbox label small {
-  margin-top: 4px;
-
-  color: #64748b;
-  font-size: 12px;
+  margin-top: 3px;
+  color: var(--lp-muted);
+  font-size: 0.76rem;
   line-height: 1.4;
 }
-
-/* =========================================================
-   FORM ACTIONS
-   ========================================================= */
 
 .leave-policy-form-actions {
   display: flex;
   align-items: center;
   justify-content: flex-end;
   gap: 10px;
-
-  margin-top: 24px;
+  margin-top: 22px;
   padding-top: 18px;
-
-  border-top: 1px solid #e2e8f0;
+  border-top: 1px solid var(--lp-border);
 }
 
 .leave-policy-cancel-btn,
 .leave-policy-save-btn {
   min-height: 44px;
-  padding: 0 20px;
-
-  border-radius: 8px;
-
-  font-size: 14px;
+  padding: 0 24px;
+  border-radius: 999px;
+  font-family: inherit;
+  font-size: 0.88rem;
   font-weight: 600;
-
   cursor: pointer;
-
-  transition:
-    background 0.2s ease,
-    border-color 0.2s ease,
-    opacity 0.2s ease;
+  transition: background 0.2s, box-shadow 0.2s, opacity 0.2s;
 }
 
 .leave-policy-cancel-btn {
-  border: 1px solid #cbd5e1;
-  background: #ffffff;
-  color: #475569;
+  border: 1px solid var(--lp-border);
+  background: var(--lp-surface);
+  color: #4b5a50;
 }
 
 .leave-policy-cancel-btn:hover {
-  background: #f8fafc;
-  border-color: #94a3b8;
+  background: #f1f4ef;
 }
 
 .leave-policy-save-btn {
-  min-width: 145px;
-
-  border: 1px solid #2563eb;
-  background: #2563eb;
-  color: #ffffff;
+  min-width: 150px;
+  border: 1px solid var(--lp-primary);
+  background: var(--lp-primary);
+  color: #fff;
 }
 
 .leave-policy-save-btn:hover {
-  background: #1d4ed8;
-  border-color: #1d4ed8;
+  background: var(--lp-primary-dark);
+  box-shadow: 0 6px 16px rgba(61, 154, 26, 0.28);
 }
 
 .leave-policy-cancel-btn:disabled,
@@ -886,18 +743,31 @@
 }
 
 /* =========================================================
-   TABLET
+   FOCUS + MOTION
    ========================================================= */
 
+.leave-policies-page button:focus-visible,
+.leave-policies-page select:focus-visible,
+.leave-policies-page input:focus-visible {
+  outline: 3px solid rgba(61, 154, 26, 0.3);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .leave-policies-page *,
+  .leave-policies-page *::before,
+  .leave-policies-page *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+
+/* Tablet */
 @media (max-width: 900px) {
-  .leave-policies-page {
-    padding: 20px;
-  }
-
-  .leave-policies-header h1 {
-    font-size: 24px;
-  }
-
   .leave-policy-summary {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
@@ -907,183 +777,131 @@
   }
 }
 
-/* =========================================================
-   MOBILE
-   ========================================================= */
-
-@media (max-width: 640px) {
-  .leave-policies-page {
-    padding: 14px;
-  }
-
-  /* Header */
-
+/* Small tablet / large phone */
+@media (max-width: 768px) {
   .leave-policies-header {
-    align-items: stretch;
     flex-direction: column;
-    gap: 15px;
-    margin-bottom: 18px;
-  }
-
-  .leave-policies-header h1 {
-    font-size: 22px;
-  }
-
-  .leave-policies-header p {
-    font-size: 13px;
+    align-items: flex-start;
   }
 
   .leave-policy-add-btn {
     width: 100%;
-    min-height: 44px;
   }
+}
 
-  /* Summary */
-
+/* Phone: each table row becomes a stacked card (uses data-label) */
+@media (max-width: 640px) {
   .leave-policy-summary {
     grid-template-columns: 1fr;
-    gap: 10px;
-    margin-bottom: 18px;
-  }
-
-  .leave-policy-summary-card {
-    min-height: 85px;
-    padding: 16px;
   }
 
   .leave-policy-summary-card:last-child {
     grid-column: auto;
   }
 
-  .leave-policy-summary-card strong {
-    font-size: 23px;
-  }
-
-  /* Table Card */
-
-  .leave-policy-table-card {
-    border-radius: 10px;
+  .leave-policy-summary-card {
+    min-height: 88px;
   }
 
   .leave-policy-table-header {
-    align-items: stretch;
     flex-direction: column;
-    padding: 15px;
+    align-items: stretch;
   }
 
   .leave-policy-refresh-btn {
     width: 100%;
   }
 
-  /*
-    Table stays horizontally scrollable
-    instead of breaking the page.
-  */
-
   .leave-policy-table-wrapper {
-    overflow-x: auto;
+    overflow: visible;
+    padding: 12px;
   }
 
-  .leave-policy-table {
-    min-width: 800px;
+  .leave-policy-table,
+  .leave-policy-table tbody {
+    display: block;
+    min-width: 0;
   }
 
-  /* Modal */
+  .leave-policy-table thead {
+    display: none;
+  }
 
-  .leave-policy-modal-overlay {
-    padding: 10px;
+  .leave-policy-table tbody {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .leave-policy-table tbody tr {
+    display: block;
+    padding: 6px 14px;
+    border: 1px solid var(--lp-border);
+    border-radius: var(--lp-radius);
+    background: var(--lp-surface);
+  }
+
+  .leave-policy-table td {
+    display: flex;
     align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 10px 0;
+    text-align: right;
+    border-bottom: 1px dashed var(--lp-border);
+  }
+
+  .leave-policy-table td:last-child {
+    border-bottom: 0;
+  }
+
+  .leave-policy-table td::before {
+    content: attr(data-label);
+    flex-shrink: 0;
+    color: var(--lp-muted);
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    text-align: left;
+  }
+
+  .leave-policy-table td[data-label="#"] {
+    display: none;
+  }
+
+  .leave-policy-name {
+    min-width: 0;
+    text-align: left;
+  }
+
+  /* Modal becomes a bottom sheet */
+  .leave-policy-modal-overlay {
+    padding: 0;
+    align-items: flex-end;
   }
 
   .leave-policy-modal {
-    width: 100%;
     max-width: 100%;
-    max-height: calc(100vh - 20px);
-
-    border-radius: 12px;
+    max-height: 92vh;
+    border-radius: 20px 20px 0 0;
   }
 
   .leave-policy-modal-header {
-    padding: 15px;
-  }
-
-  .leave-policy-modal-header h2 {
-    font-size: 18px;
+    padding: 16px 18px;
   }
 
   .leave-policy-form {
-    padding: 16px;
-    max-height: calc(100vh - 95px);
+    padding: 18px;
   }
-
-  /* Form Buttons */
 
   .leave-policy-form-actions {
     flex-direction: column-reverse;
-    gap: 9px;
   }
 
   .leave-policy-cancel-btn,
   .leave-policy-save-btn {
     width: 100%;
-  }
-
-  .leave-policy-save-btn {
     min-width: 0;
   }
-}
-
-/* =========================================================
-   SMALL MOBILE
-   ========================================================= */
-
-@media (max-width: 380px) {
-  .leave-policies-page {
-    padding: 10px;
-  }
-
-  .leave-policies-header h1 {
-    font-size: 20px;
-  }
-
-  .leave-policy-modal-overlay {
-    padding: 6px;
-  }
-
-  .leave-policy-modal {
-    border-radius: 10px;
-  }
-
-  .leave-policy-modal-header {
-    padding: 13px;
-  }
-
-  .leave-policy-form {
-    padding: 13px;
-  }
-
-  .leave-policy-form-group {
-    margin-bottom: 16px;
-  }
-
-  .leave-policy-checkbox {
-    padding: 11px;
-  }
-}
-
-/* =========================================================
-   ACCESSIBILITY
-   ========================================================= */
-
-.leave-policy-add-btn:focus-visible,
-.leave-policy-refresh-btn:focus-visible,
-.leave-policy-edit-btn:focus-visible,
-.leave-policy-delete-btn:focus-visible,
-.leave-policy-modal-close:focus-visible,
-.leave-policy-cancel-btn:focus-visible,
-.leave-policy-save-btn:focus-visible,
-.leave-policy-form-group select:focus-visible,
-.leave-policy-input-wrapper input:focus-visible {
-  outline: 3px solid rgba(37, 99, 235, 0.25);
-  outline-offset: 2px;
 }

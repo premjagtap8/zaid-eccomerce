@@ -1,256 +1,367 @@
-/* =========================================================
+/* =====================================================
    CUSTOMER DASHBOARD
-   UNIQUE GREEN DESIGN
-   ========================================================= */
+   Same look as the Corporate layout:
+   charcoal sidebar + logo card, white top bar, logo-green accent,
+   light-green banner, big rounded cards.
+
+   Desktop  (>= 1025px): fixed sidebar (collapsible), top bar beside it
+   Tablet + Mobile (<= 1024px): off-canvas drawer
+
+   All tokens are scoped to .customer-dashboard-root.
+===================================================== */
 
 .customer-dashboard-root {
-  --customer-green: #16a34a;
-  --customer-green-dark: #15803d;
-  --customer-green-light: #22c55e;
-  --customer-green-soft: #dcfce7;
+  --cd-sidebar-w: 272px;
+  --cd-topbar-h: 80px;
 
-  --customer-bg: #f4f7f5;
-  --customer-white: #ffffff;
+  /* Page */
+  --cd-bg: #f6f8f4;
+  --cd-surface: #ffffff;
+  --cd-border: #e3e8de;
+  --cd-text: #383f45;
+  --cd-muted: #6b747d;
+  --cd-ink: #1b2412;
 
-  --customer-text: #17251d;
-  --customer-muted: #6b7280;
+  /* Sidebar (charcoal, same as the corporate sidebar) */
+  --cd-nav-top: #383f47;
+  --cd-nav-bottom: #262b31;
+  --cd-nav-text: rgba(255, 255, 255, 0.92);
+  --cd-nav-muted: rgba(255, 255, 255, 0.7);
+  --cd-nav-hover: rgba(87, 164, 29, 0.18);
+  --cd-nav-divider: rgba(255, 255, 255, 0.08);
 
-  --customer-border: #e5e7eb;
+  /* Brand green (sampled from the Zaid Infotech logo) */
+  --cd-green: #57a41d;
+  --cd-green-dark: #3f7d14;
+  --cd-green-deep: #2f5d08;
+  --cd-green-rgb: 87, 164, 29;
+  --cd-green-soft: #eef6e3;
+  --cd-green-line: #dcebc8;
 
-  --customer-sidebar-width: 280px;
+  --cd-icon-rest: rgba(255, 255, 255, 0.72);
+  --cd-icon-hover: #9be15d;
+
+  --cd-radius-xl: 24px;
+  --cd-shadow: 0 1px 2px rgba(27, 36, 18, 0.04), 0 8px 24px rgba(27, 36, 18, 0.05);
+  --cd-ease: cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* Sidebar sizing follows screen HEIGHT so all items stay usable on laptops */
+  --cd-item-h: clamp(38px, 5vh, 46px);
+  --cd-logo-h: clamp(48px, 7.2vh, 66px);
 
   min-height: 100vh;
+  min-height: 100dvh;
   width: 100%;
   display: flex;
 
-  background:
-    radial-gradient(
-      circle at top right,
-      rgba(22, 163, 74, 0.06),
-      transparent 30%
-    ),
-    var(--customer-bg);
-
-  color: var(--customer-text);
-
-  font-family:
-    "Poppins",
-    "Inter",
-    Arial,
-    sans-serif;
+  font-family: "Plus Jakarta Sans", "Poppins", -apple-system, BlinkMacSystemFont, sans-serif;
+  background: var(--cd-bg);
+  color: var(--cd-text);
+  -webkit-font-smoothing: antialiased;
 }
 
-/* =========================================================
-   BODY LOCK
-   ========================================================= */
+.customer-dashboard-root *,
+.customer-dashboard-root *::before,
+.customer-dashboard-root *::after {
+  box-sizing: border-box;
+}
 
 body.customer-dashboard-sidebar-open {
   overflow: hidden;
 }
 
-/* =========================================================
+
+/* =====================================================
+   TOP BAR
+===================================================== */
+
+.customer-dashboard-topbar {
+  position: fixed;
+  top: 0;
+  left: var(--cd-sidebar-w);
+  right: 0;
+  z-index: 900;
+
+  height: var(--cd-topbar-h);
+  padding: 0 28px;
+
+  display: flex;
+  align-items: center;
+  gap: 16px;
+
+  background: var(--cd-surface);
+  border-bottom: 1px solid var(--cd-border);
+  transition: left 0.28s var(--cd-ease);
+}
+
+.customer-dashboard-menu-toggle {
+  width: 40px;
+  height: 40px;
+  flex-shrink: 0;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  border: none;
+  border-radius: 10px;
+  background: transparent;
+  color: var(--cd-text);
+
+  font-size: 20px;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition: background 0.18s var(--cd-ease);
+}
+
+.customer-dashboard-menu-toggle:active {
+  transform: scale(0.95);
+}
+
+/* Current page name (replaces the corporate search box) */
+.customer-dashboard-topbar-title {
+  min-width: 0;
+  margin: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+
+  font-size: 1.125rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: var(--cd-ink);
+}
+
+.customer-dashboard-topbar-right {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 22px;
+}
+
+.customer-dashboard-bell {
+  position: relative;
+  width: 40px;
+  height: 40px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  border: none;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--cd-text);
+
+  font-size: 20px;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.customer-dashboard-bell-badge {
+  position: absolute;
+  top: 2px;
+  right: 2px;
+
+  min-width: 18px;
+  height: 18px;
+  padding: 0 5px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 999px;
+  background: #ef4444;
+  color: #fff;
+  border: 2px solid #fff;
+
+  font-size: 10px;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.customer-dashboard-topbar-user {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.customer-dashboard-topbar-avatar {
+  width: 44px;
+  height: 44px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.customer-dashboard-topbar-meta {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.25;
+  min-width: 0;
+}
+
+.customer-dashboard-topbar-name {
+  max-width: 180px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--cd-text);
+}
+
+.customer-dashboard-topbar-role {
+  font-size: 12px;
+  color: var(--cd-muted);
+}
+
+.customer-dashboard-topbar-chevron {
+  font-size: 11px;
+  color: var(--cd-muted);
+}
+
+
+/* =====================================================
    SIDEBAR
-   ========================================================= */
+===================================================== */
 
 .customer-dashboard-sidebar {
-  width: var(--customer-sidebar-width);
-  min-width: var(--customer-sidebar-width);
-
+  width: var(--cd-sidebar-w);
+  min-width: var(--cd-sidebar-w);
   height: 100vh;
+  height: 100dvh;
 
   position: fixed;
-  left: 0;
-  top: 0;
-
-  z-index: 1100;
+  inset: 0 auto 0 0;
+  z-index: 1000;
 
   display: flex;
   flex-direction: column;
 
-  background:
-    linear-gradient(
-      180deg,
-      #ffffff 0%,
-      #f8fffa 100%
-    );
-
-  border-right: 1px solid #dfe9e2;
-
-  box-shadow:
-    8px 0 30px rgba(16, 64, 36, 0.06);
-
+  background: linear-gradient(180deg, var(--cd-nav-top) 0%, var(--cd-nav-bottom) 100%);
+  color: var(--cd-nav-text);
   overflow: hidden;
 
-  transition:
-    transform 0.3s ease,
-    box-shadow 0.3s ease;
+  transition: transform 0.28s var(--cd-ease);
 }
 
-/* =========================================================
-   SIDEBAR HEADER
-   ========================================================= */
+/* Decorative green wave near the bottom (same as .corp-sidebar-wave) */
+.customer-dashboard-sidebar-wave path {
+  stroke: var(--cd-green);
+}
+
+.customer-dashboard-sidebar-wave {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 70px;
+  width: 100%;
+  height: 260px;
+  pointer-events: none;
+  z-index: 0;
+  -webkit-mask-image: linear-gradient(to top, #000 35%, transparent 100%);
+  mask-image: linear-gradient(to top, #000 35%, transparent 100%);
+}
+
+/* everything else sits above the wave */
+.customer-dashboard-sidebar > *:not(.customer-dashboard-sidebar-wave) {
+  position: relative;
+  z-index: 1;
+}
 
 .customer-dashboard-sidebar-header {
   flex: 0 0 auto;
-  padding: 22px 18px 0;
+  padding: clamp(14px, 2.4vh, 22px) 16px 0;
 }
 
-/* =========================================================
-   BRAND
-   ========================================================= */
-
+/* ---------- Brand: logo on a light card ---------- */
 .customer-dashboard-brand {
   display: flex;
   align-items: center;
-
-  min-height: 52px;
-
-  gap: 12px;
+  gap: 10px;
 }
 
-.customer-dashboard-brand-mark {
-  width: 43px;
-  height: 43px;
-
-  flex-shrink: 0;
+.customer-dashboard-brand-card {
+  flex: 1;
+  min-width: 0;
 
   display: flex;
   align-items: center;
   justify-content: center;
 
-  border-radius: 13px;
+  padding: 12px 18px;
 
-  background:
-    linear-gradient(
-      135deg,
-      var(--customer-green),
-      var(--customer-green-dark)
-    );
-
-  color: #ffffff;
-
-  font-size: 22px;
-  font-weight: 800;
-
-  box-shadow:
-    0 7px 18px rgba(22, 163, 74, 0.22);
+  border-radius: 16px;
+  background: #ffffff;
+  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.28);
+  line-height: 0;
 }
 
-.customer-dashboard-brand-content {
-  min-width: 0;
-  flex: 1;
-}
-
-.customer-dashboard-brand-content h2 {
-  margin: 0;
-
-  color: #102018;
-
-  font-size: 17px;
-  line-height: 1.2;
-  font-weight: 800;
-
-  letter-spacing: -0.2px;
-}
-
-.customer-dashboard-brand-content span {
+.customer-dashboard-logo {
   display: block;
-
-  margin-top: 4px;
-
-  color: var(--customer-green-dark);
-
-  font-size: 10px;
-  font-weight: 700;
-
-  letter-spacing: 0.8px;
-  text-transform: uppercase;
+  width: auto;
+  max-width: 100%;
+  height: auto;
+  max-height: var(--cd-logo-h);
+  object-fit: contain;
+  user-select: none;
+  -webkit-user-drag: none;
 }
 
+/* Close (X): drawer only */
 .customer-dashboard-sidebar-close {
   display: none;
-
-  width: 34px;
-  height: 34px;
-
+  width: 40px;
+  height: 40px;
+  flex-shrink: 0;
   align-items: center;
   justify-content: center;
 
-  border: 0;
-  border-radius: 10px;
+  border: none;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--cd-nav-text);
 
-  background: #f0fdf4;
-
-  color: var(--customer-green-dark);
-
+  font-size: 16px;
   cursor: pointer;
-
-  transition:
-    background 0.2s ease,
-    color 0.2s ease;
+  -webkit-tap-highlight-color: transparent;
 }
 
-.customer-dashboard-sidebar-close:hover {
-  background: var(--customer-green);
-  color: #ffffff;
-}
-
-/* =========================================================
-   CUSTOMER USER CARD
-   ========================================================= */
-
+/* ---------- User card (glass on charcoal) ---------- */
 .customer-dashboard-user-card {
-  margin-top: 22px;
-
-  padding: 14px;
+  margin-top: clamp(12px, 2vh, 18px);
+  padding: 12px 14px;
 
   display: flex;
   align-items: center;
-
   gap: 12px;
 
-  border: 1px solid #dcefe1;
-  border-radius: 15px;
-
-  background:
-    linear-gradient(
-      135deg,
-      #ffffff,
-      #f0fdf4
-    );
-
-  box-shadow:
-    0 5px 18px rgba(22, 163, 74, 0.05);
+  border: 1px solid var(--cd-nav-divider);
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.06);
 }
 
 .customer-dashboard-avatar-wrapper {
   position: relative;
-
-  width: 48px;
-  height: 48px;
-
+  width: 44px;
+  height: 44px;
   flex-shrink: 0;
 }
 
 .customer-dashboard-avatar {
-  width: 48px;
-  height: 48px;
-
+  width: 44px;
+  height: 44px;
   display: block;
-
   border-radius: 50%;
-
   object-fit: cover;
-
-  border: 2px solid #ffffff;
-
-  box-shadow:
-    0 3px 10px rgba(22, 163, 74, 0.16);
+  border: 2px solid rgba(255, 255, 255, 0.85);
 }
 
 .customer-dashboard-online-dot {
   position: absolute;
-
   right: 0;
   bottom: 1px;
 
@@ -258,10 +369,8 @@ body.customer-dashboard-sidebar-open {
   height: 12px;
 
   border-radius: 50%;
-
-  background: #22c55e;
-
-  border: 2px solid #ffffff;
+  background: #7ddc2f;
+  border: 2px solid var(--cd-nav-top);
 }
 
 .customer-dashboard-user-info {
@@ -270,743 +379,856 @@ body.customer-dashboard-sidebar-open {
 
 .customer-dashboard-user-info h3 {
   margin: 0;
-
   max-width: 170px;
 
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 
-  color: #18251e;
-
+  color: #ffffff;
   font-size: 14px;
-  font-weight: 700;
+  font-weight: 600;
 }
 
 .customer-dashboard-user-info span {
   display: inline-flex;
-
   margin-top: 4px;
+  padding: 3px 10px;
 
-  padding: 3px 8px;
+  border-radius: 999px;
+  background: rgba(var(--cd-green-rgb), 0.22);
+  color: #b9ec86;
 
-  border-radius: 20px;
-
-  background: var(--customer-green-soft);
-
-  color: var(--customer-green-dark);
-
-  font-size: 9px;
+  font-size: 10px;
   font-weight: 700;
-
   text-transform: uppercase;
-  letter-spacing: 0.5px;
+  letter-spacing: 0.06em;
 }
 
-/* =========================================================
-   MENU TITLE
-   ========================================================= */
-
+/* ---------- "ACCOUNT MENU" title (same style as "CORPORATE") ---------- */
 .customer-dashboard-menu-title {
-  padding:
-    22px 8px 9px;
+  margin: clamp(10px, 1.6vh, 16px) 8px 8px;
+  padding: 12px 0 0;
+  border-top: 1px solid var(--cd-nav-divider);
 }
 
 .customer-dashboard-menu-title span {
-  color: #94a39a;
-
-  font-size: 10px;
-  font-weight: 800;
-
-  letter-spacing: 1.2px;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--cd-nav-muted);
 }
 
-/* =========================================================
-   SCROLLABLE MENU
-   ========================================================= */
-
+/* ---------- Menu ---------- */
 .customer-dashboard-menu {
   flex: 1 1 auto;
-
   min-height: 0;
+  padding: 0 14px 16px;
 
-  padding: 8px 14px 15px;
+  display: flex;
+  flex-direction: column;
 
   overflow-y: auto;
   overflow-x: hidden;
-
-  scrollbar-width: thin;
-  scrollbar-color:
-    #b8dfc4
-    transparent;
+  overscroll-behavior: contain;
+  scrollbar-width: none;
 }
 
 .customer-dashboard-menu::-webkit-scrollbar {
-  width: 5px;
+  display: none;
 }
-
-.customer-dashboard-menu::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-.customer-dashboard-menu::-webkit-scrollbar-thumb {
-  background: #b8dfc4;
-  border-radius: 10px;
-}
-
-/* =========================================================
-   MENU ITEMS
-   ========================================================= */
 
 .customer-dashboard-menu-item {
   position: relative;
-
+  flex-shrink: 0;
   width: 100%;
+  min-height: var(--cd-item-h);
 
-  min-height: 48px;
-
-  margin-bottom: 6px;
-
-  padding: 0 13px;
+  margin: 3px 0;
+  padding: 0 18px;
 
   display: flex;
   align-items: center;
+  gap: 16px;
 
-  gap: 13px;
-
-  border: 0;
-  border-radius: 12px;
-
+  border: none;
+  border-radius: 10px;
   background: transparent;
-
-  color: #536158;
+  color: var(--cd-nav-text);
 
   font-family: inherit;
-
-  font-size: 13px;
-  font-weight: 600;
-
+  font-size: 15.5px;
+  font-weight: 500;
   text-align: left;
 
   cursor: pointer;
-
-  transition:
-    background 0.2s ease,
-    color 0.2s ease,
-    transform 0.2s ease,
-    box-shadow 0.2s ease;
-}
-
-.customer-dashboard-menu-item:hover {
-  background: #effaf2;
-  color: var(--customer-green-dark);
-
-  transform: translateX(2px);
+  -webkit-tap-highlight-color: transparent;
+  transition: background 0.18s var(--cd-ease), box-shadow 0.18s var(--cd-ease),
+    transform 0.18s var(--cd-ease);
 }
 
 .customer-dashboard-menu-item.customer-dashboard-menu-active {
-  background:
-    linear-gradient(
-      135deg,
-      #dcfce7,
-      #f0fdf4
-    );
-
-  color: var(--customer-green-dark);
-
-  box-shadow:
-    inset 3px 0 0 var(--customer-green),
-    0 5px 14px rgba(22, 163, 74, 0.06);
-}
-
-.customer-dashboard-menu-item.customer-dashboard-menu-active
-  .customer-dashboard-menu-icon {
-  background: var(--customer-green);
+  background: linear-gradient(90deg, var(--cd-green-dark) 0%, var(--cd-green) 100%);
   color: #ffffff;
-
-  box-shadow:
-    0 5px 12px rgba(22, 163, 74, 0.20);
+  font-weight: 600;
+  box-shadow: 0 6px 18px rgba(var(--cd-green-rgb), 0.3);
 }
-
-.customer-dashboard-home-item {
-  color: #435148;
-}
-
-.customer-dashboard-home-item:hover {
-  background: #effaf2;
-  color: var(--customer-green-dark);
-}
-
-/* =========================================================
-   MENU ICON
-   ========================================================= */
 
 .customer-dashboard-menu-icon {
   position: relative;
-
-  width: 35px;
-  height: 35px;
-
-  flex: 0 0 35px;
+  width: 22px;
+  min-width: 22px;
 
   display: flex;
   align-items: center;
   justify-content: center;
 
-  border-radius: 10px;
+  font-size: 18px;
+  color: var(--cd-icon-rest);
+  transition: color 0.18s var(--cd-ease);
+}
 
-  background: #f1f5f2;
-
-  color: #66736b;
-
-  font-size: 14px;
-
-  transition:
-    background 0.2s ease,
-    color 0.2s ease,
-    box-shadow 0.2s ease;
+.customer-dashboard-menu-active .customer-dashboard-menu-icon {
+  color: #ffffff;
 }
 
 .customer-dashboard-menu-text {
   flex: 1;
-
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
   line-height: 1.2;
 }
 
-/* =========================================================
-   NOTIFICATION BADGE
-   ========================================================= */
-
-.customer-dashboard-notification-icon {
-  position: relative;
-}
-
+/* Unread badge on the notification icon */
 .customer-dashboard-notification-badge {
   position: absolute;
-
-  top: -7px;
-  right: -7px;
+  top: -8px;
+  right: -10px;
 
   min-width: 18px;
   height: 18px;
-
-  padding: 0 4px;
+  padding: 0 5px;
 
   display: flex;
   align-items: center;
   justify-content: center;
 
-  border-radius: 20px;
-
+  border-radius: 999px;
   background: #ef4444;
-
   color: #ffffff;
+  border: 2px solid var(--cd-nav-top);
 
-  border: 2px solid #ffffff;
-
-  font-size: 8px;
+  font-size: 9px;
   font-weight: 800;
-
   line-height: 1;
 }
 
-/* =========================================================
-   LOGOUT FOOTER
-   ========================================================= */
-
+/* ---------- Footer / logout ---------- */
 .customer-dashboard-sidebar-footer {
   flex: 0 0 auto;
-
-  padding:
-    13px 14px 17px;
-
-  border-top: 1px solid #e3ece5;
-
-  background:
-    rgba(255, 255, 255, 0.96);
+  margin-top: auto;
+  margin-inline: 14px;
+  padding: 12px 0 0;
+  padding-bottom: calc(18px + env(safe-area-inset-bottom, 0px));
+  border-top: 1px solid var(--cd-nav-divider);
 }
-
-/* =========================================================
-   LOGOUT BUTTON
-   ========================================================= */
 
 .customer-dashboard-logout-btn {
   width: 100%;
-  min-height: 48px;
-
-  padding: 0 13px;
+  min-height: var(--cd-item-h);
+  padding: 0 18px;
 
   display: flex;
   align-items: center;
+  gap: 16px;
 
-  gap: 13px;
-
-  border: 1px solid #fee2e2;
-  border-radius: 12px;
-
-  background: #fff7f7;
-
-  color: #dc2626;
+  border: none;
+  border-radius: 10px;
+  background: transparent;
+  color: var(--cd-nav-text);
 
   font-family: inherit;
-
-  font-size: 13px;
-  font-weight: 700;
+  font-size: 15.5px;
+  font-weight: 500;
 
   cursor: pointer;
-
-  transition:
-    background 0.2s ease,
-    border-color 0.2s ease,
-    color 0.2s ease,
-    transform 0.2s ease,
-    box-shadow 0.2s ease;
-}
-
-.customer-dashboard-logout-btn:hover {
-  background: #fee2e2;
-
-  border-color: #fecaca;
-
-  color: #b91c1c;
-
-  transform: translateY(-1px);
-
-  box-shadow:
-    0 6px 15px rgba(220, 38, 38, 0.08);
+  -webkit-tap-highlight-color: transparent;
+  transition: background 0.18s var(--cd-ease), color 0.18s var(--cd-ease);
 }
 
 .customer-dashboard-logout-icon {
-  width: 35px;
-  height: 35px;
-
-  flex: 0 0 35px;
-
+  width: 22px;
+  min-width: 22px;
   display: flex;
   align-items: center;
   justify-content: center;
-
-  border-radius: 10px;
-
-  background: #fee2e2;
-
-  color: #dc2626;
-
-  font-size: 14px;
+  font-size: 18px;
 }
 
-/* =========================================================
-   MAIN AREA
-   ========================================================= */
+/* Hover effects only on devices that really hover */
+@media (hover: hover) {
+  .customer-dashboard-menu-toggle:hover {
+    background: #f1f3f5;
+  }
+
+  .customer-dashboard-menu-item:hover {
+    background: var(--cd-nav-hover);
+    transform: translateX(2px);
+  }
+
+  .customer-dashboard-menu-item:hover .customer-dashboard-menu-icon {
+    color: var(--cd-icon-hover);
+  }
+
+  .customer-dashboard-menu-item.customer-dashboard-menu-active:hover {
+    transform: none;
+    background: linear-gradient(90deg, var(--cd-green-dark) 0%, var(--cd-green) 100%);
+  }
+
+  .customer-dashboard-menu-active:hover .customer-dashboard-menu-icon {
+    color: #ffffff;
+  }
+
+  .customer-dashboard-logout-btn:hover,
+  .customer-dashboard-sidebar-close:hover {
+    background: rgba(239, 68, 68, 0.14);
+    color: #fca5a5;
+  }
+}
+
+
+/* =====================================================
+   MAIN
+===================================================== */
 
 .customer-dashboard-main {
-  width: calc(100% - var(--customer-sidebar-width));
-
+  flex: 1;
   min-width: 0;
-
-  margin-left: var(--customer-sidebar-width);
-
   min-height: 100vh;
+  min-height: 100dvh;
 
-  background: transparent;
+  margin-left: var(--cd-sidebar-w);
+  padding-top: var(--cd-topbar-h);
+  background: var(--cd-bg);
+  transition: margin-left 0.28s var(--cd-ease);
+
+  /* A child page with a fixed min-width (Profile / Address forms)
+     must never push the whole dashboard sideways. */
+  overflow-x: clip;
 }
-
-/* =========================================================
-   CONTENT
-   ========================================================= */
 
 .customer-dashboard-content {
   width: 100%;
-
   max-width: 1600px;
-
   margin: 0 auto;
+  padding: 24px 28px 40px;
 
-  padding:
-    30px 32px 40px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
 }
 
-/* =========================================================
-   WELCOME CARD
-   ========================================================= */
+/* Desktop collapsed state */
+@media (min-width: 1025px) {
+  .customer-dashboard-root.is-collapsed .customer-dashboard-sidebar {
+    transform: translateX(-100%);
+  }
+
+  .customer-dashboard-root.is-collapsed .customer-dashboard-topbar {
+    left: 0;
+  }
+
+  .customer-dashboard-root.is-collapsed .customer-dashboard-main {
+    margin-left: 0;
+  }
+}
+
+
+/* =====================================================
+   WELCOME BANNER (same idea as "Corporate overview")
+===================================================== */
 
 .customer-dashboard-welcome-card {
   position: relative;
-
-  min-height: 185px;
+  overflow: hidden;
+  isolation: isolate;
 
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: 24px;
 
-  gap: 30px;
+  padding: clamp(1.25rem, 0.8rem + 2.4vw, 2.25rem) clamp(1.25rem, 0.8rem + 2.8vw, 2.75rem);
 
-  padding:
-    34px 40px;
-
-  margin-bottom: 24px;
-
-  overflow: hidden;
-
-  border-radius: 22px;
-
+  border: 1px solid var(--cd-green-line);
+  border-radius: var(--cd-radius-xl);
   background:
-    linear-gradient(
-      135deg,
-      #15803d 0%,
-      #16a34a 50%,
-      #22c55e 100%
-    );
-
-  box-shadow:
-    0 14px 35px rgba(22, 163, 74, 0.16);
-
-  color: #ffffff;
+    radial-gradient(circle at 100% 0%, rgba(var(--cd-green-rgb), 0.14) 0, rgba(var(--cd-green-rgb), 0) 55%),
+    linear-gradient(100deg, #eaf4dc 0%, #f3f9ea 55%, #f8fbf3 100%);
+  color: var(--cd-text);
 }
 
-.customer-dashboard-welcome-card::before {
-  content: "";
-
-  position: absolute;
-
-  width: 230px;
-  height: 230px;
-
-  right: 80px;
-  top: -150px;
-
-  border-radius: 50%;
-
-  background:
-    rgba(255, 255, 255, 0.08);
-}
-
+/* soft concentric rings in the corner */
 .customer-dashboard-welcome-card::after {
   content: "";
-
   position: absolute;
-
-  width: 190px;
-  height: 190px;
-
-  right: -70px;
-  bottom: -100px;
-
+  top: -90px;
+  right: -90px;
+  width: 280px;
+  height: 280px;
   border-radius: 50%;
-
-  background:
-    rgba(255, 255, 255, 0.09);
+  z-index: -1;
+  pointer-events: none;
+  background: repeating-radial-gradient(
+    circle at center,
+    rgba(var(--cd-green-rgb), 0.12) 0 1px,
+    transparent 1px 16px
+  );
 }
 
 .customer-dashboard-welcome-content {
   position: relative;
-
-  z-index: 2;
-
+  min-width: 0;
   max-width: 760px;
 }
 
 .customer-dashboard-welcome-label {
   display: inline-flex;
+  margin-bottom: 8px;
 
-  margin-bottom: 10px;
-
-  font-size: 10px;
-  font-weight: 800;
-
-  letter-spacing: 1.4px;
-
-  opacity: 0.85;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  color: var(--cd-green-dark);
 }
 
 .customer-dashboard-welcome-content h1 {
   margin: 0;
 
-  font-size: clamp(24px, 3vw, 32px);
+  font-size: clamp(1.6rem, 1.1rem + 2vw, 2.5rem);
+  font-weight: 600;
+  line-height: 1.12;
+  letter-spacing: -0.02em;
+  color: var(--cd-ink);
+  text-wrap: balance;
+}
 
-  line-height: 1.2;
-
-  font-weight: 800;
-
-  letter-spacing: -0.5px;
+.customer-dashboard-welcome-content h1 span {
+  color: var(--cd-green);
 }
 
 .customer-dashboard-welcome-content p {
-  margin:
-    10px 0 0;
-
+  margin: 10px 0 0;
   max-width: 650px;
 
-  color: rgba(255, 255, 255, 0.88);
-
-  font-size: 13px;
-  line-height: 1.7;
+  font-size: clamp(0.88rem, 0.85rem + 0.2vw, 1rem);
+  line-height: 1.6;
+  color: var(--cd-muted);
 }
 
 .customer-dashboard-welcome-icon {
-  position: relative;
-
-  z-index: 2;
-
-  width: 82px;
-  height: 82px;
-
-  flex: 0 0 82px;
+  width: 72px;
+  height: 72px;
+  flex: 0 0 72px;
 
   display: flex;
   align-items: center;
   justify-content: center;
 
-  border-radius: 24px;
+  border-radius: 22px;
+  background: #ffffff;
+  border: 1px solid var(--cd-green-line);
+  color: var(--cd-green);
+  font-size: 28px;
 
-  background:
-    rgba(255, 255, 255, 0.15);
-
-  border:
-    1px solid rgba(255, 255, 255, 0.25);
-
-  color: #ffffff;
-
-  font-size: 31px;
-
-  backdrop-filter: blur(8px);
+  box-shadow: 0 8px 20px rgba(63, 125, 20, 0.14);
 }
 
-/* =========================================================
-   CONTENT CARD
-   ========================================================= */
+
+/* =====================================================
+   CONTENT AREA
+   Child pages (Cart, Profile, ...) render inside this wrapper.
+   Cart + Notifications bring their own cards, so the wrapper
+   stays transparent. Every other page gets the shared theme
+   below (.customer-page-themed).
+===================================================== */
 
 .customer-dashboard-content-card {
   width: 100%;
-
-  min-height: 500px;
-
-  padding: 24px;
-
-  border:
-    1px solid #e3ebe5;
-
-  border-radius: 20px;
-
-  background: #ffffff;
-
-  box-shadow:
-    0 8px 28px rgba(16, 64, 36, 0.05);
+  min-width: 0;
+  padding: 0;
+  background: transparent;
+  border: 0;
+  box-shadow: none;
 }
 
-/* =========================================================
-   NOTIFICATIONS
-   ========================================================= */
+.customer-dashboard-content-card > * {
+  max-width: 100%;
+  min-width: 0;
+}
+
+
+/* =====================================================
+   SHARED CHILD-PAGE THEME  (.customer-page-themed)
+   Applies to: My Orders, Wishlist, My Address,
+               My Profile, Change Password.
+   Makes them look like the Cart page: white rounded card,
+   green title bar, brand-green buttons, soft rounded inputs.
+   Selectors are (0,2,0)+ so they win over each page's own
+   single-class CSS without needing !important.
+===================================================== */
+
+/* ---------- 1. The page itself becomes a card ---------- */
+.customer-page-themed > * {
+  width: 100%;
+  max-width: 100%;             /* kills fixed 1000-1100px page widths */
+  margin-inline: 0;            /* kills "margin: 0 auto" centring */
+  padding: clamp(1.125rem, 0.6rem + 2.2vw, 2rem);
+
+  background: var(--cd-surface);
+  border: 1px solid var(--cd-border);
+  border-radius: var(--cd-radius-xl);
+  box-shadow: var(--cd-shadow);
+  overflow-wrap: anywhere;     /* long order ids / emails never overflow */
+}
+
+/* Cards nested inside the page card: keep the border, drop the
+   second heavy shadow so they don't look double-boxed. */
+.customer-page-themed > * :is([class*="card" i], [class*="box" i]) {
+  box-shadow: none;
+  border-color: var(--cd-border);
+  border-radius: 18px;
+}
+
+/* ---------- 2. Typography (same as the Cart / Notifications title) ---------- */
+.customer-page-themed :is(h1, h2) {
+  position: relative;
+  margin: 0 0 0.35rem;
+  padding-left: 14px;
+
+  font-size: clamp(1.2rem, 1.05rem + 0.6vw, 1.5rem);
+  font-weight: 600;
+  line-height: 1.25;
+  letter-spacing: -0.01em;
+  color: var(--cd-ink);
+  text-align: left;
+}
+
+.customer-page-themed :is(h1, h2)::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.18em;
+  width: 4px;
+  height: 1.05em;
+  border-radius: 4px;
+  background: var(--cd-green);
+}
+
+/* sub-line under a title ("2 Items Saved") */
+.customer-page-themed :is(h1, h2) + p {
+  margin: 0 0 0 14px;
+  font-size: 0.85rem;
+  color: var(--cd-muted);
+}
+
+.customer-page-themed :is(h3, h4) {
+  color: var(--cd-ink);
+  font-weight: 600;
+}
+
+.customer-page-themed :is(label, th) {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--cd-text);
+}
+
+/* ---------- 3. Divider under the page header ---------- */
+.customer-page-themed > * > :is(h1, h2):first-child,
+.customer-page-themed > * > :first-child :is(h1, h2):first-child {
+  padding-bottom: 0;
+}
+
+/* ---------- 4. Form controls (Profile, Address, Password) ---------- */
+.customer-page-themed :is(input, select, textarea, button) {
+  font-family: inherit;
+}
+
+.customer-page-themed
+  :is(input:not([type="checkbox"], [type="radio"], [type="file"], [type="hidden"]), select, textarea) {
+  width: 100%;
+  min-height: 48px;
+  padding: 0 16px;
+
+  border: 1px solid var(--cd-border);
+  border-radius: 14px;
+  background: #fbfcf9;
+  color: var(--cd-ink);
+
+  font-size: 0.92rem;
+  transition: border-color 0.18s var(--cd-ease), box-shadow 0.18s var(--cd-ease),
+    background 0.18s var(--cd-ease);
+}
+
+.customer-page-themed textarea {
+  padding: 12px 16px;
+  min-height: 96px;
+}
+
+.customer-page-themed :is(input, select, textarea)::placeholder {
+  color: #9aa38f;
+}
+
+.customer-page-themed :is(input, select, textarea):focus {
+  outline: none;
+  border-color: var(--cd-green);
+  background: #ffffff;
+  box-shadow: 0 0 0 4px rgba(var(--cd-green-rgb), 0.15);
+}
+
+/* read-only / disabled (email + phone on the Profile page) */
+.customer-page-themed :is(input, select, textarea):is(:disabled, [readonly]) {
+  background: #f1f4ee;
+  color: var(--cd-muted);
+  cursor: not-allowed;
+}
+
+/* ---------- 5. Buttons ---------- */
+
+/* primary: Save Profile, Add Address, Update, Add To Cart, Submit… */
+.customer-page-themed
+  :is(button[type="submit"], button[class*="save" i], button[class*="add" i], button[class*="cart" i], button[class*="primary" i], button[class*="submit" i]) {
+  min-height: 44px;
+  padding: 0 22px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+
+  border: none;
+  border-radius: 999px;
+  background: linear-gradient(135deg, var(--cd-green), var(--cd-green-dark));
+  color: #ffffff;
+
+  font-size: 0.88rem;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 8px 20px rgba(63, 125, 20, 0.26);
+  transition: transform 0.18s var(--cd-ease), box-shadow 0.18s var(--cd-ease);
+}
+
+/* secondary: Edit (replaces the off-brand blue) */
+.customer-page-themed button:is([class*="edit" i], [class*="update" i], [class*="secondary" i]) {
+  min-height: 40px;
+  padding: 0 18px;
+
+  border: 1px solid var(--cd-green);
+  border-radius: 999px;
+  background: var(--cd-green-soft);
+  color: var(--cd-green-dark);
+
+  font-size: 0.84rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.18s var(--cd-ease), color 0.18s var(--cd-ease);
+}
+
+/* danger: Delete / Remove */
+.customer-page-themed button:is([class*="delete" i], [class*="remove" i], [class*="danger" i]) {
+  min-height: 40px;
+  padding: 0 18px;
+
+  border: 1px solid #fecaca;
+  border-radius: 999px;
+  background: #fef2f2;
+  color: #dc2626;
+
+  font-size: 0.84rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.18s var(--cd-ease), color 0.18s var(--cd-ease);
+}
+
+/* Address page: the Edit / Delete buttons carry no matching class on
+   some builds, so style every plain button inside an address card too. */
+.customer-page-address :is([class*="card" i], [class*="item" i]) button:not([class*="delete" i], [class*="remove" i]) {
+  min-height: 40px;
+  padding: 0 18px;
+
+  border: 1px solid var(--cd-green);
+  border-radius: 999px;
+  background: var(--cd-green-soft);
+  color: var(--cd-green-dark);
+
+  font-size: 0.84rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+@media (hover: hover) {
+  .customer-page-themed
+    :is(button[type="submit"], button[class*="save" i], button[class*="add" i], button[class*="cart" i], button[class*="primary" i], button[class*="submit" i]):hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 26px rgba(63, 125, 20, 0.34);
+  }
+
+  .customer-page-themed button:is([class*="edit" i], [class*="update" i], [class*="secondary" i]):hover,
+  .customer-page-address :is([class*="card" i], [class*="item" i]) button:not([class*="delete" i], [class*="remove" i]):hover {
+    background: var(--cd-green);
+    color: #ffffff;
+  }
+
+  .customer-page-themed button:is([class*="delete" i], [class*="remove" i], [class*="danger" i]):hover {
+    background: #dc2626;
+    color: #ffffff;
+  }
+}
+
+.customer-page-themed button:focus-visible,
+.customer-page-themed a:focus-visible,
+.customer-page-themed :is(input, select, textarea):focus-visible {
+  outline: 2px solid var(--cd-green);
+  outline-offset: 2px;
+}
+
+/* ---------- 6. Tables / order details ---------- */
+.customer-page-themed table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.customer-page-themed :is(td, th) {
+  padding: 14px 12px;
+  border-bottom: 1px solid #eff2e9;
+  text-align: left;
+  vertical-align: top;
+}
+
+.customer-page-themed tr:last-child :is(td, th) {
+  border-bottom: 0;
+}
+
+/* ---------- 7. Images (wishlist / product thumbs) ---------- */
+.customer-page-themed img {
+  max-width: 100%;
+  height: auto;
+}
+
+/* ---------- 8. Status / default badges ---------- */
+.customer-page-themed :is([class*="badge" i], [class*="tag" i], [class*="default" i]):not(button) {
+  border-radius: 999px;
+  background: var(--cd-green-soft);
+  color: var(--cd-green-dark);
+  border: 1px solid var(--cd-green-line);
+  font-weight: 600;
+}
+
+
+/* =====================================================
+   NOTIFICATIONS PANEL
+===================================================== */
 
 .customer-notifications-panel {
   width: 100%;
+  padding: clamp(1.125rem, 0.6rem + 2.2vw, 2rem);
+
+  background: var(--cd-surface);
+  border: 1px solid var(--cd-border);
+  border-radius: var(--cd-radius-xl);
+  box-shadow: var(--cd-shadow);
 }
 
 .customer-notifications-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-
   gap: 20px;
 
-  padding-bottom: 20px;
-
-  border-bottom: 1px solid #edf1ee;
+  padding-bottom: 18px;
+  border-bottom: 1px solid #eff2e9;
 }
 
 .customer-section-label {
   display: block;
-
   margin-bottom: 6px;
 
-  color: var(--customer-green-dark);
-
-  font-size: 9px;
-  font-weight: 800;
-
-  letter-spacing: 1.2px;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  color: var(--cd-green-dark);
 }
 
+/* green bar before the title, like "Recent orders" */
 .customer-notifications-header h2 {
+  position: relative;
   margin: 0;
+  padding-left: 14px;
 
-  color: #17251d;
+  font-size: clamp(1.2rem, 1.05rem + 0.6vw, 1.5rem);
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: var(--cd-ink);
+}
 
-  font-size: 24px;
-  font-weight: 800;
+.customer-notifications-header h2::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.18em;
+  width: 4px;
+  height: 1.05em;
+  border-radius: 4px;
+  background: var(--cd-green);
 }
 
 .customer-notifications-header p {
-  margin: 5px 0 0;
-
-  color: #7b877f;
-
-  font-size: 12px;
+  margin: 5px 0 0 14px;
+  font-size: 0.85rem;
+  color: var(--cd-muted);
 }
 
+/* "Mark all read" = green pill */
 .customer-mark-all-btn {
-  min-height: 40px;
-
-  padding:
-    0 15px;
+  min-height: 42px;
+  padding: 0 20px;
 
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  gap: 8px;
+  flex-shrink: 0;
 
-  gap: 7px;
-
-  border: 1px solid #bbebc8;
-  border-radius: 10px;
-
-  background: #f0fdf4;
-
-  color: var(--customer-green-dark);
+  border: none;
+  border-radius: 999px;
+  background: linear-gradient(135deg, var(--cd-green), var(--cd-green-dark));
+  color: #ffffff;
 
   font-family: inherit;
-
-  font-size: 11px;
-  font-weight: 700;
+  font-size: 0.85rem;
+  font-weight: 600;
 
   cursor: pointer;
-
-  transition:
-    background 0.2s ease,
-    color 0.2s ease,
-    border-color 0.2s ease;
+  box-shadow: 0 8px 20px rgba(63, 125, 20, 0.28);
+  transition: transform 0.18s var(--cd-ease), box-shadow 0.18s var(--cd-ease);
 }
 
 .customer-mark-all-btn:hover {
-  background: var(--customer-green);
-  border-color: var(--customer-green);
-
-  color: #ffffff;
+  transform: translateY(-2px);
+  box-shadow: 0 12px 26px rgba(63, 125, 20, 0.34);
 }
 
-/* =========================================================
-   NOTIFICATION LIST
-   ========================================================= */
+.customer-mark-all-btn:focus-visible,
+.customer-notification-row:focus-visible,
+.customer-dashboard-bell:focus-visible,
+.customer-dashboard-menu-toggle:focus-visible,
+.customer-dashboard-menu-item:focus-visible,
+.customer-dashboard-logout-btn:focus-visible,
+.customer-dashboard-sidebar-close:focus-visible {
+  outline: 2px solid var(--cd-green);
+  outline-offset: 2px;
+}
 
+/* ---------- List ---------- */
 .customer-notifications-list {
   display: flex;
   flex-direction: column;
-
-  padding-top: 14px;
-
-  gap: 8px;
+  gap: 10px;
+  padding-top: 16px;
 }
 
 .customer-notification-row {
   width: 100%;
-
-  padding: 14px;
+  padding: 14px 16px;
 
   display: flex;
   align-items: flex-start;
-
-  gap: 13px;
+  gap: 14px;
 
   border: 1px solid transparent;
-  border-radius: 14px;
-
-  background: #ffffff;
-
+  border-radius: 18px;
+  background: var(--cd-surface);
   color: inherit;
 
-  text-align: left;
-
   font-family: inherit;
-
+  text-align: left;
   cursor: pointer;
 
-  transition:
-    background 0.2s ease,
-    border-color 0.2s ease,
-    transform 0.2s ease;
+  transition: background 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
 }
 
 .customer-notification-row:hover {
-  background: #f8fcf9;
-
-  border-color: #e0eee3;
-
+  background: #fafcf6;
+  border-color: var(--cd-border);
   transform: translateY(-1px);
 }
 
 .customer-notification-row.customer-notification-unread {
-  background: #f0fdf4;
-
-  border-color: #d7f3dd;
+  background: var(--cd-green-soft);
+  border-color: var(--cd-green-line);
 }
 
 .customer-notification-icon {
-  width: 40px;
-  height: 40px;
-
-  flex: 0 0 40px;
+  width: 44px;
+  height: 44px;
+  flex: 0 0 44px;
 
   display: flex;
   align-items: center;
   justify-content: center;
 
-  border-radius: 11px;
+  border-radius: 14px;
+  background: var(--cd-green-soft);
+  color: var(--cd-green);
+  font-size: 15px;
+}
 
-  background: #dcfce7;
-
-  color: var(--customer-green-dark);
-
-  font-size: 14px;
+.customer-notification-unread .customer-notification-icon {
+  background: #ffffff;
+  box-shadow: 0 2px 8px rgba(63, 125, 20, 0.12);
 }
 
 .customer-notification-body {
   flex: 1;
-
   min-width: 0;
 }
 
 .customer-notification-heading {
   display: flex;
   align-items: center;
-
   gap: 8px;
 }
 
 .customer-notification-heading h4 {
   margin: 0;
-
-  color: #1d2922;
-
-  font-size: 13px;
-  font-weight: 700;
+  font-size: 0.92rem;
+  font-weight: 600;
+  color: var(--cd-ink);
 }
 
 .customer-notification-dot {
-  width: 7px;
-  height: 7px;
-
-  flex: 0 0 7px;
-
+  width: 8px;
+  height: 8px;
+  flex: 0 0 8px;
   border-radius: 50%;
-
-  background: #16a34a;
+  background: var(--cd-green);
 }
 
 .customer-notification-message {
   margin: 5px 0 0;
-
-  color: #6d786f;
-
-  font-size: 12px;
-
+  font-size: 0.85rem;
   line-height: 1.55;
+  color: var(--cd-muted);
+  overflow-wrap: anywhere;
 }
 
 .customer-notification-time {
   margin: 7px 0 0;
-
-  color: #9aa39d;
-
-  font-size: 10px;
+  font-size: 0.72rem;
+  color: #9aa38f;
 }
 
 .customer-notification-status {
@@ -1016,27 +1238,19 @@ body.customer-dashboard-sidebar-open {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-
   gap: 12px;
 
-  color: #7b877f;
-
-  font-size: 13px;
+  font-size: 0.9rem;
+  color: var(--cd-muted);
 }
 
 .customer-loading-spinner {
   width: 28px;
   height: 28px;
-
-  border: 3px solid #d7f3dd;
-
-  border-top-color: var(--customer-green);
-
+  border: 3px solid var(--cd-green-line);
+  border-top-color: var(--cd-green);
   border-radius: 50%;
-
-  animation:
-    customer-dashboard-spin
-    0.8s linear infinite;
+  animation: customer-dashboard-spin 0.8s linear infinite;
 }
 
 @keyframes customer-dashboard-spin {
@@ -1045,10 +1259,7 @@ body.customer-dashboard-sidebar-open {
   }
 }
 
-/* =========================================================
-   EMPTY NOTIFICATION
-   ========================================================= */
-
+/* ---------- Empty ---------- */
 .customer-notification-empty {
   min-height: 300px;
 
@@ -1056,284 +1267,140 @@ body.customer-dashboard-sidebar-open {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-
   text-align: center;
 }
 
 .customer-empty-icon {
-  width: 65px;
-  height: 65px;
+  width: 72px;
+  height: 72px;
+  margin-bottom: 16px;
 
   display: flex;
   align-items: center;
   justify-content: center;
 
-  margin-bottom: 14px;
-
-  border-radius: 20px;
-
-  background: #f0fdf4;
-
-  color: var(--customer-green);
-
-  font-size: 23px;
+  border-radius: 22px;
+  background: var(--cd-green-soft);
+  color: var(--cd-green);
+  font-size: 26px;
 }
 
 .customer-notification-empty h3 {
   margin: 0;
-
-  color: #253129;
-
-  font-size: 16px;
-  font-weight: 700;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--cd-ink);
 }
 
 .customer-notification-empty p {
   margin: 7px 0 0;
-
-  color: #8a958e;
-
-  font-size: 12px;
+  font-size: 0.88rem;
+  color: var(--cd-muted);
 }
 
-/* =========================================================
-   MOBILE TOP BAR
-   ========================================================= */
 
-.customer-dashboard-mobile-topbar {
-  display: none;
-}
-
-/* =========================================================
-   MOBILE OVERLAY
-   ========================================================= */
+/* =====================================================
+   OVERLAY (drawer mode only)
+===================================================== */
 
 .customer-dashboard-sidebar-overlay {
   display: none;
 }
 
-/* =========================================================
-   TABLET
-   ========================================================= */
 
-@media (max-width: 1100px) {
-  .customer-dashboard-content {
-    padding:
-      24px 22px 32px;
-  }
+/* =====================================================
+   TABLET + MOBILE (<= 1024px): DRAWER MODE
+===================================================== */
 
-  .customer-dashboard-welcome-card {
-    padding:
-      28px 30px;
-  }
-
-  .customer-dashboard-content-card {
-    padding: 20px;
-  }
-}
-
-/* =========================================================
-   MOBILE
-   ========================================================= */
-
-@media (max-width: 900px) {
+@media (max-width: 1024px) {
   .customer-dashboard-root {
-    display: block;
+    --cd-topbar-h: 64px;
   }
 
-  /* Mobile Topbar */
-
-  .customer-dashboard-mobile-topbar {
-    position: sticky;
-
-    top: 0;
+  .customer-dashboard-topbar {
     left: 0;
-
-    z-index: 1000;
-
-    width: 100%;
-    height: 62px;
-
-    padding:
-      0 15px;
-
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-
-    background: #ffffff;
-
-    border-bottom: 1px solid #e4ece6;
-
-    box-shadow:
-      0 4px 16px rgba(16, 64, 36, 0.06);
+    height: calc(var(--cd-topbar-h) + env(safe-area-inset-top, 0px));
+    padding: env(safe-area-inset-top, 0px) 16px 0;
+    gap: 12px;
   }
 
-  .customer-dashboard-mobile-menu-btn,
-  .customer-dashboard-mobile-home-btn {
-    width: 40px;
-    height: 40px;
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    border: 0;
-    border-radius: 11px;
-
-    background: #f0fdf4;
-
-    color: var(--customer-green-dark);
-
-    cursor: pointer;
-
-    font-size: 16px;
-  }
-
-  .customer-dashboard-mobile-menu-btn:hover,
-  .customer-dashboard-mobile-home-btn:hover {
-    background: var(--customer-green);
-    color: #ffffff;
-  }
-
-  .customer-dashboard-mobile-brand {
-    display: flex;
-    align-items: center;
-
-    gap: 8px;
-
-    color: #15241b;
-
-    font-size: 14px;
-    font-weight: 800;
-  }
-
-  .customer-dashboard-mobile-logo {
-    width: 30px;
-    height: 30px;
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    border-radius: 9px;
-
-    background:
-      linear-gradient(
-        135deg,
-        var(--customer-green),
-        var(--customer-green-dark)
-      );
-
-    color: #ffffff;
-
-    font-size: 14px;
-    font-weight: 800;
-  }
-
-  /* Overlay */
-
-  .customer-dashboard-sidebar-overlay {
-    position: fixed;
-
-    inset: 0;
-
-    z-index: 1050;
-
-    display: block;
-
-    background:
-      rgba(12, 25, 17, 0.48);
-
-    backdrop-filter:
-      blur(2px);
-  }
-
-  /* Sidebar */
-
+  /* Drawer (closed) */
   .customer-dashboard-sidebar {
-    transform:
-      translateX(-105%);
-
-    width: min(
-      310px,
-      88vw
-    );
-
+    width: min(300px, 84vw);
     min-width: 0;
+    padding-top: env(safe-area-inset-top, 0px);
 
-    box-shadow:
-      12px 0 40px rgba(0, 0, 0, 0.18);
+    transform: translateX(-100%);
+    visibility: hidden;
+    transition: transform 0.28s var(--cd-ease), visibility 0s linear 0.28s;
   }
 
+  /* Drawer (open) */
   .customer-dashboard-sidebar.customer-dashboard-sidebar-open {
-    transform:
-      translateX(0);
+    transform: translateX(0);
+    visibility: visible;
+    transition: transform 0.28s var(--cd-ease), visibility 0s;
+    box-shadow: 0 20px 40px rgba(2, 8, 20, 0.45);
   }
 
   .customer-dashboard-sidebar-close {
-    display: flex;
+    display: inline-flex;
   }
 
-  /* Main */
+  /* Dim overlay */
+  .customer-dashboard-sidebar-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 950;
+    display: block;
+    background: rgba(15, 23, 42, 0.5);
+  }
 
   .customer-dashboard-main {
-    width: 100%;
-
     margin-left: 0;
-
-    min-height: calc(
-      100vh - 62px
-    );
+    width: 100%;
+    padding-top: calc(var(--cd-topbar-h) + env(safe-area-inset-top, 0px));
   }
 
   .customer-dashboard-content {
-    padding:
-      20px 15px 30px;
-  }
-
-  .customer-dashboard-welcome-card {
-    min-height: auto;
-
-    padding:
-      25px 22px;
-
-    border-radius: 18px;
-  }
-
-  .customer-dashboard-welcome-icon {
-    width: 65px;
-    height: 65px;
-
-    flex-basis: 65px;
-
-    border-radius: 19px;
-
-    font-size: 24px;
-  }
-
-  .customer-dashboard-content-card {
-    padding: 16px;
-
-    border-radius: 16px;
+    padding: 20px 20px 32px;
+    gap: 20px;
   }
 }
 
-/* =========================================================
-   SMALL MOBILE
-   ========================================================= */
 
-@media (max-width: 600px) {
-  .customer-dashboard-welcome-card {
-    display: block;
+/* =====================================================
+   MOBILE (<= 640px)
+===================================================== */
+
+@media (max-width: 640px) {
+  .customer-dashboard-topbar {
+    padding-left: 12px;
+    padding-right: 12px;
   }
 
-  .customer-dashboard-welcome-content h1 {
-    font-size: 23px;
+  .customer-dashboard-topbar-right {
+    gap: 10px;
   }
 
-  .customer-dashboard-welcome-content p {
-    font-size: 11px;
+  .customer-dashboard-topbar-meta,
+  .customer-dashboard-topbar-chevron {
+    display: none;
+  }
+
+  .customer-dashboard-topbar-avatar {
+    width: 38px;
+    height: 38px;
+  }
+
+  .customer-dashboard-content {
+    padding: 16px 14px 28px;
+    padding-bottom: calc(28px + env(safe-area-inset-bottom, 0px));
+  }
+
+  .customer-dashboard-menu-item,
+  .customer-dashboard-logout-btn {
+    min-height: 48px;
   }
 
   .customer-dashboard-welcome-icon {
@@ -1341,60 +1408,135 @@ body.customer-dashboard-sidebar-open {
   }
 
   .customer-notifications-header {
-    align-items: flex-start;
     flex-direction: column;
+    align-items: flex-start;
   }
 
   .customer-mark-all-btn {
     width: 100%;
   }
 
-  .customer-dashboard-content-card {
-    min-height: 450px;
-
-    padding: 13px;
-  }
-
-  .customer-notifications-header h2 {
-    font-size: 21px;
-  }
-
   .customer-notification-row {
-    padding: 11px;
+    padding: 12px;
   }
 
   .customer-notification-icon {
-    width: 36px;
-    height: 36px;
+    width: 38px;
+    height: 38px;
+    flex-basis: 38px;
+  }
 
-    flex-basis: 36px;
+  /* shared child-page theme on phones */
+  .customer-page-themed > * {
+    border-radius: 18px;
+  }
+
+  /* multi-column forms / rows collapse to one column */
+  .customer-page-themed form {
+    grid-template-columns: 1fr;
+  }
+
+  .customer-page-themed
+    :is(button[type="submit"], button[class*="save" i], button[class*="add" i]) {
+    width: 100%;
+  }
+
+  /* wide tables scroll inside the card instead of the page */
+  .customer-page-themed table {
+    display: block;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .customer-page-themed :is(td, th) {
+    padding: 12px 8px;
   }
 }
 
-/* =========================================================
-   VERY SMALL DEVICES
-   ========================================================= */
+
+/* =====================================================
+   SMALL PHONES (<= 380px)
+===================================================== */
 
 @media (max-width: 380px) {
   .customer-dashboard-content {
-    padding:
-      15px 10px 25px;
+    padding: 14px 10px 24px;
+  }
+}
+
+
+/* =====================================================
+   LARGE SCREENS (>= 1600px)
+===================================================== */
+
+@media (min-width: 1600px) {
+  .customer-dashboard-root {
+    --cd-sidebar-w: 288px;
   }
 
-  .customer-dashboard-sidebar {
-    width: 290px;
+  .customer-dashboard-content {
+    padding: 32px 40px 48px;
+  }
+}
+
+
+/* =====================================================
+   SHORT SCREENS (laptops <= 760px tall, not phones)
+===================================================== */
+
+@media (max-height: 760px) and (min-width: 641px) {
+  .customer-dashboard-root {
+    --cd-item-h: 38px;
   }
 
-  .customer-dashboard-user-card {
-    padding: 11px;
+  .customer-dashboard-brand-card {
+    padding: 8px 14px;
   }
 
-  .customer-dashboard-menu {
-    padding-left: 10px;
-    padding-right: 10px;
+  .customer-dashboard-menu-item,
+  .customer-dashboard-logout-btn {
+    font-size: 15px;
   }
 
   .customer-dashboard-menu-item {
-    min-height: 45px;
+    margin: 2px 0;
+  }
+
+  .customer-dashboard-sidebar-footer {
+    padding-bottom: 12px;
+  }
+}
+
+
+/* =====================================================
+   REDUCED MOTION
+===================================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  .customer-dashboard-sidebar,
+  .customer-dashboard-topbar,
+  .customer-dashboard-main,
+  .customer-dashboard-menu-item,
+  .customer-dashboard-logout-btn,
+  .customer-dashboard-menu-toggle,
+  .customer-dashboard-menu-icon,
+  .customer-notification-row,
+  .customer-mark-all-btn,
+  .customer-page-themed button,
+  .customer-page-themed input,
+  .customer-page-themed select,
+  .customer-page-themed textarea {
+    transition: none !important;
+  }
+
+  .customer-dashboard-menu-item:hover,
+  .customer-notification-row:hover,
+  .customer-mark-all-btn:hover,
+  .customer-page-themed button:hover {
+    transform: none !important;
+  }
+
+  .customer-loading-spinner {
+    animation-duration: 2s;
   }
 }

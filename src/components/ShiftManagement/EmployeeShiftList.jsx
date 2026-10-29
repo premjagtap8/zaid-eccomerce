@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
 import "./EmployeeShiftList.css";
@@ -8,22 +8,9 @@ const API_URL = import.meta.env.VITE_API_URL;
 function EmployeeShiftList() {
     const [employees, setEmployees] = useState([]);
     const [loading, setLoading] = useState(false);
-
-    // ==========================================
-    // TOKEN
-    // ==========================================
+    const [search, setSearch] = useState("");
 
     const token = localStorage.getItem("token");
-
-    // ==========================================
-    // AUTH CONFIG
-    // ==========================================
-
-    const getAuthConfig = () => ({
-        headers: {
-            Authorization: `Bearer ${token}`,
-        },
-    });
 
     // ==========================================
     // FETCH EMPLOYEES
@@ -34,20 +21,11 @@ function EmployeeShiftList() {
             try {
                 setLoading(true);
 
-                const res = await axios.get(
-                    `${API_URL}/users/employees`,
-                    getAuthConfig()
-                );
+                const res = await axios.get(`${API_URL}/users/employees`, {
+                    headers: { Authorization: `Bearer ${token}` },
+                });
 
-                console.log(
-                    "EMPLOYEE API RESPONSE:",
-                    res.data
-                );
-
-                // ==========================================
-                // HANDLE ALL POSSIBLE RESPONSE STRUCTURES
-                // ==========================================
-
+                // Handle all possible response structures
                 const data =
                     res.data?.data?.records ||
                     res.data?.data ||
@@ -55,53 +33,14 @@ function EmployeeShiftList() {
                     res.data ||
                     [];
 
-                console.log(
-                    "EMPLOYEE DATA:",
-                    data
-                );
-
-                // ==========================================
-                // DEBUG FIRST EMPLOYEE SHIFT
-                // ==========================================
-
-                if (Array.isArray(data) && data.length > 0) {
-                    console.log(
-                        "FIRST EMPLOYEE:",
-                        data[0]
-                    );
-
-                    console.log(
-                        "FIRST EMPLOYEE SHIFT:",
-                        data[0]?.shift
-                    );
-
-                    console.log(
-                        "FIRST EMPLOYEE SHIFT DETAILS:",
-                        data[0]?.shiftDetails
-                    );
-
-                    console.log(
-                        "FIRST EMPLOYEE ASSIGNED SHIFT:",
-                        data[0]?.assignedShift
-                    );
-                }
-
-                setEmployees(
-                    Array.isArray(data)
-                        ? data
-                        : []
-                );
-
+                setEmployees(Array.isArray(data) ? data : []);
             } catch (error) {
-                console.error(
-                    "Employee fetch error:",
-                    error
-                );
+                console.error("Employee fetch error:", error);
 
                 toast.error(
                     error?.response?.data?.message ||
-                    error?.response?.data?.error ||
-                    "Failed to fetch employee shift assignments"
+                        error?.response?.data?.error ||
+                        "Failed to fetch employee shift assignments"
                 );
             } finally {
                 setLoading(false);
@@ -112,135 +51,48 @@ function EmployeeShiftList() {
     }, [token]);
 
     // ==========================================
-    // EMPLOYEE NAME
+    // HELPERS
     // ==========================================
 
     const getEmployeeName = (emp) => {
-        const name = `${emp?.firstName || ""} ${
-            emp?.lastName || ""
-        }`.trim();
-
-        return (
-            name ||
-            emp?.name ||
-            "N/A"
-        );
+        const name = `${emp?.firstName || ""} ${emp?.lastName || ""}`.trim();
+        return name || emp?.name || "N/A";
     };
 
-    // ==========================================
-    // GET SHIFT OBJECT
-    // ==========================================
-    /*
-     * Your Shift schema contains:
-     *
-     * name
-     * startTime
-     * endTime
-     *
-     * Normally the employee should receive:
-     *
-     * shift: {
-     *     _id,
-     *     name,
-     *     startTime,
-     *     endTime
-     * }
-     *
-     * This helper also keeps compatibility with
-     * shiftDetails / assignedShift if another
-     * existing API uses those names.
-     */
-
-    const getShiftObject = (employee) => {
-        const shift =
-            employee?.shiftDetails ||
-            employee?.assignedShift ||
-            employee?.shift ||
-            null;
-
-        return shift;
-    };
-
-    // ==========================================
-    // CHECK WHETHER SHIFT IS ASSIGNED
-    // ==========================================
+    // Supports shiftDetails / assignedShift / shift
+    const getShiftObject = (employee) =>
+        employee?.shiftDetails ||
+        employee?.assignedShift ||
+        employee?.shift ||
+        null;
 
     const hasShiftAssigned = (employee) => {
         const shift = getShiftObject(employee);
+        if (!shift) return false;
 
-        if (!shift) {
-            return false;
-        }
-
-        // Populated shift object
         if (typeof shift === "object") {
             return Boolean(
-                shift?._id ||
-                shift?.name ||
-                shift?.shiftName ||
-                shift?.title
+                shift?._id || shift?.name || shift?.shiftName || shift?.title
             );
         }
 
-        // ObjectId string
-        if (typeof shift === "string") {
-            return Boolean(shift);
-        }
-
-        return false;
+        return typeof shift === "string" && Boolean(shift);
     };
-
-    // ==========================================
-    // SHIFT NAME
-    // ==========================================
 
     const getShiftName = (employee) => {
         const shift = getShiftObject(employee);
+        if (!shift) return "Not Assigned";
 
-        if (!shift) {
-            return "Not Assigned";
+        if (typeof shift === "object" && !Array.isArray(shift)) {
+            return shift?.name || shift?.shiftName || shift?.title || "Assigned";
         }
 
-        // ==========================================
-        // POPULATED SHIFT
-        // ==========================================
-
-        if (
-            typeof shift === "object" &&
-            !Array.isArray(shift)
-        ) {
-            return (
-                shift?.name ||
-                shift?.shiftName ||
-                shift?.title ||
-                "Assigned"
-            );
-        }
-
-        // ==========================================
-        // ONLY OBJECT ID
-        // ==========================================
-
-        if (typeof shift === "string") {
-            return "Assigned";
-        }
-
-        return "Not Assigned";
+        return typeof shift === "string" ? "Assigned" : "Not Assigned";
     };
-
-    // ==========================================
-    // GET SHIFT START TIME
-    // ==========================================
 
     const getShiftStartTime = (employee) => {
         const shift = getShiftObject(employee);
-
-        if (
-            !shift ||
-            typeof shift !== "object"
-        ) {
-            return null;
-        }
+        if (!shift || typeof shift !== "object") return null;
 
         return (
             shift?.startTime ||
@@ -252,19 +104,9 @@ function EmployeeShiftList() {
         );
     };
 
-    // ==========================================
-    // GET SHIFT END TIME
-    // ==========================================
-
     const getShiftEndTime = (employee) => {
         const shift = getShiftObject(employee);
-
-        if (
-            !shift ||
-            typeof shift !== "object"
-        ) {
-            return null;
-        }
+        if (!shift || typeof shift !== "object") return null;
 
         return (
             shift?.endTime ||
@@ -276,116 +118,57 @@ function EmployeeShiftList() {
         );
     };
 
-    // ==========================================
-    // FORMAT TIME
-    // ==========================================
-    /*
-     * Keeps 09:00 / 18:00 exactly as backend sends.
-     *
-     * Also safely handles:
-     * 09:00:00
-     * 18:00:00
-     */
-
+    // 09:00:00 -> 09:00
     const formatTime = (time) => {
-        if (!time) {
-            return null;
-        }
+        if (!time) return null;
 
         const value = String(time).trim();
+        if (!value) return null;
 
-        if (!value) {
-            return null;
-        }
-
-        // Keep HH:mm
-        if (/^\d{2}:\d{2}$/.test(value)) {
-            return value;
-        }
-
-        // Convert HH:mm:ss -> HH:mm
-        if (/^\d{2}:\d{2}:\d{2}$/.test(value)) {
-            return value.substring(0, 5);
-        }
+        if (/^\d{2}:\d{2}:\d{2}$/.test(value)) return value.substring(0, 5);
 
         return value;
     };
 
-    // ==========================================
-    // SHIFT TIMINGS
-    // ==========================================
-
     const getShiftTimings = (employee) => {
         const shift = getShiftObject(employee);
+        if (!shift) return "Not Assigned";
+        if (typeof shift === "string") return "Timing Not Available";
 
-        if (!shift) {
-            return "Not Assigned";
-        }
+        const startTime = formatTime(getShiftStartTime(employee));
+        const endTime = formatTime(getShiftEndTime(employee));
 
-        // ==========================================
-        // OBJECT ID ONLY
-        // ==========================================
-
-        if (typeof shift === "string") {
-            return "Timing Not Available";
-        }
-
-        // ==========================================
-        // POPULATED SHIFT OBJECT
-        // ==========================================
-
-        if (
-            typeof shift === "object" &&
-            !Array.isArray(shift)
-        ) {
-            const startTime =
-                formatTime(
-                    getShiftStartTime(employee)
-                );
-
-            const endTime =
-                formatTime(
-                    getShiftEndTime(employee)
-                );
-
-            // Both available
-            if (
-                startTime &&
-                endTime
-            ) {
-                return `${startTime} - ${endTime}`;
-            }
-
-            // Only start
-            if (startTime) {
-                return `${startTime} - N/A`;
-            }
-
-            // Only end
-            if (endTime) {
-                return `N/A - ${endTime}`;
-            }
-        }
+        if (startTime && endTime) return `${startTime} - ${endTime}`;
+        if (startTime) return `${startTime} - N/A`;
+        if (endTime) return `N/A - ${endTime}`;
 
         return "Timing Not Available";
     };
 
+    const hasShiftTiming = (employee) =>
+        Boolean(getShiftStartTime(employee) || getShiftEndTime(employee));
+
     // ==========================================
-    // CHECK WHETHER TIMING EXISTS
+    // SEARCH FILTER
     // ==========================================
 
-    const hasShiftTiming = (employee) => {
-        const startTime =
-            getShiftStartTime(employee);
+    const filteredEmployees = useMemo(() => {
+        const q = search.trim().toLowerCase();
+        if (!q) return employees;
 
-        const endTime =
-            getShiftEndTime(employee);
-
-        return Boolean(
-            startTime ||
-            endTime
+        return employees.filter((emp) =>
+            [
+                getEmployeeName(emp),
+                emp?.email,
+                emp?.biometricId,
+                emp?.department,
+                getShiftName(emp),
+            ]
+                .filter(Boolean)
+                .some((field) => String(field).toLowerCase().includes(q))
         );
-    };
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [employees, search]);
 
     // ==========================================
     // RENDER
@@ -393,270 +176,147 @@ function EmployeeShiftList() {
 
     return (
         <div className="employee-shift-page">
-
-            <div className="employee-shift-card">
-
-                {/* ==========================================
-                    HEADER
-                ========================================== */}
-
-                <div className="shift-page-header">
-
-                    <div>
-
-                        <h2>
-                            Employee Shift & Biometric Details
-                        </h2>
-
-                        <p>
-                            View employee biometric information
-                            and assigned shift timings
-                        </p>
-
-                    </div>
-
-                    <div className="employee-count">
-                        {employees.length} Employees
-                    </div>
-
+            {/* HEADER (matches HR dashboard hero) */}
+            <header className="shift-hero">
+                <div className="shift-hero-text">
+                    <h1>
+                        Employee <span>shift</span>
+                    </h1>
+                    <p>View employee biometric information and assigned shift timings</p>
                 </div>
 
-                {/* ==========================================
-                    LOADING
-                ========================================== */}
+                <div className="employee-count">
+                    <strong>{employees.length}</strong>
+                    <span>{employees.length === 1 ? "Employee" : "Employees"}</span>
+                </div>
+            </header>
+
+            <section className="employee-shift-card">
+                <div className="shift-toolbar">
+                    <div>
+                        <h2 className="shift-section-title">Shift assignments</h2>
+                        <p className="shift-section-sub">
+                            Showing {filteredEmployees.length} of {employees.length}
+                        </p>
+                    </div>
+
+                    <input
+                        type="search"
+                        className="shift-search"
+                        placeholder="Search name, ID, department…"
+                        value={search}
+                        onChange={(e) => setSearch(e.target.value)}
+                        aria-label="Search employees"
+                    />
+                </div>
 
                 {loading ? (
-
-                    <div className="shift-loading">
-
+                    <div className="shift-loading" role="status">
                         <div className="loading-spinner"></div>
-
-                        <p>
-                            Loading employees...
-                        </p>
-
+                        <p>Loading employees...</p>
                     </div>
-
-                ) : employees.length === 0 ? (
-
+                ) : filteredEmployees.length === 0 ? (
                     <div className="no-employees">
-
-                        <h3>
-                            No Employees Found
-                        </h3>
-
+                        <h3>No Employees Found</h3>
                         <p>
-                            There are no employees available
-                            to display.
+                            {employees.length === 0
+                                ? "There are no employees available to display."
+                                : "No employees match your search."}
                         </p>
-
                     </div>
-
                 ) : (
-
                     <div className="shift-table-wrapper">
-
                         <table className="shift-table">
-
                             <thead>
-
                                 <tr>
-
-                                    <th>
-                                        #
-                                    </th>
-
-                                    <th>
-                                        Employee
-                                    </th>
-
-                                    <th>
-                                        Biometric ID
-                                    </th>
-
-                                    <th>
-                                        Department
-                                    </th>
-
-                                    <th>
-                                        Shift
-                                    </th>
-
-                                    <th>
-                                        Shift Timings
-                                    </th>
-
+                                    <th>#</th>
+                                    <th>Employee</th>
+                                    <th>Biometric ID</th>
+                                    <th>Department</th>
+                                    <th>Shift</th>
+                                    <th>Shift Timings</th>
                                 </tr>
-
                             </thead>
 
                             <tbody>
+                                {filteredEmployees.map((emp, index) => {
+                                    const shiftAssigned = hasShiftAssigned(emp);
+                                    const timingAvailable = hasShiftTiming(emp);
 
-                                {employees.map(
-                                    (emp, index) => {
+                                    return (
+                                        <tr key={emp?._id || index}>
+                                            <td data-label="#">
+                                                <span className="serial-number">
+                                                    {index + 1}
+                                                </span>
+                                            </td>
 
-                                        const shiftAssigned =
-                                            hasShiftAssigned(emp);
-
-                                        const timingAvailable =
-                                            hasShiftTiming(emp);
-
-                                        return (
-
-                                            <tr
-                                                key={
-                                                    emp?._id ||
-                                                    index
-                                                }
-                                            >
-
-                                                {/* ==================================
-                                                    SERIAL
-                                                ================================== */}
-
-                                                <td>
-
-                                                    <span className="serial-number">
-                                                        {index + 1}
-                                                    </span>
-
-                                                </td>
-
-                                                {/* ==================================
-                                                    EMPLOYEE
-                                                ================================== */}
-
-                                                <td>
-
-                                                    <div className="employee-info">
-
-                                                        <div className="employee-avatar">
-
-                                                            {(
-                                                                emp?.firstName?.[0] ||
-                                                                emp?.name?.[0] ||
-                                                                "E"
-                                                            ).toUpperCase()}
-
-                                                        </div>
-
-                                                        <div className="employee-details">
-
-                                                            <strong>
-                                                                {getEmployeeName(
-                                                                    emp
-                                                                )}
-                                                            </strong>
-
-                                                            {emp?.email && (
-                                                                <small>
-                                                                    {emp.email}
-                                                                </small>
-                                                            )}
-
-                                                        </div>
-
+                                            <td data-label="Employee">
+                                                <div className="employee-info">
+                                                    <div className="employee-avatar">
+                                                        {(
+                                                            emp?.firstName?.[0] ||
+                                                            emp?.name?.[0] ||
+                                                            "E"
+                                                        ).toUpperCase()}
                                                     </div>
 
-                                                </td>
-
-                                                {/* ==================================
-                                                    BIOMETRIC
-                                                ================================== */}
-
-                                                <td>
-
-                                                    {emp?.biometricId ? (
-
-                                                        <span className="biometric-badge">
-                                                            {emp.biometricId}
-                                                        </span>
-
-                                                    ) : (
-
-                                                        <span className="not-available">
-                                                            N/A
-                                                        </span>
-
-                                                    )}
-
-                                                </td>
-
-                                                {/* ==================================
-                                                    DEPARTMENT
-                                                ================================== */}
-
-                                                <td>
-
-                                                    <span className="department-text">
-
-                                                        {emp?.department ||
-                                                            "N/A"}
-
-                                                    </span>
-
-                                                </td>
-
-                                                {/* ==================================
-                                                    SHIFT
-                                                ================================== */}
-
-                                                <td>
-
-                                                    <span
-                                                        className={
-                                                            shiftAssigned
-                                                                ? "shift-badge"
-                                                                : "shift-badge unassigned"
-                                                        }
-                                                    >
-
-                                                        {getShiftName(
-                                                            emp
+                                                    <div className="employee-details">
+                                                        <strong>{getEmployeeName(emp)}</strong>
+                                                        {emp?.email && (
+                                                            <small>{emp.email}</small>
                                                         )}
+                                                    </div>
+                                                </div>
+                                            </td>
 
+                                            <td data-label="Biometric ID">
+                                                {emp?.biometricId ? (
+                                                    <span className="biometric-badge">
+                                                        {emp.biometricId}
                                                     </span>
+                                                ) : (
+                                                    <span className="not-available">N/A</span>
+                                                )}
+                                            </td>
 
-                                                </td>
+                                            <td data-label="Department">
+                                                <span className="department-text">
+                                                    {emp?.department || "N/A"}
+                                                </span>
+                                            </td>
 
-                                                {/* ==================================
-                                                    SHIFT TIMING
-                                                ================================== */}
+                                            <td data-label="Shift">
+                                                <span
+                                                    className={
+                                                        shiftAssigned
+                                                            ? "shift-badge"
+                                                            : "shift-badge unassigned"
+                                                    }
+                                                >
+                                                    {getShiftName(emp)}
+                                                </span>
+                                            </td>
 
-                                                <td>
-
-                                                    <span
-                                                        className={
-                                                            timingAvailable
-                                                                ? "timing-badge"
-                                                                : "timing-badge unavailable"
-                                                        }
-                                                    >
-
-                                                        {getShiftTimings(
-                                                            emp
-                                                        )}
-
-                                                    </span>
-
-                                                </td>
-
-                                            </tr>
-
-                                        );
-                                    }
-                                )}
-
+                                            <td data-label="Shift Timings">
+                                                <span
+                                                    className={
+                                                        timingAvailable
+                                                            ? "timing-badge"
+                                                            : "timing-badge unavailable"
+                                                    }
+                                                >
+                                                    {getShiftTimings(emp)}
+                                                </span>
+                                            </td>
+                                        </tr>
+                                    );
+                                })}
                             </tbody>
-
                         </table>
-
                     </div>
-
                 )}
-
-            </div>
-
+            </section>
         </div>
     );
 }

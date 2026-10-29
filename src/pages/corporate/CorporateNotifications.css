@@ -1,28 +1,32 @@
 /* =====================================================
-   CORPORATE NOTIFICATIONS
-   Every class is prefixed "corp-notif-" so nothing here
-   can clash with the customer dashboard styles.
-   Mobile first: base styles are for phones, larger
-   screens are layered on with min-width queries.
+   CORPORATE NOTIFICATIONS — matches the corporate overview
+   page and the HR-style sidebar.
+
+   Every class is prefixed "corp-notif-" so nothing here can
+   clash with other dashboard styles. Brand colours come from
+   the layout's --corp-* tokens, with fallbacks.
 ===================================================== */
 
 .corp-notif-page {
-  --corp-notif-green: #16a34a;
-  --corp-notif-green-dark: #15803d;
-  --corp-notif-green-soft: #f0fdf4;
-  --corp-notif-green-line: #bbf7d0;
-  --corp-notif-ink: #0f172a;
-  --corp-notif-muted: #64748b;
-  --corp-notif-faint: #94a3b8;
-  --corp-notif-line: #e2e8f0;
-  --corp-notif-surface: #ffffff;
-  --corp-notif-wash: #f8fafc;
+  --cn-green: var(--corp-green, #57a41d);
+  --cn-green-dark: var(--corp-green-dark, #3f7d14);
+  --cn-green-rgb: var(--corp-green-rgb, 87, 164, 29);
+  --cn-ink: var(--corp-text, #383f45);
+  --cn-muted: var(--corp-text-muted, #6b747d);
+  --cn-border: var(--corp-border, #e3e8de);
+  --cn-surface: #ffffff;
+  --cn-tint: #eef6e6;
+  --cn-tint-soft: #f7fbf3;
+  --cn-tint-border: #d9ead0;
+  --cn-neutral-tint: #eef0f2;
+  --cn-ease: cubic-bezier(0.4, 0, 0.2, 1);
 
-  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
   width: 100%;
-  max-width: 860px;
-  margin: 0 auto;
-  padding: 20px 14px 40px;
+  font-family: inherit;
+  color: var(--cn-ink);
 }
 
 .corp-notif-page *,
@@ -31,14 +35,48 @@
   box-sizing: border-box;
 }
 
-/* ---------- Header ---------- */
+/* =====================================================
+   HERO
+===================================================== */
 
-.corp-notif-header {
+.corp-notif-hero {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+
   display: flex;
-  flex-direction: column;
-  align-items: stretch;
-  gap: 14px;
-  margin-bottom: 20px;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+
+  padding: 32px 36px;
+
+  border: 1px solid var(--cn-tint-border);
+  border-radius: 20px;
+  background: linear-gradient(135deg, #f1f8ea 0%, #e6f2da 100%);
+}
+
+/* concentric rings, top right — same motif as the overview hero */
+.corp-notif-hero::before {
+  content: "";
+  position: absolute;
+  top: -120px;
+  right: -90px;
+  z-index: -1;
+
+  width: 340px;
+  height: 340px;
+  border-radius: 50%;
+
+  background: repeating-radial-gradient(
+    circle at center,
+    transparent 0 14px,
+    rgba(var(--cn-green-rgb), 0.16) 14px 15px
+  );
+  -webkit-mask-image: radial-gradient(circle, #000 35%, transparent 72%);
+  mask-image: radial-gradient(circle, #000 35%, transparent 72%);
+  pointer-events: none;
 }
 
 .corp-notif-heading {
@@ -47,129 +85,211 @@
 
 .corp-notif-title {
   margin: 0;
-  font-size: 1.6rem;
-  font-weight: 800;
-  line-height: 1.2;
+  font-size: clamp(28px, 3.2vw, 42px);
+  font-weight: 700;
+  line-height: 1.12;
   letter-spacing: -0.01em;
-  color: var(--corp-notif-ink);
+  color: var(--cn-ink);
+}
+
+.corp-notif-title span {
+  color: var(--cn-green);
 }
 
 .corp-notif-subtitle {
-  margin: 6px 0 0;
-  font-size: 0.9rem;
-  color: var(--corp-notif-muted);
+  margin: 8px 0 0;
+  font-size: 16px;
+  color: var(--cn-muted);
 }
 
+/* White pill with green text, like the HR "Refresh" button */
 .corp-notif-markall {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 8px;
-  width: 100%;
+
   min-height: 44px;
-  padding: 10px 20px;
-  border: none;
+  padding: 11px 22px;
+
+  border: 1px solid var(--cn-tint-border);
   border-radius: 999px;
-  background: var(--corp-notif-green);
-  color: #ffffff;
+  background: #ffffff;
+  color: var(--cn-green-dark);
+  box-shadow: 0 4px 14px rgba(var(--cn-green-rgb), 0.12);
+
   font-family: inherit;
-  font-size: 0.9rem;
+  font-size: 14.5px;
   font-weight: 600;
+  white-space: nowrap;
+
   cursor: pointer;
-  transition: background-color 0.15s ease;
+  -webkit-tap-highlight-color: transparent;
+  transition: transform 0.18s var(--cn-ease), box-shadow 0.18s var(--cn-ease),
+    border-color 0.18s var(--cn-ease);
 }
 
-.corp-notif-markall:hover {
-  background: var(--corp-notif-green-dark);
+.corp-notif-markall:active {
+  transform: scale(0.97);
 }
 
-.corp-notif-markall:focus-visible,
-.corp-notif-item:focus-visible {
-  outline: 3px solid rgba(22, 163, 74, 0.4);
-  outline-offset: 2px;
+/* =====================================================
+   CARD
+===================================================== */
+
+.corp-notif-card {
+  min-width: 0;
+  overflow: hidden;
+
+  border: 1px solid var(--cn-border);
+  border-radius: 20px;
+  background: var(--cn-surface);
+  box-shadow: 0 1px 2px rgba(31, 41, 55, 0.03);
 }
 
-/* ---------- Loading / empty ---------- */
+.corp-notif-card-header {
+  padding: 24px 28px 16px;
+}
+
+/* green accent bar before the title */
+.corp-notif-card-title {
+  position: relative;
+  margin: 0;
+  padding-left: 14px;
+
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--cn-ink);
+}
+
+.corp-notif-card-title::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 3px;
+  bottom: 3px;
+  width: 4px;
+  border-radius: 4px;
+  background: var(--cn-green);
+}
+
+.corp-notif-card-sub {
+  margin: 4px 0 0;
+  padding-left: 14px;
+  font-size: 14px;
+  color: var(--cn-muted);
+}
+
+/* =====================================================
+   LOADING / EMPTY
+===================================================== */
 
 .corp-notif-status {
-  padding: 48px 16px;
+  margin: 4px 28px 28px;
+  padding: 36px 20px;
+
+  border: 1px dashed var(--cn-tint-border);
+  border-radius: 14px;
+  background: var(--cn-tint-soft);
+
   text-align: center;
-  font-size: 0.9rem;
-  color: var(--corp-notif-muted);
+  font-size: 14.5px;
+  color: var(--cn-muted);
 }
 
 .corp-notif-empty {
+  margin: 4px 28px 28px;
   padding: 44px 20px;
+
+  border: 1px dashed var(--cn-tint-border);
+  border-radius: 14px;
+  background: var(--cn-tint-soft);
+
   text-align: center;
-  background: var(--corp-notif-surface);
-  border: 1px solid var(--corp-notif-line);
-  border-radius: 18px;
 }
 
 .corp-notif-empty-icon {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 48px;
-  height: 48px;
-  margin: 0 auto 12px;
-  border-radius: 50%;
-  background: #f1f5f9;
-  color: var(--corp-notif-faint);
-  font-size: 1.15rem;
+
+  width: 56px;
+  height: 56px;
+  margin: 0 auto 14px;
+
+  border-radius: 16px;
+  background: var(--cn-tint);
+  color: var(--cn-green);
+  font-size: 20px;
 }
 
 .corp-notif-empty-title {
   margin: 0;
+  font-size: 16px;
   font-weight: 700;
-  color: var(--corp-notif-ink);
+  color: var(--cn-ink);
 }
 
 .corp-notif-empty-text {
   margin: 6px 0 0;
-  font-size: 0.875rem;
-  color: var(--corp-notif-muted);
+  font-size: 14.5px;
+  color: var(--cn-muted);
 }
 
-/* ---------- List ---------- */
+/* =====================================================
+   LIST
+===================================================== */
 
 .corp-notif-list {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 12px;
+
   margin: 0;
-  padding: 0;
+  padding: 4px 24px 24px;
   list-style: none;
 }
 
 .corp-notif-item {
+  position: relative;
+
   display: flex;
   align-items: flex-start;
-  gap: 12px;
+  gap: 16px;
+
   width: 100%;
   margin: 0;
-  padding: 14px;
-  text-align: left;
+  padding: 16px 18px;
+
+  border: 1px solid var(--cn-border);
+  border-radius: 14px;
+  background: var(--cn-surface);
+
   font-family: inherit;
+  text-align: left;
   color: inherit;
-  background: var(--corp-notif-surface);
-  border: 1px solid var(--corp-notif-line);
-  border-radius: 16px;
+
   cursor: pointer;
-  transition: background-color 0.15s ease, border-color 0.15s ease;
+  -webkit-tap-highlight-color: transparent;
+  transition: background 0.18s var(--cn-ease), border-color 0.18s var(--cn-ease),
+    box-shadow 0.18s var(--cn-ease);
 }
 
-.corp-notif-item:hover {
-  background: var(--corp-notif-wash);
-}
-
+/* Unread: green tint + green accent line on the left edge */
 .corp-notif-item--unread {
-  background: var(--corp-notif-green-soft);
-  border-color: var(--corp-notif-green-line);
+  background: var(--cn-tint-soft);
+  border-color: var(--cn-tint-border);
 }
 
-.corp-notif-item--unread:hover {
-  background: #e7fbee;
+.corp-notif-item--unread::before {
+  content: "";
+  position: absolute;
+  left: -1px;
+  top: 14px;
+  bottom: 14px;
+  width: 4px;
+  border-radius: 0 4px 4px 0;
+  background: var(--cn-green);
 }
 
 .corp-notif-icon {
@@ -177,17 +297,19 @@
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  width: 38px;
-  height: 38px;
-  border-radius: 50%;
-  background: #f1f5f9;
-  color: var(--corp-notif-faint);
-  font-size: 0.95rem;
+
+  width: 44px;
+  height: 44px;
+  border-radius: 14px;
+
+  background: var(--cn-neutral-tint);
+  color: var(--cn-muted);
+  font-size: 16px;
 }
 
 .corp-notif-item--unread .corp-notif-icon {
-  background: #dcfce7;
-  color: var(--corp-notif-green-dark);
+  background: var(--cn-tint);
+  color: var(--cn-green);
 }
 
 .corp-notif-body {
@@ -195,7 +317,7 @@
   flex-direction: column;
   gap: 4px;
   flex: 1;
-  min-width: 0; /* lets long text wrap instead of stretching the card */
+  min-width: 0; /* long text wraps instead of stretching the card */
 }
 
 .corp-notif-item-top {
@@ -205,10 +327,10 @@
 }
 
 .corp-notif-item-title {
-  font-size: 0.95rem;
+  font-size: 15.5px;
   font-weight: 700;
   line-height: 1.3;
-  color: var(--corp-notif-ink);
+  color: var(--cn-ink);
   overflow-wrap: anywhere;
 }
 
@@ -217,89 +339,181 @@
   width: 8px;
   height: 8px;
   border-radius: 50%;
-  background: var(--corp-notif-green);
+  background: var(--cn-green);
+  box-shadow: 0 0 0 3px rgba(var(--cn-green-rgb), 0.18);
 }
 
 .corp-notif-message {
-  font-size: 0.875rem;
-  line-height: 1.5;
-  color: #475569;
+  font-size: 14.5px;
+  line-height: 1.55;
+  color: #4d555c;
   overflow-wrap: anywhere;
 }
 
 .corp-notif-time {
-  font-size: 0.75rem;
-  color: var(--corp-notif-faint);
+  margin-top: 2px;
+  font-size: 12.5px;
+  color: #8a929a;
 }
 
-/* ---------- Tablet and up ---------- */
+/* =====================================================
+   HOVER (only on devices that really hover)
+===================================================== */
 
-@media (min-width: 640px) {
+@media (hover: hover) {
+  .corp-notif-markall:hover {
+    transform: translateY(-1px);
+    border-color: rgba(var(--cn-green-rgb), 0.5);
+    box-shadow: 0 8px 20px rgba(var(--cn-green-rgb), 0.2);
+  }
+
+  .corp-notif-item:hover {
+    border-color: rgba(var(--cn-green-rgb), 0.5);
+    background: var(--cn-tint-soft);
+    box-shadow: 0 6px 16px rgba(var(--cn-green-rgb), 0.1);
+  }
+}
+
+/* =====================================================
+   FOCUS (keyboard accessibility)
+===================================================== */
+
+.corp-notif-markall:focus-visible,
+.corp-notif-item:focus-visible {
+  outline: 2px solid var(--cn-green);
+  outline-offset: 2px;
+}
+
+/* =====================================================
+   TABLET  (<= 768px)
+===================================================== */
+
+@media (max-width: 768px) {
   .corp-notif-page {
-    padding: 28px 24px 48px;
+    gap: 20px;
   }
 
-  .corp-notif-header {
-    flex-direction: row;
-    align-items: flex-start;
-    justify-content: space-between;
-    gap: 16px;
-    margin-bottom: 24px;
+  .corp-notif-hero {
+    padding: 26px 24px;
   }
 
-  .corp-notif-title {
-    font-size: 1.9rem;
-  }
-
-  .corp-notif-markall {
-    width: auto;
-    flex-shrink: 0;
+  .corp-notif-card-header {
+    padding: 20px 20px 14px;
   }
 
   .corp-notif-list {
-    gap: 12px;
+    padding: 4px 20px 20px;
+  }
+
+  .corp-notif-status,
+  .corp-notif-empty {
+    margin: 4px 20px 22px;
+  }
+}
+
+/* =====================================================
+   MOBILE  (<= 480px)
+===================================================== */
+
+@media (max-width: 480px) {
+  .corp-notif-page {
+    gap: 16px;
+  }
+
+  .corp-notif-hero {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 18px;
+
+    padding: 22px 18px;
+    border-radius: 16px;
+  }
+
+  .corp-notif-hero::before {
+    top: -150px;
+    right: -150px;
+  }
+
+  .corp-notif-subtitle {
+    font-size: 14px;
+  }
+
+  .corp-notif-markall {
+    width: 100%;
+    padding: 13px 18px;
+  }
+
+  .corp-notif-card {
+    border-radius: 16px;
+  }
+
+  .corp-notif-card-header {
+    padding: 18px 16px 12px;
+  }
+
+  .corp-notif-card-title {
+    font-size: 16.5px;
+  }
+
+  .corp-notif-list {
+    gap: 10px;
+    padding: 4px 14px 16px;
   }
 
   .corp-notif-item {
-    gap: 16px;
-    padding: 18px 20px;
+    gap: 12px;
+    padding: 14px;
   }
 
   .corp-notif-icon {
-    width: 42px;
-    height: 42px;
+    width: 40px;
+    height: 40px;
+    border-radius: 12px;
+    font-size: 15px;
   }
 
   .corp-notif-item-title {
-    font-size: 1rem;
+    font-size: 15px;
   }
 
   .corp-notif-message {
-    font-size: 0.9rem;
+    font-size: 14px;
+  }
+
+  .corp-notif-status,
+  .corp-notif-empty {
+    margin: 4px 14px 16px;
+    padding: 30px 14px;
   }
 }
 
-/* ---------- Small phones ---------- */
+/* =====================================================
+   VERY SMALL SCREENS  (<= 360px)
+===================================================== */
 
 @media (max-width: 360px) {
-  .corp-notif-page {
-    padding: 16px 10px 32px;
-  }
-
   .corp-notif-item {
-    padding: 12px;
     gap: 10px;
+    padding: 12px;
   }
 
   .corp-notif-icon {
-    width: 34px;
-    height: 34px;
+    width: 36px;
+    height: 36px;
   }
 }
+
+/* =====================================================
+   REDUCED MOTION
+===================================================== */
 
 @media (prefers-reduced-motion: reduce) {
   .corp-notif-markall,
   .corp-notif-item {
-    transition: none;
+    transition: none !important;
+  }
+
+  .corp-notif-markall:hover {
+    transform: none !important;
   }
 }

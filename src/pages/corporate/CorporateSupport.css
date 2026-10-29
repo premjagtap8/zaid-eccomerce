@@ -1,15 +1,36 @@
-/* ---------- Design tokens + container (scoped so nothing leaks into the dashboard) ---------- */
+/* ==========================================================================
+   CorporateSupport.css
+   Matches the Corporate dashboard: green gradient banner, 24px white cards,
+   light-green icon tiles, green bar section titles, deep-green pill buttons.
+
+   Tokens are scoped to .support-page so nothing leaks into the dashboard.
+   Layout reacts to the space the page actually gets (container queries),
+   so it still works correctly next to the sidebar.
+   ========================================================================== */
+
 .support-page {
-  --sp-accent: #15803d;
-  --sp-accent-hover: #166534;
-  --sp-accent-soft: #f0fdf4;
-  --sp-accent-line: #bbf7d0;
-  --sp-ink: #111827;
-  --sp-body: #374151;
-  --sp-muted: #4b5563;
-  --sp-line: #e5e7eb;
+  /* Brand tokens (same green family as the dashboard) */
+  --sp-accent: #4d8f12;
+  --sp-accent-dark: #3a7009;
+  --sp-accent-deep: #2f5d08;
+  --sp-accent-soft: #eef6e3;
+  --sp-accent-line: #dcebc8;
+
+  --sp-ink: #1b2412;
+  --sp-body: #3d4733;
+  --sp-muted: #707a66;
+  --sp-line: #e7eadf;
   --sp-surface: #ffffff;
-  --sp-radius: 14px;
+
+  --sp-radius-xl: 24px;
+  --sp-radius-md: 14px;
+
+  --sp-shadow: 0 1px 2px rgb(27 36 18 / 0.04), 0 8px 24px rgb(27 36 18 / 0.05);
+  --sp-shadow-btn: 0 8px 20px rgb(58 112 9 / 0.28);
+
+  /* Icons for the card tiles (green stroke baked in) */
+  --sp-icon-pin: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%234d8f12' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z'/%3E%3Ccircle cx='12' cy='10' r='3'/%3E%3C/svg%3E");
+  --sp-icon-headset: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%234d8f12' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M3 18v-6a9 9 0 0 1 18 0v6'/%3E%3Cpath d='M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z'/%3E%3C/svg%3E");
   --sp-icon-phone: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8.1 9.9a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2z'/%3E%3C/svg%3E");
 
   box-sizing: border-box;
@@ -17,10 +38,10 @@
   max-width: 72rem;
   margin-inline: auto;
   padding: clamp(1rem, 0.5rem + 2.5vw, 2rem);
+  font-family: inherit; /* keep the dashboard font */
   color: var(--sp-body);
 
-  /* Layout breakpoints react to the space this page actually gets
-     (e.g. next to a dashboard sidebar), not to the full window width */
+  /* Breakpoints follow the page's own width, not the window */
   container-type: inline-size;
 }
 
@@ -30,30 +51,85 @@
   box-sizing: border-box;
 }
 
+/* ---------- Banner (same idea as "Corporate overview") ---------- */
+.support-header {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+  padding: clamp(1.25rem, 0.8rem + 2.4vw, 2.25rem) clamp(1.25rem, 0.8rem + 2.8vw, 2.75rem);
+  border: 1px solid var(--sp-accent-line);
+  border-radius: var(--sp-radius-xl);
+  background:
+    radial-gradient(circle at 100% 0%, rgb(77 143 18 / 0.12) 0, rgb(77 143 18 / 0) 55%),
+    linear-gradient(100deg, #eaf4dc 0%, #f3f9ea 55%, #f8fbf3 100%);
+}
+
+/* soft concentric rings in the corner */
+.support-header::after {
+  content: "";
+  position: absolute;
+  top: -90px;
+  right: -90px;
+  width: 280px;
+  height: 280px;
+  border-radius: 50%;
+  z-index: -1;
+  pointer-events: none;
+  background: repeating-radial-gradient(
+    circle at center,
+    rgb(77 143 18 / 0.1) 0 1px,
+    transparent 1px 16px
+  );
+}
+
 /* ---------- Typography (fluid, no breakpoints needed) ---------- */
 .support-title {
-  margin: 0 0 0.25rem;
-  font-size: clamp(1.5rem, 1.2rem + 1.4vw, 2rem);
+  margin: 0 0 0.375rem;
+  font-size: clamp(1.75rem, 1.2rem + 2.2vw, 2.5rem);
   font-weight: 600;
-  line-height: 1.2;
+  line-height: 1.1;
   letter-spacing: -0.02em;
   color: var(--sp-ink);
   text-wrap: balance;
 }
 
+.support-title span {
+  color: var(--sp-accent);
+}
+
+.support-lead {
+  margin: 0;
+  font-size: clamp(0.9rem, 0.85rem + 0.25vw, 1rem);
+  color: var(--sp-muted);
+}
+
+/* Section titles get the green bar, like "Recent orders" / "Quick actions" */
 .support-subtitle {
-  margin: clamp(1.75rem, 1rem + 3vw, 2.5rem) 0 0.875rem;
+  position: relative;
+  margin: clamp(1.75rem, 1rem + 3vw, 2.5rem) 0 1rem;
+  padding-left: 0.875rem;
   font-size: clamp(1.0625rem, 1rem + 0.4vw, 1.25rem);
   font-weight: 600;
   letter-spacing: -0.01em;
   color: var(--sp-ink);
 }
 
+.support-subtitle::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.15em;
+  width: 4px;
+  height: 1.1em;
+  border-radius: 4px;
+  background: var(--sp-accent);
+}
+
 /* ---------- Layout: 1 column (narrow) -> 2 columns (tablet width and up) ---------- */
 .contact-grid {
   display: grid;
   grid-template-columns: 1fr;
-  gap: clamp(0.75rem, 0.4rem + 1.5vw, 1.25rem);
+  gap: clamp(0.875rem, 0.5rem + 1.5vw, 1.25rem);
 }
 
 @container (min-width: 36rem) {
@@ -64,34 +140,73 @@
 
 /* ---------- Cards ---------- */
 .contact-card {
+  position: relative;
+  overflow: hidden;
   display: flex;
   flex-direction: column;
   gap: 0.625rem;
   min-width: 0; /* lets long addresses wrap instead of stretching the grid */
-  padding: clamp(1rem, 0.6rem + 1.6vw, 1.5rem);
+  padding: clamp(1.125rem, 0.7rem + 1.6vw, 1.625rem);
   background: var(--sp-surface);
   border: 1px solid var(--sp-line);
-  border-radius: var(--sp-radius);
-  box-shadow: 0 1px 2px rgb(17 24 39 / 0.04);
-  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  border-radius: var(--sp-radius-xl);
+  box-shadow: var(--sp-shadow);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+/* faint green glow in the corner, like the dashboard stat cards */
+.contact-card::after {
+  content: "";
+  position: absolute;
+  right: -34px;
+  bottom: -34px;
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgb(77 143 18 / 0.09), transparent 70%);
+  pointer-events: none;
+}
+
+/* Icon tile on top of every card (location pin by default) */
+.contact-card::before {
+  content: "";
+  width: 3rem;
+  height: 3rem;
+  margin-bottom: 0.25rem;
+  border-radius: 14px;
+  background-color: var(--sp-accent-soft);
+  background-image: var(--sp-icon-pin);
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 1.375rem;
+}
+
+.contact-grid--support .contact-card::before {
+  background-image: var(--sp-icon-headset);
 }
 
 @media (hover: hover) {
   .contact-card:hover {
     border-color: var(--sp-accent-line);
-    box-shadow: 0 6px 20px rgb(17 24 39 / 0.07);
+    box-shadow: 0 14px 34px rgb(27 36 18 / 0.09);
+    transform: translateY(-2px);
   }
 }
 
-/* Support lines get a quiet tint so they read as the primary way to reach you */
+/* Support lines get a quiet green tint so they read as the primary way to reach you */
 .contact-grid--support .contact-card {
-  background: var(--sp-accent-soft);
+  background: linear-gradient(160deg, #f4faea 0%, #ffffff 70%);
   border-color: var(--sp-accent-line);
+}
+
+.contact-grid--support .contact-card::before {
+  background-color: #ffffff;
+  box-shadow: 0 2px 8px rgb(58 112 9 / 0.12);
 }
 
 .contact-card-title {
   margin: 0;
-  font-size: 1rem;
+  font-size: 1.0625rem;
   font-weight: 600;
   line-height: 1.35;
   color: var(--sp-ink);
@@ -101,18 +216,20 @@
 .contact-address {
   margin: 0;
   font-size: 0.9375rem;
-  line-height: 1.55;
+  line-height: 1.6;
   color: var(--sp-muted);
   overflow-wrap: anywhere; /* long street names never overflow on 320px screens */
 }
 
 /* ---------- Phone numbers as tappable pills (44px touch targets) ---------- */
 .contact-phones {
+  position: relative;
+  z-index: 1; /* stays above the corner glow */
   display: flex;
   flex-wrap: wrap;
   gap: 0.5rem;
   margin: auto 0 0; /* pushes phones to the card bottom so rows line up */
-  padding-top: 0.375rem;
+  padding-top: 0.5rem;
 }
 
 .contact-phones a {
@@ -120,19 +237,19 @@
   align-items: center;
   gap: 0.5rem;
   min-height: 2.75rem;
-  padding: 0 1rem;
+  padding: 0 1.125rem;
   font-size: 0.9375rem;
   font-weight: 500;
   font-variant-numeric: tabular-nums;
   white-space: nowrap;
-  color: var(--sp-ink);
+  color: var(--sp-accent-dark);
   background: var(--sp-surface);
-  border: 1px solid var(--sp-line);
+  border: 1px solid var(--sp-accent-line);
   border-radius: 999px;
   text-decoration: none;
   -webkit-tap-highlight-color: transparent;
-  transition: background-color 0.15s ease, border-color 0.15s ease,
-    color 0.15s ease, transform 0.15s ease;
+  transition: background-color 0.18s ease, border-color 0.18s ease,
+    color 0.18s ease, transform 0.18s ease, box-shadow 0.18s ease;
 }
 
 /* Phone icon drawn with a mask so it inherits the text colour */
@@ -148,9 +265,10 @@
 
 @media (hover: hover) {
   .contact-phones a:hover {
-    color: var(--sp-accent);
+    color: #fff;
+    background: var(--sp-accent);
     border-color: var(--sp-accent);
-    background: var(--sp-accent-soft);
+    transform: translateY(-1px);
   }
 }
 
@@ -159,22 +277,24 @@
 }
 
 .contact-phones a:focus-visible {
-  outline: 2px solid var(--sp-accent);
+  outline: 3px solid rgb(77 143 18 / 0.35);
   outline-offset: 2px;
 }
 
-/* Support cards: solid green call buttons (white on #15803d passes AA contrast) */
+/* Support cards: solid green call buttons, same look as "+ New order" */
 .contact-grid--support .contact-phones a {
   color: #fff;
-  background: var(--sp-accent);
-  border-color: var(--sp-accent);
+  background: linear-gradient(135deg, var(--sp-accent), var(--sp-accent-dark));
+  border-color: transparent;
+  box-shadow: var(--sp-shadow-btn);
 }
 
 @media (hover: hover) {
   .contact-grid--support .contact-phones a:hover {
     color: #fff;
-    background: var(--sp-accent-hover);
-    border-color: var(--sp-accent-hover);
+    background: linear-gradient(135deg, var(--sp-accent-dark), var(--sp-accent-deep));
+    border-color: transparent;
+    box-shadow: 0 12px 26px rgb(58 112 9 / 0.34);
   }
 }
 
@@ -192,6 +312,8 @@
   .contact-phones a {
     transition: none;
   }
+  .contact-card:hover,
+  .contact-phones a:hover,
   .contact-phones a:active {
     transform: none;
   }

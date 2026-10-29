@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from "react";
 import api from "../../api/axios";
 import "./Corporateprofile.css";
@@ -120,12 +119,18 @@ const CorporateProfile = () => {
   };
 
   if (loading) {
-    return <div className="profile-page">Loading profile...</div>;
+    return <div className="profile-page profile-loading">Loading profile...</div>;
   }
 
   return (
     <div className="profile-page">
-      <h2 className="profile-title">Company Profile</h2>
+      {/* Banner: markup-only change (wrapper + subtitle + accent span) */}
+      <div className="profile-header">
+        <h2 className="profile-title">
+          Company <span>profile</span>
+        </h2>
+        <p className="profile-lead">Keep your contact and company details up to date</p>
+      </div>
 
       {error && <div className="profile-alert profile-alert-error">{error}</div>}
       {successMsg && (

@@ -498,121 +498,118 @@ const LeavePolicies = () => {
   };
 
   // ======================================================
-  // DELETE / DISABLE
+  // DISABLE POLICY
+  // IMPORTANT:
+  // Policy database se delete nahi hogi.
+  // Sirf isActive = false hoga.
   // ======================================================
 
- // ======================================================
-// DISABLE POLICY
-// IMPORTANT:
-// Policy database se delete nahi hogi.
-// Sirf isActive = false hoga.
-// ======================================================
-
-const handleDeletePolicy = async (policy) => {
-  if (!policy?._id) {
-    toast.error("Invalid leave policy.");
-    return;
-  }
-
-  const leaveType = getLeaveTypeLabel(
-    policy.leaveType
-  );
-
-  const confirmed = window.confirm(
-    `Are you sure you want to disable "${leaveType}" leave policy?`
-  );
-
-  if (!confirmed) {
-    return;
-  }
-
-  try {
-    setLoading(true);
-    setError("");
-
-    const token = getToken();
-
-    if (!token) {
-      throw new Error(
-        "Authentication token missing. Please login again."
-      );
+  const handleDeletePolicy = async (policy) => {
+    if (!policy?._id) {
+      toast.error("Invalid leave policy.");
+      return;
     }
 
-    const url = `${API_URL}/leaves/policies/${policy._id}`;
-
-    const requestBody = {
-      isActive: false,
-    };
-
-    console.log("=================================");
-    console.log("DISABLING LEAVE POLICY");
-    console.log("URL:", url);
-    console.log("METHOD: PATCH");
-    console.log("BODY:", requestBody);
-    console.log("TOKEN EXISTS:", Boolean(token));
-    console.log("=================================");
-
-    const data = await apiRequest(
-      url,
-      {
-        method: "PATCH",
-        body: JSON.stringify(requestBody),
-      },
-      15000
+    const leaveType = getLeaveTypeLabel(
+      policy.leaveType
     );
 
-    console.log(
-      "DISABLE POLICY RESPONSE:",
-      data
+    const confirmed = window.confirm(
+      `Are you sure you want to disable "${leaveType}" leave policy?`
     );
 
-    toast.success(
-      `${leaveType} policy disabled successfully.`
-    );
+    if (!confirmed) {
+      return;
+    }
 
-    // Reload latest policies
-    await loadPolicies();
+    try {
+      setLoading(true);
+      setError("");
 
-  } catch (error) {
-    console.error(
-      "DISABLE POLICY ERROR:",
-      error
-    );
+      const token = getToken();
 
-    const message =
-      error?.message ||
-      "Failed to disable leave policy.";
+      if (!token) {
+        throw new Error(
+          "Authentication token missing. Please login again."
+        );
+      }
 
-    setError(message);
+      const url = `${API_URL}/leaves/policies/${policy._id}`;
 
-    toast.error(message);
+      const requestBody = {
+        isActive: false,
+      };
 
-  } finally {
-    setLoading(false);
-  }
-};
+      console.log("=================================");
+      console.log("DISABLING LEAVE POLICY");
+      console.log("URL:", url);
+      console.log("METHOD: PATCH");
+      console.log("BODY:", requestBody);
+      console.log("TOKEN EXISTS:", Boolean(token));
+      console.log("=================================");
+
+      const data = await apiRequest(
+        url,
+        {
+          method: "PATCH",
+          body: JSON.stringify(requestBody),
+        },
+        15000
+      );
+
+      console.log(
+        "DISABLE POLICY RESPONSE:",
+        data
+      );
+
+      toast.success(
+        `${leaveType} policy disabled successfully.`
+      );
+
+      // Reload latest policies
+      await loadPolicies();
+
+    } catch (error) {
+      console.error(
+        "DISABLE POLICY ERROR:",
+        error
+      );
+
+      const message =
+        error?.message ||
+        "Failed to disable leave policy.";
+
+      setError(message);
+
+      toast.error(message);
+
+    } finally {
+      setLoading(false);
+    }
+  };
 
   // ======================================================
   // FORMAT LEAVE TYPE
   // ======================================================
 
-const getLeaveTypeLabel = (leaveType) => {
-  const labels = {
-    SICK: "Sick Leave",
-    CASUAL: "Casual Leave",
-    EARNED: "Earned Leave",
-    UNPAID: "Unpaid Leave",
-    OTHER: "Other Leave",
+  const getLeaveTypeLabel = (leaveType) => {
+    const labels = {
+      SICK: "Sick Leave",
+      CASUAL: "Casual Leave",
+      EARNED: "Earned Leave",
+      UNPAID: "Unpaid Leave",
+      OTHER: "Other Leave",
+    };
+
+    return (
+      labels[leaveType] ||
+      leaveType
+        ?.replaceAll("_", " ")
+        ?.replace(/\b\w/g, (char) => char.toUpperCase()) ||
+      "-"
+    );
   };
 
-  return (
-    labels[leaveType] ||
-    leaveType
-      ?.replaceAll("_", " ")
-      ?.replace(/\b\w/g, (char) => char.toUpperCase()) ||
-    "-"
-  );
-};
   // ======================================================
   // RENDER
   // ======================================================
@@ -652,7 +649,7 @@ const getLeaveTypeLabel = (leaveType) => {
       {/* ERROR */}
 
       {error && (
-        <div className="leave-policy-error">
+        <div className="leave-policy-error" role="alert">
           {error}
         </div>
       )}
@@ -740,7 +737,7 @@ const getLeaveTypeLabel = (leaveType) => {
         {/* LOADING */}
 
         {loading ? (
-          <div className="leave-policy-loading">
+          <div className="leave-policy-loading" role="status">
             Loading leave policies...
           </div>
         ) : policies.length === 0 ? (
@@ -809,11 +806,11 @@ const getLeaveTypeLabel = (leaveType) => {
                       }
                     >
 
-                      <td>
+                      <td data-label="#">
                         {index + 1}
                       </td>
 
-                      <td>
+                      <td data-label="Leave Type">
                         <div className="leave-policy-name">
 
                           <div className="leave-policy-icon">
@@ -829,7 +826,7 @@ const getLeaveTypeLabel = (leaveType) => {
                         </div>
                       </td>
 
-                      <td>
+                      <td data-label="Monthly Limit">
                         <strong>
                           {
                             policy?.monthlyLimit ??
@@ -839,7 +836,7 @@ const getLeaveTypeLabel = (leaveType) => {
                         Days
                       </td>
 
-                      <td>
+                      <td data-label="Yearly Limit">
                         <strong>
                           {
                             policy?.yearlyLimit ??
@@ -849,7 +846,7 @@ const getLeaveTypeLabel = (leaveType) => {
                         Days
                       </td>
 
-                      <td>
+                      <td data-label="Carry Forward">
 
                         {policy?.carryForward ? (
                           <span className="leave-policy-badge yes">
@@ -863,7 +860,7 @@ const getLeaveTypeLabel = (leaveType) => {
 
                       </td>
 
-                      <td>
+                      <td data-label="Status">
 
                         <span
                           className={`leave-policy-status ${
@@ -881,7 +878,7 @@ const getLeaveTypeLabel = (leaveType) => {
 
                       </td>
 
-                      <td>
+                      <td data-label="Action">
 
                         <div className="leave-policy-actions">
 
@@ -948,6 +945,8 @@ const getLeaveTypeLabel = (leaveType) => {
 
           <div
             className="leave-policy-modal"
+            role="dialog"
+            aria-modal="true"
             onClick={(event) =>
               event.stopPropagation()
             }
@@ -977,6 +976,7 @@ const getLeaveTypeLabel = (leaveType) => {
                   handleCloseModal
                 }
                 disabled={saving}
+                aria-label="Close"
               >
                 ×
               </button>
@@ -996,11 +996,12 @@ const getLeaveTypeLabel = (leaveType) => {
 
               <div className="leave-policy-form-group">
 
-                <label>
+                <label htmlFor="leaveType">
                   Leave Type
                 </label>
 
                 <select
+                  id="leaveType"
                   name="leaveType"
                   value={
                     formData.leaveType
@@ -1010,12 +1011,12 @@ const getLeaveTypeLabel = (leaveType) => {
                   }
                   disabled={saving}
                 >
-                    
-                    <option value="SICK">Sick Leave</option>
-<option value="CASUAL">Casual Leave</option>
-<option value="EARNED">Earned Leave</option>
-<option value="UNPAID">Unpaid Leave</option>
-<option value="OTHER">Other Leave</option>
+
+                  <option value="SICK">Sick Leave</option>
+                  <option value="CASUAL">Casual Leave</option>
+                  <option value="EARNED">Earned Leave</option>
+                  <option value="UNPAID">Unpaid Leave</option>
+                  <option value="OTHER">Other Leave</option>
                 </select>
 
               </div>
@@ -1024,7 +1025,7 @@ const getLeaveTypeLabel = (leaveType) => {
 
               <div className="leave-policy-form-group">
 
-                <label>
+                <label htmlFor="monthlyLimit">
                   Monthly Limit
                   <span>*</span>
                 </label>
@@ -1032,6 +1033,7 @@ const getLeaveTypeLabel = (leaveType) => {
                 <div className="leave-policy-input-wrapper">
 
                   <input
+                    id="monthlyLimit"
                     type="number"
                     name="monthlyLimit"
                     min="0"
@@ -1058,7 +1060,7 @@ const getLeaveTypeLabel = (leaveType) => {
 
               <div className="leave-policy-form-group">
 
-                <label>
+                <label htmlFor="yearlyLimit">
                   Yearly Limit
                   <span>*</span>
                 </label>
@@ -1066,6 +1068,7 @@ const getLeaveTypeLabel = (leaveType) => {
                 <div className="leave-policy-input-wrapper">
 
                   <input
+                    id="yearlyLimit"
                     type="number"
                     name="yearlyLimit"
                     min="0"

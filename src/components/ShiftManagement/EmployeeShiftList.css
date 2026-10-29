@@ -1,64 +1,443 @@
+/* ==========================================================
+   Employee Shift page
+   Content-only styles: the sidebar, logo and top bar come from
+   the shared HR layout, so this page must NOT set its own
+   full-screen background, min-height: 100vh or fixed widths.
+   ========================================================== */
 
 .employee-shift-page {
-  padding: 30px 20px;
-  background: linear-gradient(135deg, #e8f5e9, #c8e6c9);
-  min-height: 100vh;
+  /* Design tokens (matched to the HR dashboard) */
+  --es-green-700: #2f7d12;
+  --es-green-600: #3d9a1a;
+  --es-green-500: #4caf24;
+  --es-green-100: #e6f4dc;
+  --es-green-50: #f2f9ec;
+  --es-ink: #1f2a24;
+  --es-muted: #6b7a70;
+  --es-border: #e7ece4;
+  --es-surface: #ffffff;
+  --es-radius-lg: 20px;
+  --es-radius-md: 14px;
+  --es-shadow: 0 2px 6px rgba(31, 42, 36, 0.04), 0 10px 28px rgba(31, 42, 36, 0.06);
+
+  width: 100%;
+  max-width: 100%;
   box-sizing: border-box;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  padding: clamp(14px, 2.2vw, 30px);
+  display: flex;
+  flex-direction: column;
+  gap: clamp(16px, 2vw, 24px);
+  font-family: "Poppins", "Inter", "Segoe UI", system-ui, -apple-system, sans-serif;
+  color: var(--es-ink);
 }
+
+.employee-shift-page *,
+.employee-shift-page *::before,
+.employee-shift-page *::after {
+  box-sizing: border-box;
+}
+
+/* ---------- Hero header (same look as "HR dashboard") ---------- */
+
+.shift-hero {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: clamp(18px, 2.6vw, 34px) clamp(18px, 3vw, 40px);
+  border-radius: var(--es-radius-lg);
+  border: 1px solid #dcebd0;
+  background:
+    radial-gradient(circle at 92% 20%, rgba(76, 175, 36, 0.14), transparent 45%),
+    linear-gradient(135deg, #eef8e6 0%, #f7fbf3 100%);
+}
+
+.shift-hero h1 {
+  margin: 0 0 6px;
+  font-size: clamp(1.5rem, 3.4vw, 2.6rem);
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+}
+
+.shift-hero h1 span {
+  color: var(--es-green-600);
+}
+
+.shift-hero p {
+  margin: 0;
+  color: var(--es-muted);
+  font-size: clamp(0.85rem, 1.4vw, 1rem);
+}
+
+.employee-count {
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 96px;
+  padding: 10px 18px;
+  border-radius: 999px;
+  background: var(--es-surface);
+  border: 1px solid var(--es-border);
+  box-shadow: var(--es-shadow);
+}
+
+.employee-count strong {
+  font-size: 1.4rem;
+  line-height: 1.1;
+  color: var(--es-green-600);
+}
+
+.employee-count span {
+  font-size: 0.75rem;
+  color: var(--es-muted);
+}
+
+/* ---------- Card ---------- */
 
 .employee-shift-card {
-  background: #ffffff;
-  padding: 30px;
-  border-radius: 16px;
-  box-shadow: 0 10px 25px rgba(46, 125, 50, 0.12);
-  border: 1px solid rgba(165, 214, 167, 0.4);
-  max-width: 1000px;
-  margin: 0 auto;
+  background: var(--es-surface);
+  border: 1px solid var(--es-border);
+  border-radius: var(--es-radius-lg);
+  box-shadow: var(--es-shadow);
+  padding: clamp(14px, 2vw, 26px);
+  min-width: 0; /* lets the table scroll instead of stretching the layout */
+}
+
+.shift-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px 16px;
+  margin-bottom: 18px;
+}
+
+.shift-section-title {
+  margin: 0;
+  padding-left: 12px;
+  border-left: 4px solid var(--es-green-600);
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+.shift-section-sub {
+  margin: 2px 0 0 16px;
+  font-size: 0.82rem;
+  color: var(--es-muted);
+}
+
+.shift-search {
   width: 100%;
-  box-sizing: border-box;
+  max-width: 320px;
+  padding: 10px 16px;
+  font: inherit;
+  font-size: 0.9rem;
+  color: var(--es-ink);
+  background: #f6f8f5;
+  border: 1px solid var(--es-border);
+  border-radius: 999px;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
 }
 
-.employee-shift-card h2 {
-  margin-top: 0;
-  margin-bottom: 24px;
-  color: #1e3a1e;
-  font-size: 1.6rem;
-  font-weight: 700;
+.shift-search:focus {
+  background: #fff;
+  border-color: var(--es-green-500);
+  box-shadow: 0 0 0 3px rgba(76, 175, 36, 0.18);
 }
 
-/* Shift Table Styling */
+/* ---------- Table ---------- */
+
+.shift-table-wrapper {
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  border: 1px solid var(--es-border);
+  border-radius: var(--es-radius-md);
+}
+
 .shift-table {
   width: 100%;
-  border-collapse: collapse;
+  min-width: 760px;
+  border-collapse: separate;
+  border-spacing: 0;
 }
 
-.shift-table th,
-.shift-table td {
+.shift-table thead th {
+  position: sticky;
+  top: 0;
   padding: 14px 16px;
   text-align: left;
-  border-bottom: 1px solid #e8f5e9;
-  font-size: 0.93rem;
-  color: #1e3a1e;
+  white-space: nowrap;
+  font-size: 0.74rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--es-green-700);
+  background: var(--es-green-50);
+  border-bottom: 1px solid var(--es-border);
 }
 
-.shift-table th {
-  background-color: #e8f5e9;
-  color: #2e7d32;
+.shift-table tbody td {
+  padding: 14px 16px;
+  font-size: 0.9rem;
+  vertical-align: middle;
+  border-bottom: 1px solid var(--es-border);
+}
+
+.shift-table tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+.shift-table tbody tr {
+  transition: background-color 0.15s ease;
+}
+
+.shift-table tbody tr:hover {
+  background: var(--es-green-50);
+}
+
+/* ---------- Cells ---------- */
+
+.serial-number {
+  display: inline-grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--es-muted);
+  background: #f1f4ef;
+}
+
+.employee-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+}
+
+.employee-avatar {
+  flex-shrink: 0;
+  display: grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
   font-weight: 700;
+  font-size: 0.95rem;
+  color: #fff;
+  background: linear-gradient(135deg, var(--es-green-500), var(--es-green-700));
 }
 
-.shift-table tr:hover {
-  background-color: #f4fbf7;
+.employee-details {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
 }
 
-.shift-table strong {
-  color: #1e3a1e;
+.employee-details strong {
+  font-weight: 600;
+  line-height: 1.3;
 }
 
+.employee-details small {
+  color: var(--es-muted);
+  font-size: 0.78rem;
+  overflow-wrap: anywhere;
+}
+
+.biometric-badge,
+.shift-badge,
+.timing-badge {
+  display: inline-block;
+  padding: 5px 12px;
+  border-radius: 999px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.biometric-badge {
+  font-family: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+  color: var(--es-ink);
+  background: #f1f4ef;
+  border: 1px solid var(--es-border);
+}
+
+.shift-badge {
+  color: var(--es-green-700);
+  background: var(--es-green-100);
+}
+
+.shift-badge.unassigned {
+  color: #b4540a;
+  background: #fff1e0;
+}
+
+.timing-badge {
+  color: #1d4f91;
+  background: #e6f0fc;
+}
+
+.timing-badge.unavailable {
+  color: var(--es-muted);
+  background: #f1f4ef;
+}
+
+.department-text {
+  font-weight: 500;
+}
+
+.not-available {
+  color: var(--es-muted);
+}
+
+/* ---------- Loading / empty ---------- */
+
+.shift-loading,
+.no-employees {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 56px 16px;
+  text-align: center;
+  color: var(--es-muted);
+}
+
+.no-employees h3 {
+  margin: 0;
+  color: var(--es-ink);
+}
+
+.no-employees p,
+.shift-loading p {
+  margin: 0;
+}
+
+.loading-spinner {
+  width: 38px;
+  height: 38px;
+  border: 4px solid var(--es-green-100);
+  border-top-color: var(--es-green-600);
+  border-radius: 50%;
+  animation: es-spin 0.8s linear infinite;
+}
+
+@keyframes es-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .loading-spinner {
+    animation-duration: 2s;
+  }
+  .shift-table tbody tr,
+  .shift-search {
+    transition: none;
+  }
+}
+
+/* ==========================================================
+   Responsive
+   ========================================================== */
+
+/* Tablet */
+@media (max-width: 1024px) {
+  .shift-table tbody td,
+  .shift-table thead th {
+    padding: 12px;
+  }
+}
+
+/* Small tablet / large phone */
 @media (max-width: 768px) {
-  .employee-shift-card {
-    padding: 20px 15px;
-    overflow-x: auto;
+  .shift-hero {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .employee-count {
+    flex-direction: row;
+    gap: 8px;
+    border-radius: 12px;
+    padding: 8px 14px;
+  }
+
+  .shift-search {
+    max-width: none;
+  }
+}
+
+/* Phone: turn table rows into stacked cards */
+@media (max-width: 640px) {
+  .shift-table-wrapper {
+    border: 0;
+    overflow: visible;
+  }
+
+  .shift-table {
+    min-width: 0;
+    display: block;
+  }
+
+  .shift-table thead {
+    display: none;
+  }
+
+  .shift-table tbody {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .shift-table tbody tr {
+    display: block;
+    padding: 6px 14px;
+    border: 1px solid var(--es-border);
+    border-radius: var(--es-radius-md);
+    background: var(--es-surface);
+  }
+
+  .shift-table tbody td {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 10px 0;
+    text-align: right;
+    border-bottom: 1px dashed var(--es-border);
+  }
+
+  .shift-table tbody td:last-child {
+    border-bottom: 0;
+  }
+
+  .shift-table tbody td::before {
+    content: attr(data-label);
+    flex-shrink: 0;
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--es-muted);
+    text-align: left;
+  }
+
+  /* Index number is noise on cards */
+  .shift-table tbody td[data-label="#"] {
+    display: none;
+  }
+
+  .employee-info {
+    justify-content: flex-end;
+    text-align: left;
   }
 }

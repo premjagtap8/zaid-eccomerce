@@ -52,7 +52,13 @@ const PhoneLinks = ({ phones }) => (
 const CorporateSupport = () => {
   return (
     <div className="support-page">
-      <h2 className="support-title">Contact Us</h2>
+      {/* Banner: markup-only change (wrapper + subtitle + accent span) */}
+      <div className="support-header">
+        <h2 className="support-title">
+          Contact <span>us</span>
+        </h2>
+        <p className="support-lead">Call our team for service, rentals and bulk orders</p>
+      </div>
 
       <h3 className="support-subtitle">Customer Support</h3>
       <div className="contact-grid contact-grid--support">

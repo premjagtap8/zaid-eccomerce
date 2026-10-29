@@ -741,7 +741,7 @@ const HolidaysManagement = () => {
       ======================================= */}
 
       {error && (
-        <div className="holiday-error">
+        <div className="holiday-error" role="alert">
           {error}
         </div>
       )}
@@ -854,7 +854,7 @@ const HolidaysManagement = () => {
 
         {loading ? (
 
-          <div className="holiday-loading">
+          <div className="holiday-loading" role="status">
             Loading holidays...
           </div>
 
@@ -947,11 +947,11 @@ const HolidaysManagement = () => {
                       }
                     >
 
-                      <td>
+                      <td data-label="#">
                         {index + 1}
                       </td>
 
-                      <td>
+                      <td data-label="Holiday">
 
                         <div className="holiday-name">
 
@@ -969,7 +969,7 @@ const HolidaysManagement = () => {
 
                       </td>
 
-                      <td>
+                      <td data-label="Date">
                         {
                           formatDate(
                             holiday.date
@@ -977,7 +977,7 @@ const HolidaysManagement = () => {
                         }
                       </td>
 
-                      <td>
+                      <td data-label="Type">
 
                         <span
                           className={`holiday-type ${
@@ -996,7 +996,7 @@ const HolidaysManagement = () => {
 
                       </td>
 
-                      <td>
+                      <td data-label="Description">
 
                         <span className="holiday-description">
 
@@ -1009,7 +1009,7 @@ const HolidaysManagement = () => {
 
                       </td>
 
-                      <td>
+                      <td data-label="Status">
 
                         <span
                           className={`holiday-status ${
@@ -1029,7 +1029,7 @@ const HolidaysManagement = () => {
 
                       </td>
 
-                      <td>
+                      <td data-label="Action">
 
                         <div className="holiday-actions">
 
@@ -1096,6 +1096,8 @@ const HolidaysManagement = () => {
 
           <div
             className="holiday-modal"
+            role="dialog"
+            aria-modal="true"
             onClick={(event) =>
               event.stopPropagation()
             }
@@ -1127,6 +1129,7 @@ const HolidaysManagement = () => {
                   handleCloseModal
                 }
                 disabled={saving}
+                aria-label="Close"
               >
                 ×
               </button>
@@ -1146,12 +1149,13 @@ const HolidaysManagement = () => {
 
               <div className="holiday-form-group">
 
-                <label>
+                <label htmlFor="holidayTitle">
                   Holiday Name
                   <span>*</span>
                 </label>
 
                 <input
+                  id="holidayTitle"
                   type="text"
                   name="title"
                   value={
@@ -1171,12 +1175,13 @@ const HolidaysManagement = () => {
 
               <div className="holiday-form-group">
 
-                <label>
+                <label htmlFor="holidayDate">
                   Holiday Date
                   <span>*</span>
                 </label>
 
                 <input
+                  id="holidayDate"
                   type="date"
                   name="date"
                   value={
@@ -1195,11 +1200,12 @@ const HolidaysManagement = () => {
 
               <div className="holiday-form-group">
 
-                <label>
+                <label htmlFor="holidayType">
                   Holiday Type
                 </label>
 
                 <select
+                  id="holidayType"
                   name="holidayType"
                   value={
                     formData.holidayType
@@ -1226,11 +1232,12 @@ const HolidaysManagement = () => {
 
               <div className="holiday-form-group">
 
-                <label>
+                <label htmlFor="holidayDescription">
                   Description
                 </label>
 
                 <textarea
+                  id="holidayDescription"
                   name="description"
                   value={
                     formData.description

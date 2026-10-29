@@ -1,547 +1,3 @@
-// // import React, { useState } from "react";
-
-// // import "./AddAddress.css";
-
-// // import { useNavigate } from "react-router-dom";
-
-// // import { createAddress } from "../../../services/addressService";
-
-// // const AddAddress = () => {
-
-// //     const navigate = useNavigate();
-
-// //     const [formData, setFormData] = useState({
-
-// //         type: "HOME",
-
-// //         fullName: "",
-
-// //         phone: "",
-
-// //         addressLine: "",
-
-// //         city: "",
-
-// //         state: "",
-
-// //         pincode: "",
-
-// //         country: "India",
-
-// //         landmark: ""
-
-// //     });
-
-// //     const handleChange = (e) => {
-
-// //         setFormData({
-
-// //             ...formData,
-
-// //             [e.target.name]: e.target.value
-
-// //         });
-
-// //     };
-
-// //     const handleSubmit = async (e) => {
-
-// //         e.preventDefault();
-
-// //         try {
-
-// //             await createAddress(formData);
-
-// //             alert("Address Added Successfully");
-
-// //             navigate("/my-address");
-
-// //         }
-
-// //         catch (error) {
-
-// //             console.log(error);
-
-// //             alert(error.response?.data?.message || "Something went wrong");
-
-// //         }
-
-// //     };
-
-// //     return (
-
-// //         <div className="add-address-page">
-
-// //             <h2>Add New Address</h2>
-
-// //             <form
-// //                 className="address-form"
-// //                 onSubmit={handleSubmit}
-// //             >
-
-// //                 <select
-// //                     name="type"
-// //                     value={formData.type}
-// //                     onChange={handleChange}
-// //                 >
-
-// //                     <option value="HOME">Home</option>
-
-// //                     <option value="OFFICE">Office</option>
-
-// //                     <option value="OTHER">Other</option>
-
-// //                 </select>
-
-// //                 <input
-// //                     type="text"
-// //                     name="fullName"
-// //                     placeholder="Full Name"
-// //                     value={formData.fullName}
-// //                     onChange={handleChange}
-// //                     required
-// //                 />
-
-// //                 <input
-// //                     type="text"
-// //                     name="phone"
-// //                     placeholder="Phone Number"
-// //                     value={formData.phone}
-// //                     onChange={handleChange}
-// //                     required
-// //                 />
-
-// //                 <textarea
-// //                     name="addressLine"
-// //                     placeholder="Address"
-// //                     value={formData.addressLine}
-// //                     onChange={handleChange}
-// //                     required
-// //                 />
-
-// //                 <input
-// //                     type="text"
-// //                     name="city"
-// //                     placeholder="City"
-// //                     value={formData.city}
-// //                     onChange={handleChange}
-// //                     required
-// //                 />
-
-// //                 <input
-// //                     type="text"
-// //                     name="state"
-// //                     placeholder="State"
-// //                     value={formData.state}
-// //                     onChange={handleChange}
-// //                     required
-// //                 />
-
-// //                 <input
-// //                     type="text"
-// //                     name="pincode"
-// //                     placeholder="Pincode"
-// //                     value={formData.pincode}
-// //                     onChange={handleChange}
-// //                     required
-// //                 />
-
-// //                 <input
-// //                     type="text"
-// //                     name="country"
-// //                     placeholder="Country"
-// //                     value={formData.country}
-// //                     onChange={handleChange}
-// //                 />
-
-// //                 <input
-// //                     type="text"
-// //                     name="landmark"
-// //                     placeholder="Landmark"
-// //                     value={formData.landmark}
-// //                     onChange={handleChange}
-// //                 />
-
-// //                 <button type="submit">
-
-// //                     Save Address
-
-// //                 </button>
-
-// //             </form>
-
-// //         </div>
-
-// //     );
-
-// // };
-
-// // export default AddAddress;
-
-
-// import React, { useState } from "react";
-
-// import "./AddAddress.css";
-
-// import { useNavigate } from "react-router-dom";
-
-// import { createAddress } from "../../../services/addressService";
-// import { toast } from "react-toastify";
-
-// const AddAddress = () => {
-
-//     const navigate = useNavigate();
-
-//     const [formData, setFormData] = useState({
-
-//         type: "HOME",
-
-//         fullName: "",
-
-//         phone: "",
-
-//         addressLine: "",
-
-//         city: "",
-
-//         state: "",
-
-//         pincode: "",
-
-//         country: "India",
-
-//         landmark: ""
-
-//     });
-
-//     const handleChange = (e) => {
-
-//         setFormData({
-
-//             ...formData,
-
-//             [e.target.name]: e.target.value
-
-//         });
-
-//     };
-
-//     const handleSubmit = async (e) => {
-
-//         e.preventDefault();
-
-//         try {
-
-//             await createAddress(formData);
-
-//            toast.success("Address Added Successfully");
-
-//             navigate("/my-address");
-
-//         }
-
-//         catch (error) {
-
-//             console.log(error);
-
-//             toast.error(error.response?.data?.message || "Something went wrong");
-
-//         }
-
-//     };
-
-//     return (
-
-//         <div className="add-address-page">
-
-//             <h2>Add New Address</h2>
-
-//             <form
-//                 className="address-form"
-//                 onSubmit={handleSubmit}
-//             >
-
-//                 <select
-//                     name="type"
-//                     value={formData.type}
-//                     onChange={handleChange}
-//                 >
-
-//                     <option value="HOME">Home</option>
-
-//                     <option value="OFFICE">Office</option>
-
-//                     <option value="OTHER">Other</option>
-
-//                 </select>
-
-//                 <input
-//                     type="text"
-//                     name="fullName"
-//                     placeholder="Full Name"
-//                     value={formData.fullName}
-//                     onChange={handleChange}
-//                     required
-//                 />
-
-//                 <input
-//                     type="text"
-//                     name="phone"
-//                     placeholder="Phone Number"
-//                     value={formData.phone}
-//                     onChange={handleChange}
-//                     required
-//                 />
-
-//                 <textarea
-//                     name="addressLine"
-//                     placeholder="Address"
-//                     value={formData.addressLine}
-//                     onChange={handleChange}
-//                     required
-//                 />
-
-//                 <input
-//                     type="text"
-//                     name="city"
-//                     placeholder="City"
-//                     value={formData.city}
-//                     onChange={handleChange}
-//                     required
-//                 />
-
-//                 <input
-//                     type="text"
-//                     name="state"
-//                     placeholder="State"
-//                     value={formData.state}
-//                     onChange={handleChange}
-//                     required
-//                 />
-
-//                 <input
-//                     type="text"
-//                     name="pincode"
-//                     placeholder="Pincode"
-//                     value={formData.pincode}
-//                     onChange={handleChange}
-//                     required
-//                 />
-
-//                 <input
-//                     type="text"
-//                     name="country"
-//                     placeholder="Country"
-//                     value={formData.country}
-//                     onChange={handleChange}
-//                 />
-
-//                 <input
-//                     type="text"
-//                     name="landmark"
-//                     placeholder="Landmark"
-//                     value={formData.landmark}
-//                     onChange={handleChange}
-//                 />
-
-//                 <button type="submit">
-
-//                     Save Address
-
-//                 </button>
-
-//             </form>
-
-//         </div>
-
-//     );
-
-// };
-
-// export default AddAddress;
-
-
-// import React, { useState } from "react";
-
-// import "./AddAddress.css";
-
-// import { useNavigate } from "react-router-dom";
-
-// import { createAddress } from "../../../services/addressService";
-
-// const AddAddress = () => {
-
-//     const navigate = useNavigate();
-
-//     const [formData, setFormData] = useState({
-
-//         type: "HOME",
-
-//         fullName: "",
-
-//         phone: "",
-
-//         addressLine: "",
-
-//         city: "",
-
-//         state: "",
-
-//         pincode: "",
-
-//         country: "India",
-
-//         landmark: ""
-
-//     });
-
-//     const handleChange = (e) => {
-
-//         setFormData({
-
-//             ...formData,
-
-//             [e.target.name]: e.target.value
-
-//         });
-
-//     };
-
-//     const handleSubmit = async (e) => {
-
-//         e.preventDefault();
-
-//         try {
-
-//             await createAddress(formData);
-
-//             alert("Address Added Successfully");
-
-//             navigate("/my-address");
-
-//         }
-
-//         catch (error) {
-
-//             console.log(error);
-
-//             alert(error.response?.data?.message || "Something went wrong");
-
-//         }
-
-//     };
-
-//     return (
-
-//         <div className="add-address-page">
-
-//             <h2>Add New Address</h2>
-
-//             <form
-//                 className="address-form"
-//                 onSubmit={handleSubmit}
-//             >
-
-//                 <select
-//                     name="type"
-//                     value={formData.type}
-//                     onChange={handleChange}
-//                 >
-
-//                     <option value="HOME">Home</option>
-
-//                     <option value="OFFICE">Office</option>
-
-//                     <option value="OTHER">Other</option>
-
-//                 </select>
-
-//                 <input
-//                     type="text"
-//                     name="fullName"
-//                     placeholder="Full Name"
-//                     value={formData.fullName}
-//                     onChange={handleChange}
-//                     required
-//                 />
-
-//                 <input
-//                     type="text"
-//                     name="phone"
-//                     placeholder="Phone Number"
-//                     value={formData.phone}
-//                     onChange={handleChange}
-//                     required
-//                 />
-
-//                 <textarea
-//                     name="addressLine"
-//                     placeholder="Address"
-//                     value={formData.addressLine}
-//                     onChange={handleChange}
-//                     required
-//                 />
-
-//                 <input
-//                     type="text"
-//                     name="city"
-//                     placeholder="City"
-//                     value={formData.city}
-//                     onChange={handleChange}
-//                     required
-//                 />
-
-//                 <input
-//                     type="text"
-//                     name="state"
-//                     placeholder="State"
-//                     value={formData.state}
-//                     onChange={handleChange}
-//                     required
-//                 />
-
-//                 <input
-//                     type="text"
-//                     name="pincode"
-//                     placeholder="Pincode"
-//                     value={formData.pincode}
-//                     onChange={handleChange}
-//                     required
-//                 />
-
-//                 <input
-//                     type="text"
-//                     name="country"
-//                     placeholder="Country"
-//                     value={formData.country}
-//                     onChange={handleChange}
-//                 />
-
-//                 <input
-//                     type="text"
-//                     name="landmark"
-//                     placeholder="Landmark"
-//                     value={formData.landmark}
-//                     onChange={handleChange}
-//                 />
-
-//                 <button type="submit">
-
-//                     Save Address
-
-//                 </button>
-
-//             </form>
-
-//         </div>
-
-//     );
-
-// };
-
-// export default AddAddress;
-
-
 import React, { useState } from "react";
 
 import "./AddAddress.css";
@@ -672,15 +128,42 @@ const AddAddress = () => {
 
         <div className="add-address-page">
 
-            <h2>Add New Address</h2>
+            {/* HERO (title) */}
+
+            <div className="add-address-hero">
+
+                <h2 className="add-address-title">
+
+                    Add New <span>Address</span>
+
+                </h2>
+
+                <p className="add-address-subtitle">
+
+                    Save a delivery address for your orders
+
+                </p>
+
+            </div>
 
             <form
                 className="address-form"
                 onSubmit={handleSubmit}
             >
 
+                {/* FORM CARD HEADER */}
+
+                <div className="address-form-header">
+
+                    <h3 className="address-form-title">Address details</h3>
+
+                    <p className="address-form-sub">Fields are checked when you save</p>
+
+                </div>
+
                 <select
                     name="type"
+                    aria-label="Address type"
                     value={formData.type}
                     onChange={handleChange}
                 >
@@ -698,6 +181,7 @@ const AddAddress = () => {
                     <input
                         type="text"
                         name="fullName"
+                        aria-label="Full name"
                         placeholder="Full Name"
                         value={formData.fullName}
                         onChange={handleChange}
@@ -713,6 +197,7 @@ const AddAddress = () => {
                     <input
                         type="text"
                         name="phone"
+                        aria-label="Phone number"
                         placeholder="Phone Number"
                         value={formData.phone}
                         onChange={handleChange}
@@ -727,6 +212,7 @@ const AddAddress = () => {
 
                     <textarea
                         name="addressLine"
+                        aria-label="Address"
                         placeholder="Address"
                         value={formData.addressLine}
                         onChange={handleChange}
@@ -742,6 +228,7 @@ const AddAddress = () => {
                     <input
                         type="text"
                         name="city"
+                        aria-label="City"
                         placeholder="City"
                         value={formData.city}
                         onChange={handleChange}
@@ -757,6 +244,7 @@ const AddAddress = () => {
                     <input
                         type="text"
                         name="state"
+                        aria-label="State"
                         placeholder="State"
                         value={formData.state}
                         onChange={handleChange}
@@ -772,6 +260,7 @@ const AddAddress = () => {
                     <input
                         type="text"
                         name="pincode"
+                        aria-label="Pincode"
                         placeholder="Pincode"
                         value={formData.pincode}
                         onChange={handleChange}
@@ -787,6 +276,7 @@ const AddAddress = () => {
                     <input
                         type="text"
                         name="country"
+                        aria-label="Country"
                         placeholder="Country"
                         value={formData.country}
                         onChange={handleChange}
@@ -799,6 +289,7 @@ const AddAddress = () => {
                 <input
                     type="text"
                     name="landmark"
+                    aria-label="Landmark"
                     placeholder="Landmark"
                     value={formData.landmark}
                     onChange={handleChange}

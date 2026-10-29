@@ -447,3 +447,391 @@
     grid-column: span 1;
   }
 }
+
+
+/* =====================================================================
+   NEW HELPER MARKUP — hidden by default so any page that renders
+   AddAddress outside the corporate dashboard looks exactly as before.
+   The corporate block below turns these on.
+===================================================================== */
+
+.add-address-subtitle,
+.address-form-header {
+  display: none;
+}
+
+
+/* =====================================================================
+   CORPORATE DASHBOARD VERSION
+   Everything below is scoped to ".corp-layout", so it only applies when
+   this page is rendered inside CorporateLayout. It matches the overview
+   page: hero banner, white card with a green title bar, green focus
+   rings and a green gradient button.
+===================================================================== */
+
+.corp-layout .add-address-page {
+  --aa-green: var(--corp-green, #57a41d);
+  --aa-green-dark: var(--corp-green-dark, #3f7d14);
+  --aa-green-rgb: var(--corp-green-rgb, 87, 164, 29);
+  --aa-ink: var(--corp-text, #383f45);
+  --aa-muted: var(--corp-text-muted, #6b747d);
+  --aa-border: var(--corp-border, #e3e8de);
+  --aa-tint: #eef6e6;
+  --aa-tint-border: #d9ead0;
+  --aa-ease: cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* undo the standalone "centered full-screen" layout */
+  min-height: 0;
+  width: 100%;
+  padding: 0;
+  gap: 24px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: flex-start;
+
+  background: none;
+  font-family: inherit;
+  color: var(--aa-ink);
+}
+
+/* ---------- Hero ---------- */
+
+.corp-layout .add-address-hero {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+
+  padding: 32px 36px;
+
+  border: 1px solid var(--aa-tint-border);
+  border-radius: 20px;
+  background: linear-gradient(135deg, #f1f8ea 0%, #e6f2da 100%);
+}
+
+/* concentric rings, top right — same motif as the overview hero */
+.corp-layout .add-address-hero::before {
+  content: "";
+  position: absolute;
+  top: -120px;
+  right: -90px;
+  z-index: -1;
+
+  width: 340px;
+  height: 340px;
+  border-radius: 50%;
+
+  background: repeating-radial-gradient(
+    circle at center,
+    transparent 0 14px,
+    rgba(var(--aa-green-rgb), 0.16) 14px 15px
+  );
+  -webkit-mask-image: radial-gradient(circle, #000 35%, transparent 72%);
+  mask-image: radial-gradient(circle, #000 35%, transparent 72%);
+  pointer-events: none;
+}
+
+/* resets the old centered "pill" heading */
+.corp-layout .add-address-page .add-address-title {
+  margin: 0;
+  padding: 0;
+
+  border: none;
+  border-radius: 0;
+  background: none;
+  box-shadow: none;
+
+  font-size: clamp(28px, 3.2vw, 42px);
+  font-weight: 700;
+  line-height: 1.12;
+  letter-spacing: -0.01em;
+  text-align: left;
+  color: var(--aa-ink);
+}
+
+.corp-layout .add-address-title span {
+  color: var(--aa-green);
+}
+
+.corp-layout .add-address-subtitle {
+  display: block;
+  margin: 8px 0 0;
+  font-size: 16px;
+  color: var(--aa-muted);
+}
+
+/* ---------- Form card ---------- */
+
+.corp-layout .address-form {
+  width: 100%;
+  max-width: 960px;
+  margin: 0;
+  padding: 8px 28px 28px;
+
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px 20px;
+
+  border: 1px solid var(--aa-border);
+  border-radius: 20px;
+  background: #ffffff;
+  box-shadow: 0 1px 2px rgba(31, 41, 55, 0.03);
+
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+}
+
+/* card title with green accent bar, like the overview cards */
+.corp-layout .address-form-header {
+  display: block;
+  grid-column: 1 / -1;
+  padding-top: 16px;
+}
+
+.corp-layout .address-form-title {
+  position: relative;
+  margin: 0;
+  padding-left: 14px;
+
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--aa-ink);
+}
+
+.corp-layout .address-form-title::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 3px;
+  bottom: 3px;
+  width: 4px;
+  border-radius: 4px;
+  background: var(--aa-green);
+}
+
+.corp-layout .address-form-sub {
+  margin: 4px 0 0;
+  padding-left: 14px;
+  font-size: 14px;
+  color: var(--aa-muted);
+}
+
+/* full-width items; 1 / -1 works at any column count */
+.corp-layout .address-form select[name="type"],
+.corp-layout .address-form input[name="landmark"],
+.corp-layout .address-form .field-wrap-full,
+.corp-layout .address-form button[type="submit"] {
+  grid-column: 1 / -1;
+}
+
+.corp-layout .address-form .field-wrap {
+  gap: 6px;
+  min-width: 0;
+}
+
+/* ---------- Fields ---------- */
+
+.corp-layout .address-form input,
+.corp-layout .address-form select,
+.corp-layout .address-form textarea {
+  width: 100%;
+  min-height: 48px;
+  padding: 0 16px;
+
+  border: 1px solid var(--aa-border);
+  border-radius: 12px;
+  background-color: #fbfcfa;
+  color: var(--aa-ink);
+
+  font-family: inherit;
+  font-size: 15px;
+  font-weight: 400;
+
+  transition: border-color 0.18s var(--aa-ease), background-color 0.18s var(--aa-ease),
+    box-shadow 0.18s var(--aa-ease);
+}
+
+.corp-layout .address-form textarea {
+  min-height: 104px;
+  height: auto;
+  padding: 13px 16px;
+  line-height: 1.5;
+  resize: vertical;
+}
+
+.corp-layout .address-form input::placeholder,
+.corp-layout .address-form textarea::placeholder {
+  color: #9aa3ab;
+  font-size: 15px;
+}
+
+.corp-layout .address-form select {
+  padding-right: 40px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%2357a41d' stroke-width='2.5'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 16px center;
+  background-size: 12px;
+}
+
+.corp-layout .address-form input:hover,
+.corp-layout .address-form select:hover,
+.corp-layout .address-form textarea:hover {
+  border-color: rgba(var(--aa-green-rgb), 0.45);
+  background-color: #ffffff;
+}
+
+.corp-layout .address-form input:focus,
+.corp-layout .address-form select:focus,
+.corp-layout .address-form textarea:focus {
+  border-color: var(--aa-green);
+  background-color: #ffffff;
+  box-shadow: 0 0 0 3px rgba(var(--aa-green-rgb), 0.18);
+  transform: none;
+  outline: none;
+}
+
+/* red border on a field that shows an error (modern browsers) */
+.corp-layout .address-form .field-wrap:has(.form-error) input,
+.corp-layout .address-form .field-wrap:has(.form-error) textarea {
+  border-color: #e2a3ac;
+  background-color: #fdf6f7;
+}
+
+.corp-layout .address-form .form-error {
+  margin: 0;
+  padding: 0 2px;
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 1.4;
+  color: #b4233a;
+}
+
+/* ---------- Submit button ---------- */
+
+.corp-layout .address-form button[type="submit"] {
+  justify-self: end;
+  min-height: 48px;
+  margin-top: 4px;
+  padding: 0 32px;
+
+  border: none;
+  border-radius: 999px;
+  background: linear-gradient(90deg, var(--aa-green-dark) 0%, var(--aa-green) 100%);
+  color: #ffffff;
+  box-shadow: 0 8px 20px rgba(var(--aa-green-rgb), 0.28);
+
+  font-family: inherit;
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: 0;
+
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition: transform 0.18s var(--aa-ease), box-shadow 0.18s var(--aa-ease);
+}
+
+.corp-layout .address-form button[type="submit"]:active {
+  transform: scale(0.97);
+  box-shadow: 0 4px 12px rgba(var(--aa-green-rgb), 0.28);
+}
+
+/* ---------- Hover (only on devices that really hover) ---------- */
+
+@media (hover: hover) {
+  .corp-layout .address-form button[type="submit"]:hover {
+    background: linear-gradient(90deg, var(--aa-green-dark) 0%, var(--aa-green) 100%);
+    transform: translateY(-1px);
+    box-shadow: 0 10px 24px rgba(var(--aa-green-rgb), 0.38);
+  }
+}
+
+/* ---------- Keyboard focus on the button ---------- */
+
+.corp-layout .address-form button[type="submit"]:focus-visible {
+  outline: 2px solid var(--aa-green);
+  outline-offset: 3px;
+}
+
+/* ---------- Tablet (<= 768px) ---------- */
+
+@media (max-width: 768px) {
+  .corp-layout .add-address-page {
+    gap: 20px;
+  }
+
+  .corp-layout .add-address-hero {
+    padding: 26px 24px;
+  }
+
+  .corp-layout .address-form {
+    padding: 4px 22px 24px;
+    gap: 16px;
+  }
+
+  /* 16px inputs stop iOS Safari from zooming in on focus */
+  .corp-layout .address-form input,
+  .corp-layout .address-form select,
+  .corp-layout .address-form textarea {
+    font-size: 16px;
+  }
+}
+
+/* ---------- Mobile (<= 640px): single column ---------- */
+
+@media (max-width: 640px) {
+  .corp-layout .address-form {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .corp-layout .address-form button[type="submit"] {
+    justify-self: stretch;
+    width: 100%;
+  }
+}
+
+/* ---------- Small phones (<= 480px) ---------- */
+
+@media (max-width: 480px) {
+  .corp-layout .add-address-page {
+    gap: 16px;
+  }
+
+  .corp-layout .add-address-hero {
+    padding: 22px 18px;
+    border-radius: 16px;
+  }
+
+  .corp-layout .add-address-hero::before {
+    top: -150px;
+    right: -150px;
+  }
+
+  .corp-layout .add-address-subtitle {
+    font-size: 14px;
+  }
+
+  .corp-layout .address-form {
+    padding: 2px 16px 20px;
+    border-radius: 16px;
+  }
+
+  .corp-layout .address-form-title {
+    font-size: 16.5px;
+  }
+}
+
+/* ---------- Reduced motion ---------- */
+
+@media (prefers-reduced-motion: reduce) {
+  .corp-layout .address-form input,
+  .corp-layout .address-form select,
+  .corp-layout .address-form textarea,
+  .corp-layout .address-form button[type="submit"] {
+    transition: none !important;
+  }
+
+  .corp-layout .address-form button[type="submit"]:hover {
+    transform: none !important;
+  }
+}

@@ -1,114 +1,12 @@
-/* *{
-margin:0;
-padding:0;
-box-sizing:border-box;
-}
+/* =====================================================
+   ADD EMPLOYEE — Zaid Infotech
+   Matches HRLayout + HrDashboard + EmployeeList
+   Palette: logo green (#57a41d) + logo charcoal (#383f45)
+   Responsive: desktop (2 columns) / tablet / mobile (1 column)
+===================================================== */
 
-.add-employee-page{
-
-width:100%;
-
-min-height:100vh;
-
-display:flex;
-
-justify-content:center;
-
-align-items:center;
-
-background:#f4f6fb;
-
-padding:30px;
-
-}
-
-.employee-box{
-
-width:500px;
-
-background:white;
-
-padding:35px;
-
-border-radius:10px;
-
-box-shadow:0px 5px 20px rgba(0,0,0,.15);
-
-}
-
-.employee-box h2{
-
-text-align:center;
-
-margin-bottom:25px;
-
-color:#0d6efd;
-
-}
-
-.employee-box form{
-
-display:flex;
-
-flex-direction:column;
-
-gap:15px;
-
-}
-
-.employee-box input,
-
-.employee-box select{
-
-padding:14px;
-
-border:1px solid #ddd;
-
-border-radius:8px;
-
-font-size:15px;
-
-outline:none;
-
-}
-
-.employee-box input:focus,
-
-.employee-box select:focus{
-
-border:1px solid #0d6efd;
-
-}
-
-.employee-box button{
-
-padding:14px;
-
-border:none;
-
-background:#0d6efd;
-
-color:white;
-
-font-size:16px;
-
-font-weight:bold;
-
-border-radius:8px;
-
-cursor:pointer;
-
-}
-
-.employee-box button:hover{
-
-background:#0b5ed7;
-
-} */
-
-
-
-
+/* Legacy global tokens: kept exactly as they were so that any other
+   page that still reads them is not affected. This page no longer uses them. */
 :root {
   --primary-green: #2e7d32;
   --primary-hover: #1b5e20;
@@ -124,99 +22,223 @@ background:#0b5ed7;
   --shadow: 0 10px 25px rgba(46, 125, 50, 0.12);
 }
 
-/* Page Background */
+/* =====================================================
+   PAGE
+   (HRLayout already provides the page background, topbar
+   offset and padding, so this wrapper no longer sets its
+   own gradient or 100vh height)
+===================================================== */
+
 .add-employee-page {
+  /* tokens scoped to this page */
+  --ae-green: #57a41d;          /* logo "TECH" green */
+  --ae-green-dark: #3f7d14;
+  --ae-green-soft: #eaf4dc;
+  --ae-ink: #383f45;            /* logo charcoal */
+  --ae-text: #4a525a;
+  --ae-muted: #6b747d;
+  --ae-border: #e3e8de;
+  --ae-input-border: #d5dccf;
+  --ae-ease: cubic-bezier(0.4, 0, 0.2, 1);
+
+  width: 100%;
   display: flex;
   justify-content: center;
-  align-items: center;
-  min-height: 100vh;
-  background: linear-gradient(135deg, var(--bg-gradient-start), var(--bg-gradient-end));
-  padding: 30px 20px;
-  box-sizing: border-box;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  align-items: flex-start;
+  padding: 0 0 24px;
+
+  font-family: inherit;
+  color: var(--ae-ink);
 }
 
-/* Form Container */
+/* =====================================================
+   CARD
+===================================================== */
+
 .employee-box {
-  background: var(--card-bg);
   width: 100%;
-  max-width: 720px;
-  padding: 35px 40px;
-  border-radius: 16px;
-  box-shadow: var(--shadow);
-  border: 1px solid rgba(165, 214, 167, 0.4);
+  max-width: 880px;
+
+  padding: clamp(20px, 3.2vw, 36px);
+
+  background: #ffffff;
+  border: 1px solid var(--ae-border);
+  border-radius: 18px;
+  box-shadow: 0 1px 2px rgba(16, 24, 40, 0.04), 0 8px 28px rgba(16, 24, 40, 0.06);
+}
+
+.employee-head {
+  margin-bottom: 24px;
 }
 
 .employee-box h2 {
-  margin-top: 0;
-  margin-bottom: 24px;
-  color: var(--text-dark);
-  font-size: 1.75rem;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  margin: 0 0 6px;
+
+  font-size: clamp(22px, 2.6vw, 28px);
   font-weight: 700;
-  text-align: center;
-  letter-spacing: -0.5px;
+  letter-spacing: -0.02em;
+  text-align: left;
+  color: var(--ae-ink);
 }
 
-/* ==========================================================================
-   2-Column Form Layout Grid
-   ========================================================================== */
+/* same brand accent as the dashboard + employee list titles */
+.employee-box h2::before {
+  content: "";
+  width: 4px;
+  height: 24px;
+  border-radius: 4px;
+  background: linear-gradient(180deg, var(--ae-green), var(--ae-green-dark));
+}
+
+.employee-head p {
+  margin: 0 0 0 14px;
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--ae-muted);
+}
+
+/* =====================================================
+   FORM GRID (2 columns on desktop/tablet)
+===================================================== */
 
 .employee-box form {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 16px 20px;
-  align-items: center;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px 20px;
+  align-items: start;
 }
 
-/* ==========================================================================
-   Full-Width Span Adjustments (Spans across both columns)
-   ========================================================================== */
-
-/* Full-width elements */
+/* full-width rows */
 .employee-box form .form-row,
+.employee-box form .form-section-title,
+.employee-box form .bank-details-section,
 .employee-box form button[type="submit"] {
   grid-column: 1 / -1;
 }
 
-/* Label for Joining Date - formatted as full section block or line label */
-.employee-box form label:not(.form-row label) {
-  grid-column: 1 / -1;
-  color: var(--text-dark);
-  font-weight: 600;
-  font-size: 0.9rem;
-  margin-top: 6px;
-  margin-bottom: -8px;
-}
+/* ---------- Section titles ---------- */
 
-/* Checkbox Row Styling */
-.form-row {
-  background-color: var(--input-bg);
-  padding: 12px 16px;
-  border-radius: var(--border-radius);
-  border: 1px solid var(--input-border);
+.form-section-title {
   display: flex;
   align-items: center;
+  gap: 12px;
+
+  margin: 8px 0 -4px;
+
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ae-green-dark);
+}
+
+/* thin line that runs to the right edge */
+.form-section-title::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: var(--ae-border);
+}
+
+/* =====================================================
+   "EMPLOYEE CAN LOGIN" TOGGLE ROW
+===================================================== */
+
+.form-row {
+  padding: 14px 18px;
+
+  background: var(--ae-green-soft);
+  border: 1px solid #d3e6c0;
+  border-radius: 14px;
 }
 
 .form-row label {
-  color: var(--text-dark);
-  font-weight: 600;
-  font-size: 0.95rem;
-  cursor: pointer;
   display: flex;
   align-items: center;
-}
+  gap: 14px;
 
-.form-row input[type="checkbox"] {
-  width: 18px;
-  height: 18px;
-  accent-color: var(--primary-green);
+  margin: 0;
+
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--ae-ink);
   cursor: pointer;
+  user-select: none;
 }
 
-/* ==========================================================================
-   Inputs & Select Styling
-   ========================================================================== */
+/* checkbox rendered as a switch */
+.form-row input[type="checkbox"] {
+  position: relative;
+  flex-shrink: 0;
+
+  width: 44px;
+  height: 26px;
+  margin: 0;
+
+  border-radius: 999px;
+  background: #c7cec2;
+  cursor: pointer;
+
+  appearance: none;
+  -webkit-appearance: none;
+  transition: background 0.2s var(--ae-ease);
+}
+
+.form-row input[type="checkbox"]::after {
+  content: "";
+  position: absolute;
+  top: 3px;
+  left: 3px;
+
+  width: 20px;
+  height: 20px;
+
+  border-radius: 50%;
+  background: #ffffff;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
+  transition: transform 0.2s var(--ae-ease);
+}
+
+.form-row input[type="checkbox"]:checked {
+  background: linear-gradient(90deg, #3f7d14, #57a41d);
+}
+
+.form-row input[type="checkbox"]:checked::after {
+  transform: translateX(18px);
+}
+
+.form-row input[type="checkbox"]:focus-visible {
+  outline: 2px solid var(--ae-green);
+  outline-offset: 3px;
+}
+
+/* =====================================================
+   FIELDS
+===================================================== */
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+}
+
+.field label {
+  margin: 0;
+
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ae-ink);
+}
+
+.field .req {
+  margin-left: 3px;
+  color: #d92d20;
+}
 
 .employee-box input[type="text"],
 .employee-box input[type="email"],
@@ -225,65 +247,205 @@ background:#0b5ed7;
 .employee-box input[type="date"],
 .employee-box select {
   width: 100%;
-  padding: 12px 14px;
-  border: 1.5px solid var(--input-border);
-  border-radius: var(--border-radius);
-  background-color: var(--input-bg);
-  color: var(--text-dark);
-  font-size: 0.95rem;
+  min-height: 46px;
+  padding: 0 14px;
+
+  background-color: #ffffff;
+  color: var(--ae-ink);
+  border: 1.5px solid var(--ae-input-border);
+  border-radius: 12px;
   outline: none;
-  box-sizing: border-box;
-  transition: all 0.25s ease-in-out;
+
+  font-family: inherit;
+  font-size: 14.5px;
+
+  transition: border-color 0.2s var(--ae-ease), box-shadow 0.2s var(--ae-ease),
+    background-color 0.2s var(--ae-ease);
 }
 
 .employee-box input::placeholder {
-  color: #8fae91;
+  color: #9aa39a;
 }
 
-/* Focus States */
+/* IFSC is always shown in capitals (was an inline style) */
+.employee-box input[name="ifscCode"] {
+  text-transform: uppercase;
+}
+
+/* select: custom arrow */
+.employee-box select {
+  padding-right: 40px;
+  cursor: pointer;
+
+  appearance: none;
+  -webkit-appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath d='M2.5 4.5 6 8l3.5-3.5' fill='none' stroke='%236b747d' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 14px center;
+}
+
+@media (hover: hover) {
+  .employee-box input:hover,
+  .employee-box select:hover {
+    border-color: #b9c6ae;
+  }
+}
+
 .employee-box input:focus,
 .employee-box select:focus {
-  border-color: var(--input-focus);
-  background-color: #ffffff;
-  box-shadow: 0 0 0 3.5px rgba(76, 175, 80, 0.18);
+  border-color: var(--ae-green);
+  box-shadow: 0 0 0 4px rgba(87, 164, 29, 0.16);
 }
 
-/* ==========================================================================
-   Submit Button
-   ========================================================================== */
+/* =====================================================
+   BANK DETAILS CARD
+   (replaces the old inline styles)
+===================================================== */
+
+.bank-details-section {
+  margin-top: 6px;
+  padding: clamp(16px, 2.4vw, 24px);
+
+  background: #f8faf5;
+  border: 1px solid var(--ae-border);
+  border-radius: 16px;
+}
+
+.bank-head {
+  margin-bottom: 18px;
+}
+
+.bank-head h3 {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  margin: 0 0 4px;
+
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--ae-ink);
+}
+
+.bank-head h3::before {
+  content: "";
+  width: 4px;
+  height: 18px;
+  border-radius: 4px;
+  background: linear-gradient(180deg, var(--ae-green), var(--ae-green-dark));
+}
+
+.bank-head p {
+  margin: 0 0 0 14px;
+  font-size: 13.5px;
+  color: var(--ae-muted);
+}
+
+.bank-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px 20px;
+}
+
+/* =====================================================
+   SUBMIT BUTTON
+===================================================== */
 
 .employee-box button[type="submit"] {
-  margin-top: 10px;
-  padding: 14px;
-  background-color: var(--primary-green);
-  color: #ffffff;
+  min-height: 50px;
+  margin-top: 6px;
+  padding: 0 20px;
+
   border: none;
-  border-radius: var(--border-radius);
-  font-size: 1rem;
+  border-radius: 12px;
+  background: linear-gradient(90deg, #3f7d14 0%, #57a41d 100%);
+  color: #ffffff;
+  box-shadow: 0 8px 20px rgba(87, 164, 29, 0.28);
+
+  font-family: inherit;
+  font-size: 15.5px;
   font-weight: 600;
+  letter-spacing: 0.01em;
+
   cursor: pointer;
-  letter-spacing: 0.5px;
-  transition: background-color 0.2s ease, transform 0.1s ease;
+  -webkit-tap-highlight-color: transparent;
+  transition: transform 0.18s var(--ae-ease), box-shadow 0.18s var(--ae-ease),
+    opacity 0.18s var(--ae-ease);
 }
 
-.employee-box button[type="submit"]:hover {
-  background-color: var(--primary-hover);
+@media (hover: hover) {
+  .employee-box button[type="submit"]:not(:disabled):hover {
+    transform: translateY(-1px);
+    box-shadow: 0 12px 26px rgba(87, 164, 29, 0.36);
+  }
 }
 
-.employee-box button[type="submit"]:active {
+.employee-box button[type="submit"]:not(:disabled):active {
   transform: scale(0.99);
 }
 
-/* ==========================================================================
-   Responsive (1 Column on Mobile Screens)
-   ========================================================================== */
+/* replaces the inline opacity / cursor that used to be set from JSX */
+.employee-box button[type="submit"]:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+  box-shadow: none;
+}
 
-@media (max-width: 640px) {
+.employee-box button[type="submit"]:focus-visible {
+  outline: 2px solid var(--ae-green);
+  outline-offset: 3px;
+}
+
+/* =====================================================
+   TABLET (<= 900px): tighter spacing, still 2 columns
+===================================================== */
+
+@media (max-width: 900px) {
   .employee-box {
-    padding: 25px 20px;
+    border-radius: 16px;
   }
 
-  .employee-box form {
+  .employee-box form,
+  .bank-grid {
+    gap: 16px 16px;
+  }
+}
+
+/* =====================================================
+   MOBILE (<= 640px): single column
+===================================================== */
+
+@media (max-width: 640px) {
+  .employee-box form,
+  .bank-grid {
     grid-template-columns: 1fr;
+  }
+
+  .employee-head p {
+    margin-left: 0;
+  }
+
+  .employee-box input[type="text"],
+  .employee-box input[type="email"],
+  .employee-box input[type="password"],
+  .employee-box input[type="number"],
+  .employee-box input[type="date"],
+  .employee-box select {
+    min-height: 48px;       /* comfortable touch target */
+    font-size: 16px;        /* stops iOS zooming into the field */
+  }
+}
+
+/* =====================================================
+   REDUCED MOTION
+===================================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  .employee-box input,
+  .employee-box select,
+  .employee-box button[type="submit"],
+  .form-row input[type="checkbox"],
+  .form-row input[type="checkbox"]::after {
+    transition: none !important;
   }
 }

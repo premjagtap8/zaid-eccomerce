@@ -103,10 +103,12 @@ const CorporateNotifications = () => {
 
   return (
     <div className="corp-notif-page">
-      {/* Header */}
-      <div className="corp-notif-header">
+      {/* Hero (title + primary action) */}
+      <section className="corp-notif-hero">
         <div className="corp-notif-heading">
-          <h1 className="corp-notif-title">Notifications</h1>
+          <h1 className="corp-notif-title">
+            Corporate <span>notifications</span>
+          </h1>
 
           <p className="corp-notif-subtitle">
             {unreadCount > 0
@@ -127,73 +129,89 @@ const CorporateNotifications = () => {
             <span>Mark all read</span>
           </button>
         )}
-      </div>
+      </section>
 
-      {/* List */}
-      {loading ? (
-        <div className="corp-notif-status">
-          Loading notifications...
-        </div>
-      ) : notifications.length === 0 ? (
-        <div className="corp-notif-empty">
-          <div className="corp-notif-empty-icon">
-            <FaBell aria-hidden="true" />
-          </div>
+      {/* List card */}
+      <section className="corp-notif-card">
+        <div className="corp-notif-card-header">
+          <h2 className="corp-notif-card-title">
+            All notifications
+          </h2>
 
-          <p className="corp-notif-empty-title">No notifications</p>
-
-          <p className="corp-notif-empty-text">
-            New order updates will appear here.
+          <p className="corp-notif-card-sub">
+            Select a notification to mark it as read
           </p>
         </div>
-      ) : (
-        <ul className="corp-notif-list">
-          {notifications.map((notification) => (
-            <li key={notification._id}>
-              <button
-                type="button"
-                onClick={() => handleNotificationClick(notification)}
-                className={`corp-notif-item${
-                  notification.isRead
-                    ? ""
-                    : " corp-notif-item--unread"
-                }`}
-              >
-                <span className="corp-notif-icon">
-                  <FaBell aria-hidden="true" />
-                </span>
 
-                <span className="corp-notif-body">
-                  <span className="corp-notif-item-top">
-                    <span className="corp-notif-item-title">
-                      {notification.title}
+        {loading ? (
+          <div className="corp-notif-status">
+            Loading notifications...
+          </div>
+        ) : notifications.length === 0 ? (
+          <div className="corp-notif-empty">
+            <div className="corp-notif-empty-icon">
+              <FaBell aria-hidden="true" />
+            </div>
+
+            <p className="corp-notif-empty-title">
+              No notifications
+            </p>
+
+            <p className="corp-notif-empty-text">
+              New order updates will appear here.
+            </p>
+          </div>
+        ) : (
+          <ul className="corp-notif-list">
+            {notifications.map((notification) => (
+              <li key={notification._id}>
+                <button
+                  type="button"
+                  onClick={() =>
+                    handleNotificationClick(notification)
+                  }
+                  className={`corp-notif-item${
+                    notification.isRead
+                      ? ""
+                      : " corp-notif-item--unread"
+                  }`}
+                >
+                  <span className="corp-notif-icon">
+                    <FaBell aria-hidden="true" />
+                  </span>
+
+                  <span className="corp-notif-body">
+                    <span className="corp-notif-item-top">
+                      <span className="corp-notif-item-title">
+                        {notification.title}
+                      </span>
+
+                      {!notification.isRead && (
+                        <span
+                          className="corp-notif-dot"
+                          aria-label="Unread"
+                        />
+                      )}
                     </span>
 
-                    {!notification.isRead && (
-                      <span
-                        className="corp-notif-dot"
-                        aria-label="Unread"
-                      />
+                    <span className="corp-notif-message">
+                      {notification.message}
+                    </span>
+
+                    {notification.createdAt && (
+                      <span className="corp-notif-time">
+                        {new Date(
+                          notification.createdAt
+                        ).toLocaleString("en-IN")}
+                      </span>
                     )}
                   </span>
-
-                  <span className="corp-notif-message">
-                    {notification.message}
-                  </span>
-
-                  {notification.createdAt && (
-                    <span className="corp-notif-time">
-                      {new Date(
-                        notification.createdAt
-                      ).toLocaleString("en-IN")}
-                    </span>
-                  )}
-                </span>
-              </button>
-            </li>
-          ))}
-        </ul>
-      )}
+                </button>
+              </li>
+            ))}
+          </ul>
+        )}
+      </section>
     </div>
   );
 };

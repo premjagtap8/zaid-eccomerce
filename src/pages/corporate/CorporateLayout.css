@@ -1,16 +1,61 @@
 /* =====================================================
-   CORPORATE LAYOUT
-   Desktop  (> 900px)  : fixed sidebar, always visible
-   Tablet   (<= 900px) : fixed icon-only rail
-   Phone    (<= 640px) : fixed bottom navigation bar
+   CORPORATE LAYOUT — Zaid Infotech
+   Same look as the HR layout (logo-charcoal sidebar + logo-green accent)
+   Desktop  (>= 1025px): fixed sidebar, topbar + content beside it
+   Tablet + Mobile (<= 1024px): off-canvas drawer
+
+   All variables are scoped to .corp-layout so they never
+   clash with the HR layout's :root variables.
 ===================================================== */
 
 .corp-layout {
-  display: flex;
+  --corp-sidebar-w: 272px;
+  --corp-topbar-h: 80px;
+
+  /* Page */
+  --corp-bg: #f6f8f4;
+  --corp-surface: #ffffff;
+  --corp-border: #e3e8de;
+  --corp-text: #383f45;
+  --corp-text-muted: #6b747d;
+
+  /* Sidebar (charcoal, taken from the logo's dark colour) */
+  --corp-nav-top: #383f47;
+  --corp-nav-bottom: #262b31;
+  --corp-nav-text: rgba(255, 255, 255, 0.92);
+  --corp-nav-muted: rgba(255, 255, 255, 0.7);
+  --corp-nav-hover: rgba(87, 164, 29, 0.18);
+  --corp-nav-divider: rgba(255, 255, 255, 0.08);
+
+  /* Brand green — sampled from the Zaid Infotech logo */
+  --corp-green: #57a41d;
+  --corp-green-dark: #3f7d14;
+  --corp-green-rgb: 87, 164, 29;
+
+  /* Menu fill */
+  --corp-nav-active-from: #3f7d14;
+  --corp-nav-active-to: #57a41d;
+
+  --corp-ease: cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* Sidebar sizing scales with screen HEIGHT so the menu (12 items)
+     stays usable on short laptop screens */
+  --corp-item-h: clamp(38px, 5vh, 46px);
+  --corp-logo-h: clamp(48px, 7.2vh, 66px);
+
+  /* Menu icons */
+  --corp-icon-rest: rgba(255, 255, 255, 0.72);
+  --corp-icon-hover: #9be15d;
+
   min-height: 100vh;
+  min-height: 100dvh;
   width: 100%;
+  display: flex;
+
   font-family: "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, sans-serif;
-  background: #f1f5f9;
+  background: var(--corp-bg);
+  color: var(--corp-text);
+  -webkit-font-smoothing: antialiased;
 }
 
 .corp-layout *,
@@ -20,95 +65,412 @@
 }
 
 /* =====================================================
+   TOPBAR
+===================================================== */
+
+.corp-topbar {
+  position: fixed;
+  top: 0;
+  left: var(--corp-sidebar-w);
+  right: 0;
+  z-index: 900;
+
+  height: var(--corp-topbar-h);
+  padding: 0 28px;
+
+  display: flex;
+  align-items: center;
+  gap: 20px;
+
+  background: var(--corp-surface);
+  border-bottom: 1px solid var(--corp-border);
+  transition: left 0.28s var(--corp-ease);
+}
+
+.corp-menu-toggle {
+  width: 40px;
+  height: 40px;
+  flex-shrink: 0;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  border: none;
+  border-radius: 10px;
+  background: transparent;
+  color: var(--corp-text);
+
+  font-size: 20px;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition: background 0.18s var(--corp-ease);
+}
+
+.corp-menu-toggle:active {
+  transform: scale(0.95);
+}
+
+/* Search */
+.corp-search {
+  position: relative;
+  flex: 1;
+  max-width: 450px;
+  min-width: 0;
+}
+
+.corp-search-icon {
+  position: absolute;
+  left: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 15px;
+  color: var(--corp-text-muted);
+  pointer-events: none;
+}
+
+.corp-search input {
+  width: 100%;
+  height: 42px;
+
+  padding: 0 18px 0 42px;
+
+  border: 1px solid var(--corp-border);
+  border-radius: 999px;
+  background: #f2f4f6;
+  color: var(--corp-text);
+
+  font-family: inherit;
+  font-size: 13.5px;
+  outline: none;
+  transition: border-color 0.18s var(--corp-ease), background 0.18s var(--corp-ease),
+    box-shadow 0.18s var(--corp-ease);
+}
+
+.corp-search input::placeholder {
+  color: var(--corp-text-muted);
+}
+
+.corp-search input:focus {
+  background: #fff;
+  border-color: var(--corp-green);
+  box-shadow: 0 0 0 3px rgba(var(--corp-green-rgb), 0.18);
+}
+
+/* Right side */
+.corp-topbar-right {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 22px;
+}
+
+.corp-bell {
+  position: relative;
+  width: 40px;
+  height: 40px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  border: none;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--corp-text);
+
+  font-size: 20px;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.corp-bell-badge {
+  position: absolute;
+  top: 2px;
+  right: 2px;
+
+  min-width: 18px;
+  height: 18px;
+  padding: 0 5px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 999px;
+  background: #ef4444;
+  color: #fff;
+  border: 2px solid #fff;
+
+  font-size: 10px;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.corp-user {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+}
+
+.corp-user-avatar {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+.corp-user-initials {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, var(--corp-green), var(--corp-green-dark));
+  color: #fff;
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.corp-user-meta {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.25;
+}
+
+.corp-user-name {
+  max-width: 180px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--corp-text);
+}
+
+.corp-user-role {
+  font-size: 12px;
+  color: var(--corp-text-muted);
+}
+
+.corp-user-chevron {
+  font-size: 11px;
+  color: var(--corp-text-muted);
+}
+
+/* Overlay behind the drawer */
+.corp-overlay {
+  display: none;
+}
+
+/* =====================================================
    SIDEBAR
 ===================================================== */
 
 .corp-sidebar {
+  width: var(--corp-sidebar-w);
+  min-width: var(--corp-sidebar-w);
+  height: 100vh;
+  height: 100dvh;
+
   position: fixed;
-  top: 0;
-  left: 0;
+  inset: 0 auto 0 0;
   z-index: 1000;
 
   display: flex;
   flex-direction: column;
 
-  width: 240px;
-  height: 100vh;
-  height: 100dvh;
+  background: linear-gradient(180deg, var(--corp-nav-top) 0%, var(--corp-nav-bottom) 100%);
+  color: var(--corp-nav-text);
+  overflow: hidden;
 
-  padding: 1.25rem 0.75rem;
+  transition: transform 0.28s var(--corp-ease);
+}
 
-  background: #0f172a;
-  overflow-y: auto;
+/* Decorative green wave near the bottom */
+.corp-sidebar-wave path {
+  stroke: var(--corp-green);
+}
+
+.corp-sidebar-wave {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 70px;
+  width: 100%;
+  height: 260px;
+  pointer-events: none;
+  z-index: 0;
+  -webkit-mask-image: linear-gradient(to top, #000 35%, transparent 100%);
+  mask-image: linear-gradient(to top, #000 35%, transparent 100%);
+}
+
+.corp-sidebar > *:not(.corp-sidebar-wave) {
+  position: relative;
+  z-index: 1;
+}
+
+.corp-sidebar-header {
+  flex-shrink: 0;
+
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  padding: clamp(14px, 2.4vh, 22px) 16px clamp(10px, 1.6vh, 16px);
+}
+
+/* Light card that holds the logo, so it keeps its original colours */
+.corp-brand {
+  flex: 1;
+  min-width: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 12px 18px;
+
+  border: none;
+  border-radius: 16px;
+  background: #ffffff;
+  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.28);
+
+  line-height: 0;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition: transform 0.18s var(--corp-ease), box-shadow 0.18s var(--corp-ease);
+}
+
+.corp-brand:active {
+  transform: scale(0.98);
+}
+
+.corp-logo {
+  display: block;
+  width: auto;
+  max-width: 100%;
+  height: auto;
+  max-height: var(--corp-logo-h);
+  object-fit: contain;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+/* Close (X) button — only visible inside the drawer */
+.corp-sidebar-close {
+  display: none;
+  width: 40px;
+  height: 40px;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+
+  border: none;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--corp-nav-text);
+
+  font-size: 16px;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
 }
 
 /* =====================================================
-   SIDEBAR MENU
+   MENU
 ===================================================== */
+
+.corp-menu-title {
+  margin: 6px 24px 8px;
+  padding: 12px 0 0;
+  border-top: 1px solid var(--corp-nav-divider);
+
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--corp-nav-muted);
+}
 
 .corp-sidebar-menu {
   display: flex;
   flex-direction: column;
   flex: 1 1 auto;
-  gap: 2px;
+  min-height: 0;
+  padding: 0 14px 16px;
+
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: none;
+}
+
+.corp-sidebar-menu::-webkit-scrollbar {
+  display: none;
 }
 
 .corp-menu-item {
   position: relative;
+  flex-shrink: 0;
+  min-height: var(--corp-item-h);
 
   display: flex;
   align-items: center;
-  gap: 0.75rem;
+  gap: 16px;
 
-  padding: 0.7rem 0.75rem;
+  margin: 3px 0;
+  padding: 0 18px;
 
-  border-radius: 8px;
-
-  color: #cbd5e1;
-  font-size: 0.875rem;
-  font-weight: 500;
-
+  border-radius: 10px;
   text-decoration: none;
 
-  transition: background 0.15s ease, color 0.15s ease;
-}
+  color: var(--corp-nav-text);
+  font-size: 15.5px;
+  font-weight: 500;
 
-.corp-menu-item:hover {
-  background: rgba(255, 255, 255, 0.07);
-  color: #ffffff;
+  -webkit-tap-highlight-color: transparent;
+  transition: background 0.18s var(--corp-ease), box-shadow 0.18s var(--corp-ease),
+    transform 0.18s var(--corp-ease);
 }
 
 .corp-menu-item.active {
-  background: #2563eb;
-  color: #ffffff;
+  background: linear-gradient(90deg, var(--corp-nav-active-from) 0%, var(--corp-nav-active-to) 100%);
+  color: #fff;
   font-weight: 600;
-}
-
-.corp-menu-item:focus-visible {
-  outline: 2px solid #38bdf8;
-  outline-offset: 2px;
+  box-shadow: 0 6px 18px rgba(var(--corp-green-rgb), 0.3);
 }
 
 .corp-menu-icon {
+  width: 22px;
+  min-width: 22px;
+
   display: flex;
   align-items: center;
   justify-content: center;
 
-  width: 20px;
-
-  font-size: 0.95rem;
+  font-size: 18px;
+  color: var(--corp-icon-rest);
+  transition: color 0.18s var(--corp-ease), transform 0.18s var(--corp-ease);
 }
 
-/* =====================================================
-   UNREAD BADGE
-===================================================== */
+.corp-menu-item.active .corp-menu-icon {
+  color: #fff;
+}
 
+.corp-menu-label {
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Unread notifications badge */
 .corp-menu-badge {
   margin-left: auto;
+  flex-shrink: 0;
 
-  min-width: 20px;
-  height: 20px;
-
+  min-width: 22px;
+  height: 22px;
   padding: 0 6px;
 
   display: inline-flex;
@@ -116,250 +478,311 @@
   justify-content: center;
 
   border-radius: 999px;
-
   background: #ef4444;
-  color: #ffffff;
+  color: #fff;
 
-  font-size: 0.7rem;
+  font-size: 11px;
   font-weight: 700;
   line-height: 1;
 }
 
 /* =====================================================
-   LOGOUT
+   FOOTER / LOGOUT
 ===================================================== */
 
 .corp-sidebar-footer {
-  flex-shrink: 0;
-
   margin-top: auto;
-  padding: 12px 0 4px;
-
-  border-top: 1px solid rgba(148, 163, 184, 0.2);
+  flex-shrink: 0;
+  margin-inline: 14px;
+  border-top: 1px solid var(--corp-nav-divider);
+  padding: 12px 0 0;
+  padding-bottom: calc(18px + env(safe-area-inset-bottom, 0px));
 }
 
 .corp-logout-btn {
+  width: 100%;
+  min-height: var(--corp-item-h);
+
   display: flex;
   align-items: center;
-  gap: 0.75rem;
+  gap: 16px;
 
-  width: 100%;
-
-  padding: 0.7rem 0.75rem;
+  padding: 0 18px;
 
   border: none;
-  border-radius: 8px;
-
+  border-radius: 10px;
   background: transparent;
-  color: #fca5a5;
+  color: var(--corp-nav-text);
 
+  font-size: 15.5px;
+  font-weight: 500;
   font-family: inherit;
-  font-size: 0.875rem;
-  font-weight: 600;
-
-  text-align: left;
 
   cursor: pointer;
-
-  transition: background 0.15s ease, color 0.15s ease;
+  -webkit-tap-highlight-color: transparent;
+  transition: background 0.18s var(--corp-ease), color 0.18s var(--corp-ease);
 }
 
-.corp-logout-btn:hover {
-  background: rgba(239, 68, 68, 0.14);
-  color: #fecaca;
+.corp-logout-btn svg {
+  font-size: 18px;
+  width: 22px;
 }
 
-.corp-logout-btn:focus-visible {
-  outline: 2px solid #f87171;
-  outline-offset: 2px;
+/* Hover effects only on devices that really hover */
+@media (hover: hover) {
+  .corp-menu-toggle:hover {
+    background: #f1f3f5;
+  }
+
+  .corp-menu-item:hover {
+    background: var(--corp-nav-hover);
+    transform: translateX(2px);
+  }
+
+  .corp-menu-item:hover .corp-menu-icon {
+    color: var(--corp-icon-hover);
+  }
+
+  .corp-menu-item.active:hover {
+    transform: none;
+    background: linear-gradient(90deg, var(--corp-nav-active-from) 0%, var(--corp-nav-active-to) 100%);
+  }
+
+  .corp-menu-item.active:hover .corp-menu-icon {
+    color: #fff;
+  }
+
+  .corp-brand:hover {
+    box-shadow: 0 10px 26px rgba(0, 0, 0, 0.36);
+  }
+
+  .corp-logout-btn:hover,
+  .corp-sidebar-close:hover {
+    background: rgba(239, 68, 68, 0.14);
+    color: #fca5a5;
+  }
 }
 
 /* =====================================================
-   CHILD PAGE
-
-   IMPORTANT:
-   Sidebar is fixed, so main content gets a left margin.
-   This prevents the sidebar from covering the page content.
+   MAIN
 ===================================================== */
 
 .corp-main {
   flex: 1;
   min-width: 0;
+  min-height: 100vh;
+  min-height: 100dvh;
 
-  margin-left: 240px;
+  margin-left: var(--corp-sidebar-w);
+  padding-top: var(--corp-topbar-h);
+  background: var(--corp-bg);
+  transition: margin-left 0.28s var(--corp-ease);
+}
 
-  padding: 1.75rem 2rem;
+.corp-main-content {
+  width: 100%;
+  max-width: 1600px;
+
+  margin: 0 auto;
+  padding: 24px 28px;
+}
+
+.corp-main-content > * {
+  max-width: 100%;
+}
+
+.corp-main-content img,
+.corp-main-content video {
+  max-width: 100%;
+  height: auto;
+}
+
+/* Desktop collapsed state */
+@media (min-width: 1025px) {
+  .corp-layout.is-collapsed .corp-sidebar {
+    transform: translateX(-100%);
+  }
+
+  .corp-layout.is-collapsed .corp-topbar {
+    left: 0;
+  }
+
+  .corp-layout.is-collapsed .corp-main {
+    margin-left: 0;
+  }
 }
 
 /* =====================================================
-   TABLET: fixed icon-only rail
+   FOCUS (keyboard accessibility)
 ===================================================== */
 
-@media (max-width: 900px) {
+.corp-menu-item:focus-visible,
+.corp-logout-btn:focus-visible,
+.corp-brand:focus-visible,
+.corp-menu-toggle:focus-visible,
+.corp-sidebar-close:focus-visible,
+.corp-bell:focus-visible {
+  outline: 2px solid var(--corp-green);
+  outline-offset: 2px;
+}
+
+/* =====================================================
+   TABLET + MOBILE  (<= 1024px) — DRAWER MODE
+===================================================== */
+
+@media (max-width: 1024px) {
+  .corp-layout {
+    --corp-topbar-h: 64px;
+  }
+
+  .corp-topbar {
+    left: 0;
+    height: calc(var(--corp-topbar-h) + env(safe-area-inset-top, 0px));
+    padding: env(safe-area-inset-top, 0px) 16px 0;
+    gap: 12px;
+  }
+
+  /* Drawer (closed) */
   .corp-sidebar {
-    width: 64px;
+    width: min(300px, 84vw);
+    min-width: 0;
+    padding-top: env(safe-area-inset-top, 0px);
 
-    padding: 1rem 0.5rem;
+    transform: translateX(-100%);
+    visibility: hidden;
+    transition: transform 0.28s var(--corp-ease), visibility 0s linear 0.28s;
   }
 
-  .corp-menu-label {
-    display: none;
+  /* Drawer (open) */
+  .corp-sidebar.is-open {
+    transform: translateX(0);
+    visibility: visible;
+    transition: transform 0.28s var(--corp-ease), visibility 0s;
+    box-shadow: 0 20px 40px rgba(2, 8, 20, 0.45);
   }
 
-  .corp-menu-item {
-    justify-content: center;
-    padding: 0.75rem 0;
+  .corp-sidebar-close {
+    display: inline-flex;
   }
 
-  .corp-menu-badge {
-    position: absolute;
+  /* Dim overlay */
+  .corp-overlay {
+    display: block;
+    position: fixed;
+    inset: 0;
+    z-index: 950;
 
-    top: 2px;
-    right: 4px;
-
-    margin-left: 0;
-
-    min-width: 18px;
-    height: 18px;
-
-    padding: 0 5px;
-
-    font-size: 0.65rem;
+    background: rgba(15, 23, 42, 0.5);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.25s var(--corp-ease);
   }
 
-  .corp-logout-btn {
-    justify-content: center;
-    padding: 0.75rem 0;
+  .corp-overlay.is-open {
+    opacity: 1;
+    pointer-events: auto;
   }
 
   .corp-main {
-    margin-left: 64px;
-    padding: 1.25rem 1rem;
+    margin-left: 0;
+    width: 100%;
+    padding-top: calc(var(--corp-topbar-h) + env(safe-area-inset-top, 0px));
+  }
+
+  .corp-main-content {
+    padding: 20px;
+  }
+
+  html:has(body.corp-no-scroll),
+  body.corp-no-scroll {
+    overflow: hidden;
   }
 }
 
 /* =====================================================
-   PHONE: fixed bottom navigation bar
-
-   On mobile the sidebar becomes a bottom navigation,
-   so the left margin is removed.
+   MOBILE (<= 640px)
 ===================================================== */
 
 @media (max-width: 640px) {
-  .corp-layout {
-    flex-direction: column;
+  .corp-topbar {
+    padding-left: 12px;
+    padding-right: 12px;
   }
 
-  .corp-sidebar {
-    position: fixed;
-
-    top: auto;
-    right: 0;
-    bottom: 0;
-    left: 0;
-
-    z-index: 1000;
-
-    display: flex;
-    flex-direction: row;
-    align-items: stretch;
-
-    width: 100%;
-    height: auto;
-
-    padding: 6px 6px
-      calc(6px + env(safe-area-inset-bottom, 0px));
-
-    border-top: 1px solid rgba(148, 163, 184, 0.25);
-
-    overflow: hidden;
+  .corp-topbar-right {
+    gap: 10px;
   }
 
-  .corp-sidebar-menu {
-    flex-direction: row;
-
-    flex: 1 1 auto;
-
-    gap: 2px;
-
-    min-width: 0;
-
-    overflow-x: auto;
-    overflow-y: hidden;
-
-    -webkit-overflow-scrolling: touch;
-
-    scrollbar-width: none;
-  }
-
-  .corp-sidebar-menu::-webkit-scrollbar {
+  .corp-user-meta,
+  .corp-user-chevron {
     display: none;
   }
 
+  .corp-user-avatar {
+    width: 38px;
+    height: 38px;
+  }
+
+  .corp-main-content {
+    padding: 16px 14px 28px;
+    padding-bottom: calc(28px + env(safe-area-inset-bottom, 0px));
+  }
+
+  .corp-menu-item,
+  .corp-logout-btn {
+    min-height: 48px;
+  }
+}
+
+/* =====================================================
+   SMALL PHONES (<= 380px)
+===================================================== */
+
+@media (max-width: 380px) {
+  .corp-main-content {
+    padding: 14px 10px 24px;
+  }
+}
+
+/* =====================================================
+   LARGE SCREENS (>= 1600px)
+===================================================== */
+
+@media (min-width: 1600px) {
+  .corp-layout {
+    --corp-sidebar-w: 288px;
+  }
+
+  .corp-main-content {
+    padding: 32px 40px;
+  }
+}
+
+/* =====================================================
+   SHORT SCREENS (laptops <= 760px tall, not phones)
+   The corporate menu has 12 items, so spacing is tighter here.
+===================================================== */
+
+@media (max-height: 760px) and (min-width: 641px) {
+  .corp-layout {
+    --corp-item-h: 38px;
+  }
+
+  .corp-brand {
+    padding: 8px 14px;
+  }
+
+  .corp-menu-item,
+  .corp-logout-btn {
+    font-size: 15px;
+  }
+
   .corp-menu-item {
-    flex: 0 0 auto;
-
-    flex-direction: column;
-    justify-content: center;
-
-    gap: 3px;
-
-    min-width: 66px;
-    min-height: 50px;
-
-    padding: 6px 8px;
-  }
-
-  .corp-menu-icon {
-    width: auto;
-    font-size: 1.05rem;
-  }
-
-  .corp-menu-label {
-    display: block;
-
-    font-size: 0.65rem;
-    line-height: 1.1;
-
-    white-space: nowrap;
-  }
-
-  .corp-menu-badge {
-    top: 2px;
-    right: 10px;
+    margin: 2px 0;
   }
 
   .corp-sidebar-footer {
-    display: flex;
-
-    flex: 0 0 auto;
-
-    margin: 0 0 0 6px;
-    padding: 0 0 0 6px;
-
-    border-top: none;
-    border-left: 1px solid rgba(148, 163, 184, 0.25);
-  }
-
-  .corp-logout-btn {
-    flex-direction: column;
-    justify-content: center;
-
-    gap: 3px;
-
-    width: auto;
-
-    min-width: 62px;
-    min-height: 50px;
-
-    padding: 6px 8px;
-  }
-
-  .corp-main {
-    margin-left: 0;
-
-    padding: 1rem 0.75rem
-      calc(86px + env(safe-area-inset-bottom, 0px));
+    padding-bottom: 12px;
   }
 }
 
@@ -368,8 +791,19 @@
 ===================================================== */
 
 @media (prefers-reduced-motion: reduce) {
+  .corp-sidebar,
+  .corp-overlay,
+  .corp-topbar,
+  .corp-main,
   .corp-menu-item,
-  .corp-logout-btn {
-    transition: none;
+  .corp-logout-btn,
+  .corp-menu-toggle,
+  .corp-brand,
+  .corp-menu-icon {
+    transition: none !important;
+  }
+
+  .corp-menu-item:hover {
+    transform: none !important;
   }
 }

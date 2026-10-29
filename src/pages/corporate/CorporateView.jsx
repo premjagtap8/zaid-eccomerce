@@ -1,8 +1,8 @@
-
 import React, { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   FaBoxOpen,
+  FaChevronRight,
   FaClipboardList,
   FaFileInvoice,
   FaHeadset,
@@ -214,11 +214,13 @@ export default function CorporateOverview() {
 
   return (
     <div className="co-page">
-      {/* HEADER */}
+      {/* HERO (title + primary action) */}
 
-      <div className="co-header">
-        <div>
-          <h2 className="co-title">Corporate overview</h2>
+      <section className="co-hero">
+        <div className="co-hero-text">
+          <h2 className="co-title">
+            Corporate <span>overview</span>
+          </h2>
 
           <p className="co-subtitle">
             Wholesale pricing active
@@ -233,7 +235,7 @@ export default function CorporateOverview() {
           <FaPlus className="co-btn-icon" />
           New order
         </button>
-      </div>
+      </section>
 
       {/* STAT CARDS */}
 
@@ -249,11 +251,7 @@ export default function CorporateOverview() {
                 <Icon />
               </div>
 
-              <div>
-                <p className="co-stat-label">
-                  {stat.label}
-                </p>
-
+              <div className="co-stat-body">
                 <p className="co-stat-value">
                   {loading
                     ? "-"
@@ -261,114 +259,144 @@ export default function CorporateOverview() {
                     ? formatINR(stat.value)
                     : stat.value}
                 </p>
+
+                <p className="co-stat-label">
+                  {stat.label}
+                </p>
               </div>
             </div>
           );
         })}
       </div>
 
-      {/* RECENT ORDERS */}
+      {/* RECENT ORDERS + QUICK ACTIONS */}
 
-      <div className="co-card">
-        <div className="co-card-header">
-          <h3 className="co-card-title">
-            Recent orders
-          </h3>
+      <div className="co-grid">
+        <section className="co-card">
+          <div className="co-card-header">
+            <div>
+              <h3 className="co-card-title">
+                Recent orders
+              </h3>
 
-          <button
-            type="button"
-            className="co-link-btn"
-            onClick={() => navigate(ROUTES.orders)}
-          >
-            View all
-          </button>
-        </div>
+              <p className="co-card-sub">
+                Your latest purchases
+              </p>
+            </div>
 
-        {loading ? (
-          <p className="co-empty">
-            Loading your orders…
-          </p>
-        ) : error ? (
-          <p className="co-empty co-empty--error">
-            {error}
-          </p>
-        ) : recentOrders.length === 0 ? (
-          <p className="co-empty">
-            You haven't placed any orders yet. Start with
-            your first bulk order.
-          </p>
-        ) : (
-          <div className="co-table-wrap">
-            <table className="co-table">
-              <thead>
-                <tr>
-                  <th>Order</th>
-                  <th>Items</th>
-                  <th>Date</th>
-                  <th>Status</th>
-                  <th className="co-right">Total</th>
-                </tr>
-              </thead>
-
-              <tbody>
-                {recentOrders.map((order) => (
-                  <tr key={order._id}>
-                    <td className="co-cell-strong">
-                      {shortOrderId(order)}
-                    </td>
-
-                    <td>{getItemsText(order)}</td>
-
-                    <td className="co-cell-muted">
-                      {formatDate(order.createdAt)}
-                    </td>
-
-                    <td>
-                      <span
-                        className={`co-badge ${statusClass(
-                          order.orderStatus
-                        )}`}
-                      >
-                        {statusLabel(order.orderStatus)}
-                      </span>
-                    </td>
-
-                    <td className="co-right co-cell-strong">
-                      {formatINR(order.finalAmount)}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        )}
-      </div>
-
-      {/* QUICK ACTIONS */}
-
-      <div className="co-actions">
-        {quickActions.map((action) => {
-          const Icon = action.icon;
-
-          return (
             <button
-              key={action.title}
               type="button"
-              className="co-action-card"
-              onClick={() => navigate(action.to)}
+              className="co-link-btn"
+              onClick={() => navigate(ROUTES.orders)}
             >
-              <Icon className="co-action-icon" />
-
-              <p className="co-action-title">
-                {action.title}
-              </p>
-
-              <p className="co-action-hint">
-                {action.hint}
-              </p>
+              View all
             </button>
-          );
-        })}
+          </div>
+
+          {loading ? (
+            <p className="co-empty">
+              Loading your orders…
+            </p>
+          ) : error ? (
+            <p className="co-empty co-empty--error">
+              {error}
+            </p>
+          ) : recentOrders.length === 0 ? (
+            <p className="co-empty">
+              You haven't placed any orders yet. Start with
+              your first bulk order.
+            </p>
+          ) : (
+            <div className="co-table-wrap">
+              <table className="co-table">
+                <thead>
+                  <tr>
+                    <th>Order</th>
+                    <th>Items</th>
+                    <th>Date</th>
+                    <th>Status</th>
+                    <th className="co-right">Total</th>
+                  </tr>
+                </thead>
+
+                <tbody>
+                  {recentOrders.map((order) => (
+                    <tr key={order._id}>
+                      <td className="co-cell-strong">
+                        {shortOrderId(order)}
+                      </td>
+
+                      <td>{getItemsText(order)}</td>
+
+                      <td className="co-cell-muted">
+                        {formatDate(order.createdAt)}
+                      </td>
+
+                      <td>
+                        <span
+                          className={`co-badge ${statusClass(
+                            order.orderStatus
+                          )}`}
+                        >
+                          {statusLabel(order.orderStatus)}
+                        </span>
+                      </td>
+
+                      <td className="co-right co-cell-strong">
+                        {formatINR(order.finalAmount)}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
+        </section>
+
+        <section className="co-card co-card--padded">
+          <div className="co-card-header">
+            <div>
+              <h3 className="co-card-title">
+                Quick actions
+              </h3>
+
+              <p className="co-card-sub">
+                Common corporate tasks
+              </p>
+            </div>
+          </div>
+
+          <div className="co-actions">
+            {quickActions.map((action) => {
+              const Icon = action.icon;
+
+              return (
+                <button
+                  key={action.title}
+                  type="button"
+                  className="co-action-card"
+                  onClick={() => navigate(action.to)}
+                >
+                  <span className="co-action-icon">
+                    <Icon />
+                  </span>
+
+                  <span className="co-action-text">
+                    <span className="co-action-title">
+                      {action.title}
+                    </span>
+
+                    <span className="co-action-hint">
+                      {action.hint}
+                    </span>
+                  </span>
+
+                  <FaChevronRight className="co-action-chevron" />
+                </button>
+              );
+            })}
+          </div>
+        </section>
       </div>
     </div>
   );

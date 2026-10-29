@@ -1,144 +1,36 @@
-/* *{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
-}
-
-.employee-list-page{
-
-    width:95%;
-    margin:30px auto;
-    background:#fff;
-    padding:25px;
-    border-radius:10px;
-    box-shadow:0 5px 20px rgba(0,0,0,.1);
-
-}
-
-.employee-list-page h2{
-
-    text-align:center;
-    color:#0d6efd;
-    margin-bottom:25px;
-
-}
-
-.employee-list-page table{
-
-    width:100%;
-    border-collapse:collapse;
-
-}
-
-.employee-list-page table thead{
-
-    background:#0d6efd;
-    color:white;
-
-}
-
-.employee-list-page table th{
-
-    padding:15px;
-    font-size:16px;
-    text-align:left;
-
-}
-
-.employee-list-page table td{
-
-    padding:14px;
-    border-bottom:1px solid #ddd;
-    font-size:15px;
-
-}
-
-.employee-list-page table tbody tr:hover{
-
-    background:#f5f7ff;
-
-}
-
-.employee-list-page table tbody tr:nth-child(even){
-
-    background:#fafafa;
-
-}
-
-@media(max-width:768px){
-
-.employee-list-page{
-
-overflow:auto;
-
-}
-
-.employee-list-page table{
-
-min-width:700px;
-
-}
-
-}
-
-
-.employee-top{
-
-display:flex;
-
-justify-content:flex-end;
-
-margin-bottom:20px;
-
-}
-
-.employee-top button{
-
-background:#0d6efd;
-
-color:#fff;
-
-border:none;
-
-padding:10px 18px;
-
-border-radius:6px;
-
-cursor:pointer;
-
-font-size:15px;
-
-}
-
-.employee-top button:hover{
-
-background:#084ec2;
-
-}
-
-table select{
-
-padding:8px;
-
-border-radius:6px;
-
-border:1px solid #ccc;
-
-font-size:14px;
-
-cursor:pointer;
-
-width:130px;
-
-} */
+/* =====================================================
+   EMPLOYEE LIST — Zaid Infotech
+   Matches HRLayout + HrDashboard (logo green + logo charcoal)
+   Responsive: desktop / tablet / mobile (table scrolls sideways,
+   Action column stays pinned on the right)
+===================================================== */
 
 @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap");
 
+/* NOTE: this global reset was already in the file, so it is kept
+   as-is to avoid shifting other pages. See the tips about scoping it. */
 *{
     margin:0;
     padding:0;
     box-sizing:border-box;
     font-family:"Poppins",sans-serif;
+}
+
+/* =========================
+   TOKENS (scoped to this page)
+========================= */
+
+.employee-list-page{
+    --emp-green:#57a41d;          /* logo "TECH" green */
+    --emp-green-dark:#3f7d14;     /* text / hover (better contrast) */
+    --emp-green-soft:#eaf4dc;     /* tints */
+    --emp-ink:#383f45;            /* logo charcoal */
+    --emp-text:#4a525a;
+    --emp-muted:#6b747d;
+    --emp-border:#e3e8de;
+    --emp-row-alt:#fafcf8;
+    --emp-row-hover:#f1f7ea;
+    --emp-ease:cubic-bezier(0.4,0,0.2,1);
 }
 
 /* =========================
@@ -149,16 +41,33 @@ width:130px;
     width:100%;
     background:#fff;
     padding:24px;
-    border-radius:18px;
-    box-shadow:0 10px 25px rgba(0,0,0,.08);
+    border:1px solid var(--emp-border);
+    border-radius:16px;
+    box-shadow:0 1px 2px rgba(16,24,40,.04), 0 4px 16px rgba(16,24,40,.04);
     overflow-x:auto;
+    color:var(--emp-ink);
 }
 
 .employee-list-page h2{
-    font-size:28px;
-    color:#1f2937;
+    display:flex;
+    align-items:center;
+    gap:10px;
+
     margin-bottom:20px;
+
+    font-size:clamp(20px,2.4vw,24px);
     font-weight:700;
+    letter-spacing:-0.01em;
+    color:var(--emp-ink);
+}
+
+/* small brand accent, same as the dashboard panel titles */
+.employee-list-page h2::before{
+    content:"";
+    width:4px;
+    height:22px;
+    border-radius:4px;
+    background:linear-gradient(180deg,var(--emp-green),var(--emp-green-dark));
 }
 
 /* =========================
@@ -168,40 +77,109 @@ width:130px;
 .employee-table{
     width:100%;
     min-width:1100px;
-    border-collapse:collapse;
+    border-collapse:separate;
+    border-spacing:0;
 }
 
-.employee-table thead{
-    background:#22c55e;
-}
+.employee-table thead th{
+    padding:14px 14px;
 
-.employee-table th{
-    color:#fff;
-    padding:14px 12px;
-    text-align:left;
-    font-size:14px;
+    background:#eef4e8;
+    color:var(--emp-ink);
+    border-top:1px solid var(--emp-border);
+    border-bottom:2px solid var(--emp-green);
+
+    font-size:12px;
     font-weight:600;
+    text-align:left;
+    text-transform:uppercase;
+    letter-spacing:.06em;
     white-space:nowrap;
+}
+
+.employee-table thead th:first-child{
+    border-top-left-radius:10px;
+    border-left:1px solid var(--emp-border);
+}
+
+.employee-table thead th:last-child{
+    border-top-right-radius:10px;
+    border-right:1px solid var(--emp-border);
 }
 
 .employee-table td{
-    padding:12px;
+    padding:13px 14px;
+
+    background:#fff;
+    color:var(--emp-text);
+    border-bottom:1px solid var(--emp-border);
+
     font-size:14px;
-    color:#374151;
-    border-bottom:1px solid #e5e7eb;
     white-space:nowrap;
+    transition:background .2s var(--emp-ease);
 }
 
-.employee-table tbody tr{
-    transition:.25s;
+.employee-table tbody tr:nth-child(even) td{
+    background:var(--emp-row-alt);
 }
 
-.employee-table tbody tr:nth-child(even){
-    background:#fafafa;
+.employee-table tbody tr:hover td{
+    background:var(--emp-row-hover);
 }
 
-.employee-table tbody tr:hover{
-    background:#ecfdf5;
+/* special cells */
+.employee-table .emp-id{
+    font-weight:600;
+    color:var(--emp-green-dark);
+}
+
+.employee-table .emp-name{
+    font-weight:600;
+    color:var(--emp-ink);
+}
+
+/* loading / empty row */
+.employee-table td.emp-state{
+    padding:44px 14px;
+    text-align:center;
+    font-size:15px;
+    color:var(--emp-muted);
+    background:#fff !important;
+}
+
+/* =========================
+   SYSTEM ACCESS PILL
+========================= */
+
+.emp-pill{
+    display:inline-flex;
+    align-items:center;
+    gap:6px;
+
+    padding:4px 12px;
+
+    border-radius:999px;
+    font-size:12px;
+    font-weight:600;
+    letter-spacing:.03em;
+}
+
+.emp-pill::before{
+    content:"";
+    width:6px;
+    height:6px;
+    border-radius:50%;
+    background:currentColor;
+}
+
+.emp-pill.is-yes{
+    background:var(--emp-green-soft);
+    color:var(--emp-green-dark);
+}
+
+.emp-pill.is-no{
+    background:#eceef0;
+    color:var(--emp-muted);
 }
 
 /* =========================
@@ -209,84 +187,172 @@ width:130px;
 ========================= */
 
 .employee-table select{
-    width:130px;
-    padding:8px 10px;
-    border:1px solid #d1d5db;
-    border-radius:8px;
+    width:136px;
+    padding:8px 32px 8px 12px;
+
+    border:1px solid #d5dccf;
+    border-radius:999px;
     outline:none;
     cursor:pointer;
-    font-size:13px;
-    background:#fff;
+
+    background-color:#fff;
+    color:var(--emp-ink);
+    font-size:12.5px;
+    font-weight:600;
+    letter-spacing:.02em;
+
+    appearance:none;
+    -webkit-appearance:none;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath d='M2.5 4.5 6 8l3.5-3.5' fill='none' stroke='%236b747d' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+    background-repeat:no-repeat;
+    background-position:right 12px center;
+
+    transition:border-color .18s var(--emp-ease), box-shadow .18s var(--emp-ease),
+        background-color .18s var(--emp-ease);
 }
 
 .employee-table select:focus{
-    border-color:#22c55e;
+    border-color:var(--emp-green);
+    box-shadow:0 0 0 3px rgba(87,164,29,.18);
+}
+
+/* colour follows the current status (data-status is set in the JSX) */
+.employee-table select[data-status="ACTIVE"]{
+    background-color:var(--emp-green-soft);
+    border-color:#cfe5b9;
+    color:var(--emp-green-dark);
+}
+
+.employee-table select[data-status="INACTIVE"]{
+    background-color:#eceef0;
+    border-color:#dde1e4;
+    color:var(--emp-muted);
+}
+
+.employee-table select[data-status="BLOCKED"],
+.employee-table select[data-status="DELETED"]{
+    background-color:#fdecec;
+    border-color:#f6c9c9;
+    color:#b42318;
 }
 
 /* =========================
-   BUTTONS
+   ACTION BUTTONS
 ========================= */
+
+.emp-actions{
+    display:flex;
+    align-items:center;
+    gap:8px;
+}
 
 .btn-edit,
 .btn-salary{
+    min-height:34px;
+    padding:0 16px;
 
-    border:none;
+    border:1px solid transparent;
+    border-radius:999px;
     cursor:pointer;
-    color:#fff;
+
     font-size:13px;
     font-weight:600;
+    -webkit-tap-highlight-color:transparent;
 
-    padding:8px 16px;
-    border-radius:8px;
-
-    transition:.25s;
+    transition:background .18s var(--emp-ease), box-shadow .18s var(--emp-ease),
+        transform .18s var(--emp-ease), color .18s var(--emp-ease);
 }
 
+.btn-edit:active,
+.btn-salary:active{
+    transform:scale(.97);
+}
+
+/* Edit = charcoal outline (logo dark) */
 .btn-edit{
-    background:#3b82f6;
+    background:#fff;
+    color:var(--emp-ink);
+    border-color:#cfd5cc;
 }
 
-.btn-edit:hover{
-    background:#2563eb;
-}
-
+/* Salary = brand green (same gradient as the sidebar active item) */
 .btn-salary{
-    background:#22c55e;
+    background:linear-gradient(90deg,#3f7d14 0%,#57a41d 100%);
+    color:#fff;
+    box-shadow:0 4px 12px rgba(87,164,29,.25);
 }
 
-.btn-salary:hover{
-    background:#16a34a;
+@media (hover:hover){
+    .btn-edit:hover{
+        background:var(--emp-ink);
+        border-color:var(--emp-ink);
+        color:#fff;
+    }
+
+    .btn-salary:hover{
+        box-shadow:0 6px 16px rgba(87,164,29,.35);
+        transform:translateY(-1px);
+    }
+}
+
+/* =========================
+   PINNED ACTION COLUMN
+   (stays visible while the table scrolls sideways)
+========================= */
+
+.employee-table th:last-child,
+.employee-table td:last-child{
+    position:sticky;
+    right:0;
+    z-index:1;
+}
+
+.employee-table td:last-child{
+    box-shadow:-8px 0 12px -8px rgba(16,24,40,.12);
+}
+
+/* =========================
+   KEYBOARD FOCUS
+========================= */
+
+.btn-edit:focus-visible,
+.btn-salary:focus-visible{
+    outline:2px solid var(--emp-green);
+    outline-offset:2px;
 }
 
 /* =========================
    SCROLLBAR
 ========================= */
 
+.employee-list-page{
+    scrollbar-width:thin;
+    scrollbar-color:var(--emp-green) #eef2ea;
+}
+
 .employee-list-page::-webkit-scrollbar{
     height:8px;
 }
 
 .employee-list-page::-webkit-scrollbar-thumb{
-    background:#22c55e;
+    background:var(--emp-green);
     border-radius:20px;
 }
 
 .employee-list-page::-webkit-scrollbar-track{
-    background:#f1f5f9;
+    background:#eef2ea;
+    border-radius:20px;
 }
 
 /* =========================
-   MOBILE
+   TABLET + MOBILE
 ========================= */
 
 @media(max-width:992px){
 
     .employee-list-page{
         padding:18px;
-    }
-
-    .employee-list-page h2{
-        font-size:24px;
+        border-radius:14px;
     }
 
 }
@@ -294,11 +360,45 @@ width:130px;
 @media(max-width:768px){
 
     .employee-list-page{
-        padding:15px;
+        padding:14px;
     }
 
     .employee-table{
         min-width:1000px;
+    }
+
+    .employee-table td{
+        padding:12px;
+    }
+
+    /* bigger touch targets */
+    .btn-edit,
+    .btn-salary{
+        min-height:38px;
+    }
+
+}
+
+@media(max-width:480px){
+
+    .employee-list-page{
+        padding:12px 10px;
+        border-radius:12px;
+    }
+
+}
+
+/* =========================
+   REDUCED MOTION
+========================= */
+
+@media (prefers-reduced-motion: reduce){
+
+    .employee-table td,
+    .employee-table select,
+    .btn-edit,
+    .btn-salary{
+        transition:none !important;
     }
 
 }

@@ -1,55 +1,241 @@
+/* ==========================================================================
+   Corporateprofile.css
+   Matches the Corporate dashboard: green gradient banner, 24px white card,
+   green-bar section titles, soft rounded inputs with green focus ring,
+   deep-green pill save button.
+
+   Tokens are scoped to .profile-page so nothing leaks into other pages.
+   Columns follow the width the page actually gets (container queries),
+   so the form lays out correctly next to the sidebar.
+   ========================================================================== */
+
 .profile-page {
-  padding: 24px;
+  --pf-accent: #4d8f12;
+  --pf-accent-dark: #3a7009;
+  --pf-accent-deep: #2f5d08;
+  --pf-accent-soft: #eef6e3;
+  --pf-accent-line: #dcebc8;
+
+  --pf-ink: #1b2412;
+  --pf-body: #3d4733;
+  --pf-muted: #707a66;
+  --pf-line: #e7eadf;
+  --pf-field: #f8faf4;
+  --pf-surface: #ffffff;
+
+  --pf-danger-bg: #fdecea;
+  --pf-danger-fg: #b3261e;
+  --pf-danger-line: #f7c9c4;
+
+  --pf-radius-xl: 24px;
+  --pf-radius-md: 14px;
+
+  --pf-shadow: 0 1px 2px rgb(27 36 18 / 0.04), 0 8px 24px rgb(27 36 18 / 0.05);
+  --pf-shadow-btn: 0 8px 20px rgb(58 112 9 / 0.28);
+
+  --pf-chevron: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23707a66' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  padding: clamp(1rem, 0.5rem + 2.4vw, 2rem);
+
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+
+  font-family: inherit; /* keep the dashboard font */
+  color: var(--pf-body);
+
+  /* Breakpoints follow the page's own width, not the window */
+  container-type: inline-size;
+}
+
+.profile-page *,
+.profile-page *::before,
+.profile-page *::after {
+  box-sizing: border-box;
+}
+
+/* Loading state (same element, extra class) */
+.profile-loading {
+  align-items: center;
+  justify-content: center;
+  min-height: 260px;
+  color: var(--pf-accent-dark);
+  font-weight: 500;
+}
+
+
+/* ==========================================================================
+   BANNER (same idea as "Corporate overview")
+   ========================================================================== */
+
+.profile-header {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+  padding: clamp(1.25rem, 0.8rem + 2.4vw, 2.25rem) clamp(1.25rem, 0.8rem + 2.8vw, 2.75rem);
+  border: 1px solid var(--pf-accent-line);
+  border-radius: var(--pf-radius-xl);
+  background:
+    radial-gradient(circle at 100% 0%, rgb(77 143 18 / 0.12) 0, rgb(77 143 18 / 0) 55%),
+    linear-gradient(100deg, #eaf4dc 0%, #f3f9ea 55%, #f8fbf3 100%);
+}
+
+.profile-header::after {
+  content: "";
+  position: absolute;
+  top: -90px;
+  right: -90px;
+  width: 280px;
+  height: 280px;
+  border-radius: 50%;
+  z-index: -1;
+  pointer-events: none;
+  background: repeating-radial-gradient(
+    circle at center,
+    rgb(77 143 18 / 0.1) 0 1px,
+    transparent 1px 16px
+  );
 }
 
 .profile-title {
-  font-size: 22px;
+  margin: 0 0 0.375rem;
+  font-size: clamp(1.75rem, 1.2rem + 2.2vw, 2.5rem);
   font-weight: 600;
-  margin-bottom: 20px;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  color: var(--pf-ink);
+  text-wrap: balance;
 }
 
-.profile-section-title {
-  font-size: 16px;
-  font-weight: 600;
-  margin: 20px 0 12px;
-  color: #374151;
+.profile-title span {
+  color: var(--pf-accent);
 }
+
+.profile-lead {
+  margin: 0;
+  font-size: clamp(0.9rem, 0.85rem + 0.25vw, 1rem);
+  color: var(--pf-muted);
+}
+
+
+/* ==========================================================================
+   ALERTS
+   ========================================================================== */
 
 .profile-alert {
-  padding: 10px 14px;
-  border-radius: 6px;
-  font-size: 14px;
-  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.875rem 1.125rem;
+  border: 1px solid transparent;
+  border-radius: var(--pf-radius-md);
+  font-size: 0.9rem;
+  font-weight: 500;
+  line-height: 1.45;
+}
+
+/* status dot, same look as the "Pending" pill dot */
+.profile-alert::before {
+  content: "";
+  flex: none;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: currentColor;
 }
 
 .profile-alert-error {
-  background: #fee2e2;
-  color: #b91c1c;
+  background: var(--pf-danger-bg);
+  border-color: var(--pf-danger-line);
+  color: var(--pf-danger-fg);
 }
 
 .profile-alert-success {
-  background: #dcfce7;
-  color: #166534;
+  background: var(--pf-accent-soft);
+  border-color: var(--pf-accent-line);
+  color: var(--pf-accent-dark);
 }
 
+
+/* ==========================================================================
+   FORM CARD
+   ========================================================================== */
+
 .profile-form {
-  background: #fff;
-  border: 1px solid #e5e7eb;
-  border-radius: 8px;
-  padding: 20px;
-  max-width: 720px;
+  width: 100%;
+  min-width: 0;
+  padding: clamp(1.125rem, 0.6rem + 2.2vw, 2rem);
+  background: var(--pf-surface);
+  border: 1px solid var(--pf-line);
+  border-radius: var(--pf-radius-xl);
+  box-shadow: var(--pf-shadow);
 }
+
+/* green bar before each section title, like "Recent orders" / "Quick actions" */
+.profile-section-title {
+  position: relative;
+  margin: 0 0 1.125rem;
+  padding-left: 0.875rem;
+  font-size: clamp(1.0625rem, 1rem + 0.4vw, 1.25rem);
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: var(--pf-ink);
+}
+
+.profile-section-title::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.15em;
+  width: 4px;
+  height: 1.1em;
+  border-radius: 4px;
+  background: var(--pf-accent);
+}
+
+/* divider + space before the second section */
+.profile-grid + .profile-section-title {
+  margin-top: 2rem;
+  padding-top: 1.75rem;
+  border-top: 1px dashed #dfe5d3;
+}
+
+.profile-grid + .profile-section-title::before {
+  top: calc(1.75rem + 0.15em);
+}
+
+
+/* ==========================================================================
+   FIELDS  (1 column -> 2 columns -> 3 columns, by container width)
+   ========================================================================== */
 
 .profile-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 14px 20px;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 1.125rem 1.25rem;
+}
+
+@container (min-width: 36rem) {
+  .profile-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@container (min-width: 64rem) {
+  .profile-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
 }
 
 .profile-form-row {
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 0.4375rem;
+  min-width: 0;
 }
 
 .profile-form-row-full {
@@ -57,42 +243,133 @@
 }
 
 .profile-form-row label {
-  font-size: 14px;
-  font-weight: 500;
-  color: #374151;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  color: var(--pf-body);
 }
 
 .profile-form-row input,
 .profile-form-row select {
-  border: 1px solid #d1d5db;
-  border-radius: 6px;
-  padding: 8px 10px;
-  font-size: 14px;
+  width: 100%;
+  min-width: 0;
+  height: 2.875rem;               /* 46px: comfortable touch target */
+  padding: 0 1rem;
+  border: 1px solid var(--pf-line);
+  border-radius: 12px;
+  background-color: var(--pf-field);
+  color: var(--pf-ink);
   font-family: inherit;
+  font-size: 1rem;                /* 16px stops iOS zoom-on-focus */
+  text-overflow: ellipsis;
+  transition: border-color 0.18s ease, box-shadow 0.18s ease, background-color 0.18s ease;
 }
 
-.profile-form-row input:disabled {
-  background: #f3f4f6;
-  color: #6b7280;
+.profile-form-row input::placeholder {
+  color: #9aa38f;
 }
+
+@media (hover: hover) {
+  .profile-form-row input:hover:not(:disabled),
+  .profile-form-row select:hover {
+    border-color: var(--pf-accent-line);
+  }
+}
+
+.profile-form-row input:focus,
+.profile-form-row select:focus {
+  outline: none;
+  border-color: var(--pf-accent);
+  background-color: var(--pf-surface);
+  box-shadow: 0 0 0 3px rgb(77 143 18 / 0.18);
+}
+
+/* custom select arrow */
+.profile-form-row select {
+  appearance: none;
+  -webkit-appearance: none;
+  padding-right: 2.75rem;
+  background-image: var(--pf-chevron);
+  background-repeat: no-repeat;
+  background-position: right 1rem center;
+  background-size: 1.125rem;
+  cursor: pointer;
+}
+
+/* read-only fields (email, phone) */
+.profile-form-row input:disabled {
+  background-color: #f1f3ee;
+  color: var(--pf-muted);
+  border-style: dashed;
+  cursor: not-allowed;
+  -webkit-text-fill-color: var(--pf-muted); /* Safari keeps disabled text readable */
+}
+
+
+/* ==========================================================================
+   SAVE BUTTON  (same pill as "+ New order")
+   ========================================================================== */
 
 .profile-save-btn {
-  background: #16a34a;
-  color: #fff;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 2.875rem;
+  margin-top: 1.75rem;
+  padding: 0 2rem;
   border: none;
-  border-radius: 6px;
-  padding: 10px 20px;
-  font-size: 14px;
+  border-radius: 999px;
+  background: linear-gradient(135deg, var(--pf-accent), var(--pf-accent-dark));
+  color: #fff;
+  font-family: inherit;
+  font-size: 0.95rem;
   font-weight: 600;
   cursor: pointer;
-  margin-top: 20px;
+  box-shadow: var(--pf-shadow-btn);
+  transition: transform 0.18s ease, box-shadow 0.18s ease, background 0.18s ease;
 }
 
-.profile-save-btn:hover {
-  background: #15803d;
+.profile-save-btn:hover:not(:disabled) {
+  background: linear-gradient(135deg, var(--pf-accent-dark), var(--pf-accent-deep));
+  box-shadow: 0 12px 26px rgb(58 112 9 / 0.34);
+  transform: translateY(-2px);
+}
+
+.profile-save-btn:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.profile-save-btn:focus-visible {
+  outline: 3px solid rgb(77 143 18 / 0.35);
+  outline-offset: 3px;
 }
 
 .profile-save-btn:disabled {
-  background: #9ca3af;
+  background: #dfe3d8;
+  color: #7c8472;
+  box-shadow: none;
   cursor: not-allowed;
+}
+
+/* Phones: full-width button, easy to tap */
+@container (max-width: 35.99rem) {
+  .profile-save-btn {
+    width: 100%;
+  }
+}
+
+
+/* ==========================================================================
+   REDUCED MOTION
+   ========================================================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  .profile-form-row input,
+  .profile-form-row select,
+  .profile-save-btn {
+    transition: none;
+  }
+  .profile-save-btn:hover:not(:disabled) {
+    transform: none;
+  }
 }

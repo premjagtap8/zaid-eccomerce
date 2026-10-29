@@ -1,136 +1,329 @@
+/* ==========================================================================
+   CorporateInvoices.css
+   Matches the Corporate dashboard: green gradient banner, big rounded white
+   cards, light-green icon tiles, deep-green pill buttons, soft status pills.
 
-/* All classes are prefixed with "corpinv-" so they don't clash with other pages */
+   All classes are prefixed "corpinv-" and tokens are scoped to
+   .corpinv-page, so nothing leaks into other pages.
+   ========================================================================== */
 
 .corpinv-page {
-  padding: 8px 4px;
-  color: #0f172a;
+  --ci-accent: #4d8f12;
+  --ci-accent-dark: #3a7009;
+  --ci-accent-deep: #2f5d08;
+  --ci-accent-soft: #eef6e3;
+  --ci-accent-line: #dcebc8;
+
+  --ci-ink: #1b2412;
+  --ci-text: #3d4733;
+  --ci-muted: #707a66;
+  --ci-border: #e7eadf;
+  --ci-surface: #ffffff;
+  --ci-surface-alt: #f8faf4;
+
+  --ci-amber-bg: #fff3d6;
+  --ci-amber-fg: #9a5b00;
+  --ci-red-bg: #fdecea;
+  --ci-red-fg: #b3261e;
+  --ci-red-line: #f7c9c4;
+
+  --ci-radius-xl: 24px;
+  --ci-radius-lg: 18px;
+  --ci-radius-md: 12px;
+  --ci-radius-pill: 999px;
+
+  --ci-shadow: 0 1px 2px rgba(27, 36, 18, 0.04),
+               0 8px 24px rgba(27, 36, 18, 0.05);
+  --ci-shadow-btn: 0 8px 20px rgba(58, 112, 9, 0.28);
+
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+
+  padding: clamp(14px, 2.2vw, 30px);
+
+  font-family: inherit;            /* keep the dashboard font (Poppins) */
+  color: var(--ci-text);
 }
 
+.corpinv-page *,
+.corpinv-page *::before,
+.corpinv-page *::after {
+  box-sizing: border-box;
+}
+
+.corpinv-page button:focus-visible,
+.corpinv-page input:focus-visible {
+  outline: 3px solid rgba(77, 143, 18, 0.35);
+  outline-offset: 2px;
+}
+
+
+/* ==========================================================================
+   HEADER BANNER  (same idea as "Corporate overview")
+   ========================================================================== */
+
 .corpinv-header {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+
   display: flex;
+  align-items: center;
   justify-content: space-between;
-  align-items: flex-start;
   gap: 16px;
-  margin-bottom: 20px;
+
+  padding: clamp(20px, 3vw, 34px) clamp(20px, 3.2vw, 44px);
+  border: 1px solid var(--ci-accent-line);
+  border-radius: var(--ci-radius-xl);
+  background:
+    radial-gradient(circle at 100% 0%, rgba(77, 143, 18, 0.12) 0, rgba(77, 143, 18, 0) 55%),
+    linear-gradient(100deg, #eaf4dc 0%, #f3f9ea 55%, #f8fbf3 100%);
+}
+
+.corpinv-header::after {
+  content: "";
+  position: absolute;
+  top: -90px;
+  right: -90px;
+  width: 280px;
+  height: 280px;
+  border-radius: 50%;
+  z-index: -1;
+  pointer-events: none;
+  background: repeating-radial-gradient(
+    circle at center,
+    rgba(77, 143, 18, 0.1) 0 1px,
+    transparent 1px 16px
+  );
 }
 
 .corpinv-header h1 {
-  margin: 0 0 4px;
-  font-size: 24px;
+  margin: 0 0 6px;
+  font-size: clamp(1.6rem, 3.4vw, 2.4rem);
+  font-weight: 600;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  color: var(--ci-ink);
+}
+
+.corpinv-header h1 span {
+  color: var(--ci-accent);
 }
 
 .corpinv-header p {
   margin: 0;
-  color: #64748b;
-  font-size: 14px;
+  font-size: clamp(0.88rem, 1.4vw, 1rem);
+  color: var(--ci-muted);
 }
 
+/* Refresh = same pill as "+ New order" */
 .corpinv-header button {
+  position: relative;
+  z-index: 1;
+  flex-shrink: 0;
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  padding: 9px 16px;
-  border: 0;
-  border-radius: 8px;
-  background: #2563eb;
+  gap: 8px;
+  padding: 12px 24px;
+  border: none;
+  border-radius: var(--ci-radius-pill);
+  background: linear-gradient(135deg, var(--ci-accent), var(--ci-accent-dark));
   color: #fff;
-  font-size: 14px;
+  font-family: inherit;
+  font-size: 0.9rem;
   font-weight: 600;
   cursor: pointer;
+  box-shadow: var(--ci-shadow-btn);
+  transition: transform 0.18s ease, box-shadow 0.18s ease, background 0.18s ease;
+}
+
+.corpinv-header button:hover:not(:disabled) {
+  background: linear-gradient(135deg, var(--ci-accent-dark), var(--ci-accent-deep));
+  box-shadow: 0 12px 26px rgba(58, 112, 9, 0.34);
+  transform: translateY(-2px);
 }
 
 .corpinv-header button:disabled {
-  opacity: 0.6;
+  opacity: 0.7;
   cursor: default;
 }
 
-/* Summary */
+.corpinv-spin {
+  animation: corpinv-rotate 0.9s linear infinite;
+}
+
+@keyframes corpinv-rotate {
+  to { transform: rotate(360deg); }
+}
+
+
+/* ==========================================================================
+   SUMMARY CARDS  (same card pattern as the dashboard stat cards)
+   ========================================================================== */
 
 .corpinv-summary {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
-  gap: 12px;
-  margin-bottom: 18px;
+  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+  gap: 16px;
 }
 
 .corpinv-stat {
+  position: relative;
+  overflow: hidden;
+
   display: flex;
   flex-direction: column;
   gap: 4px;
-  padding: 14px 16px;
-  background: #fff;
-  border: 1px solid #e2e8f0;
-  border-radius: 10px;
+
+  padding: 20px 22px;
+  background: var(--ci-surface);
+  border: 1px solid var(--ci-border);
+  border-radius: var(--ci-radius-xl);
+  box-shadow: var(--ci-shadow);
 }
 
-.corpinv-stat span {
-  color: #64748b;
-  font-size: 13px;
+/* faint green glow bottom-right, like the dashboard cards */
+.corpinv-stat::after {
+  content: "";
+  position: absolute;
+  right: -30px;
+  bottom: -30px;
+  width: 110px;
+  height: 110px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(77, 143, 18, 0.1), transparent 70%);
+  pointer-events: none;
+}
+
+.corpinv-stat-icon {
+  display: grid;
+  place-items: center;
+  width: 46px;
+  height: 46px;
+  margin-bottom: 10px;
+  border-radius: 14px;
+  background: var(--ci-accent-soft);
+  color: var(--ci-accent);
+  font-size: 1.15rem;
 }
 
 .corpinv-stat strong {
-  font-size: 20px;
+  font-size: clamp(1.3rem, 2.2vw, 1.7rem);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.15;
+  color: var(--ci-ink);
+  overflow-wrap: anywhere;
 }
 
-/* Search */
+.corpinv-stat span {
+  font-size: 0.88rem;
+  color: var(--ci-muted);
+}
+
+/* Balance due: neutral tile, like the "Amount due" card */
+.corpinv-stat-due .corpinv-stat-icon {
+  background: #f1f3ee;
+  color: #4b5443;
+}
+
+
+/* ==========================================================================
+   SEARCH  (pill, like the top-bar search)
+   ========================================================================== */
 
 .corpinv-search {
   position: relative;
-  max-width: 460px;
-  margin-bottom: 16px;
+  width: 100%;
+  max-width: 520px;
 }
 
 .corpinv-search svg {
   position: absolute;
-  left: 12px;
+  left: 18px;
   top: 50%;
   transform: translateY(-50%);
-  color: #64748b;
+  color: var(--ci-muted);
+  pointer-events: none;
 }
 
 .corpinv-search input {
   width: 100%;
-  padding: 10px 12px 10px 38px;
-  border: 1px solid #cbd5e1;
-  border-radius: 8px;
-  background: #fff;
-  font-size: 14px;
-  outline: none;
+  height: 46px;
+  padding: 0 18px 0 46px;
+  border: 1px solid var(--ci-border);
+  border-radius: var(--ci-radius-pill);
+  background: var(--ci-surface);
+  color: var(--ci-ink);
+  font-family: inherit;
+  font-size: 0.9rem;
+  text-overflow: ellipsis;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.corpinv-search input::placeholder {
+  color: #9aa38f;
 }
 
 .corpinv-search input:focus {
-  border-color: #2563eb;
+  outline: none;
+  border-color: var(--ci-accent);
+  box-shadow: 0 0 0 3px rgba(77, 143, 18, 0.18);
 }
 
-/* Table */
+
+/* ==========================================================================
+   TABLE  (desktop / tablet)
+   ========================================================================== */
 
 .corpinv-table-wrap {
   overflow-x: auto;
-  background: #fff;
-  border: 1px solid #e2e8f0;
-  border-radius: 10px;
+  background: var(--ci-surface);
+  border: 1px solid var(--ci-border);
+  border-radius: var(--ci-radius-xl);
+  box-shadow: var(--ci-shadow);
+  -webkit-overflow-scrolling: touch;
 }
 
 .corpinv-table {
   width: 100%;
-  min-width: 760px;
+  min-width: 820px;
   border-collapse: collapse;
-  font-size: 14px;
+  font-size: 0.9rem;
 }
 
 .corpinv-table th,
 .corpinv-table td {
-  padding: 12px 14px;
+  padding: 16px 18px;
   text-align: left;
-  border-bottom: 1px solid #e2e8f0;
+  border-bottom: 1px solid #eff2e9;
   white-space: nowrap;
 }
 
 .corpinv-table th {
-  background: #f8fafc;
-  color: #475569;
-  font-size: 13px;
+  background: var(--ci-surface-alt);
+  color: var(--ci-muted);
+  font-size: 0.78rem;
   font-weight: 600;
+  letter-spacing: 0.04em;
+}
+
+.corpinv-table td {
+  color: var(--ci-text);
+}
+
+.corpinv-table tbody tr {
+  transition: background-color 0.2s ease;
+}
+
+.corpinv-table tbody tr:hover {
+  background: #fafcf6;
 }
 
 .corpinv-table tbody tr:last-child td {
@@ -138,75 +331,225 @@
 }
 
 .corpinv-number {
-  font-weight: 600;
+  font-weight: 700;
+  color: var(--ci-ink) !important;
 }
 
-/* Status */
+.corpinv-actions {
+  text-align: right !important;
+}
+
+
+/* ==========================================================================
+   STATUS PILLS  (dot + soft background, like the "Pending" pill)
+   ========================================================================== */
 
 .corpinv-status {
-  display: inline-block;
-  padding: 3px 10px;
-  border-radius: 999px;
-  font-size: 12px;
-  font-weight: 700;
-  background: #e2e8f0;
-  color: #334155;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 5px 14px;
+  border-radius: var(--ci-radius-pill);
+  background: #eef0ea;
+  color: #4b5443;
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+
+.corpinv-status::before {
+  content: "";
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: currentColor;
 }
 
 .corpinv-paid {
-  background: #dcfce7;
-  color: #166534;
+  background: var(--ci-accent-soft);
+  color: var(--ci-accent-dark);
 }
 
 .corpinv-pending,
 .corpinv-partial {
-  background: #fef3c7;
-  color: #92400e;
+  background: var(--ci-amber-bg);
+  color: var(--ci-amber-fg);
 }
 
 .corpinv-failed,
 .corpinv-refunded {
-  background: #fee2e2;
-  color: #991b1b;
+  background: var(--ci-red-bg);
+  color: var(--ci-red-fg);
 }
 
-/* View button */
+
+/* ==========================================================================
+   VIEW BUTTON
+   ========================================================================== */
 
 .corpinv-view {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  padding: 7px 12px;
-  border: 1px solid #2563eb;
-  border-radius: 8px;
-  background: #fff;
-  color: #2563eb;
-  font-size: 13px;
+  gap: 7px;
+  padding: 8px 16px;
+  border: 1px solid var(--ci-accent-line);
+  border-radius: var(--ci-radius-pill);
+  background: var(--ci-surface);
+  color: var(--ci-accent-dark);
+  font-family: inherit;
+  font-size: 0.82rem;
   font-weight: 600;
   cursor: pointer;
+  transition: background-color 0.18s ease, color 0.18s ease,
+              border-color 0.18s ease, transform 0.18s ease;
 }
 
 .corpinv-view:hover {
-  background: #2563eb;
+  background: var(--ci-accent);
+  border-color: var(--ci-accent);
   color: #fff;
+  transform: translateY(-1px);
 }
 
-/* Empty state */
+
+/* ==========================================================================
+   EMPTY / LOADING
+   ========================================================================== */
 
 .corpinv-empty {
-  padding: 40px 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+
+  padding: clamp(36px, 7vw, 70px) 20px;
   text-align: center;
-  background: #fff;
-  border: 1px dashed #cbd5e1;
-  border-radius: 10px;
-  color: #64748b;
+  background: var(--ci-surface);
+  border: 1px dashed #cfd8c0;
+  border-radius: var(--ci-radius-xl);
+  color: var(--ci-muted);
+  font-size: 0.92rem;
 }
 
 .corpinv-empty h3 {
-  margin: 0 0 6px;
-  color: #0f172a;
+  margin: 0;
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: var(--ci-ink);
 }
 
 .corpinv-empty p {
   margin: 0;
+}
+
+.corpinv-loader {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  border: 3px solid var(--ci-accent-line);
+  border-top-color: var(--ci-accent);
+  animation: corpinv-rotate 0.8s linear infinite;
+}
+
+
+/* ==========================================================================
+   MOBILE  (< 720px) : each invoice becomes a card, no sideways scroll
+   ========================================================================== */
+
+@media (max-width: 719px) {
+  .corpinv-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .corpinv-header button {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .corpinv-table-wrap {
+    overflow: visible;
+    background: transparent;
+    border: 0;
+    box-shadow: none;
+  }
+
+  .corpinv-table,
+  .corpinv-table tbody {
+    display: block;
+    min-width: 0;
+  }
+
+  .corpinv-table thead {
+    display: none;
+  }
+
+  .corpinv-table tbody {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .corpinv-table tr {
+    display: block;
+    padding: 6px 18px 14px;
+    background: var(--ci-surface);
+    border: 1px solid var(--ci-border);
+    border-radius: var(--ci-radius-lg);
+    box-shadow: var(--ci-shadow);
+  }
+
+  .corpinv-table td {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 11px 0;
+    text-align: right;
+    white-space: normal;
+  }
+
+  .corpinv-table tbody tr:last-child td {
+    border-bottom: 1px solid #eff2e9;
+  }
+
+  .corpinv-table td::before {
+    content: attr(data-label);
+    flex-shrink: 0;
+    font-size: 0.78rem;
+    font-weight: 500;
+    color: var(--ci-muted);
+    text-align: left;
+  }
+
+  .corpinv-table td.corpinv-actions {
+    display: block;
+    padding: 14px 0 0;
+    border-bottom: 0 !important;
+  }
+
+  .corpinv-table td.corpinv-actions::before {
+    content: none;
+  }
+
+  .corpinv-view {
+    width: 100%;
+    justify-content: center;
+    padding: 11px 16px;
+  }
+}
+
+
+/* ==========================================================================
+   REDUCED MOTION
+   ========================================================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  .corpinv-page *,
+  .corpinv-page *::before,
+  .corpinv-page *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
 }

@@ -1,6 +1,12 @@
-
 import { useEffect, useMemo, useState } from "react";
-import { FiRefreshCw, FiEye, FiSearch } from "react-icons/fi";
+import {
+  FiRefreshCw,
+  FiEye,
+  FiSearch,
+  FiFileText,
+  FiCheckCircle,
+  FiClock,
+} from "react-icons/fi";
 import { toast } from "react-toastify";
 
 import { getMyInvoices } from "../../services/invoiceService";
@@ -111,33 +117,49 @@ export default function CorporateInvoices() {
 
   return (
     <div className="corpinv-page">
+      {/* HEADER BANNER */}
       <div className="corpinv-header">
-        <div>
-          <h1>Invoices</h1>
+        <div className="corpinv-header-text">
+          <h1>
+            Tax <span>invoices</span>
+          </h1>
           <p>Tax invoices for your company's orders</p>
         </div>
 
         <button type="button" onClick={loadInvoices} disabled={loading}>
-          <FiRefreshCw />
+          <FiRefreshCw className={loading ? "corpinv-spin" : ""} />
           {loading ? "Loading..." : "Refresh"}
         </button>
       </div>
 
+      {/* SUMMARY CARDS */}
       <div className="corpinv-summary">
         <div className="corpinv-stat">
-          <span>Total invoiced</span>
+          <div className="corpinv-stat-icon">
+            <FiFileText />
+          </div>
           <strong>{money(totals.invoiced)}</strong>
+          <span>Total invoiced</span>
         </div>
+
         <div className="corpinv-stat">
-          <span>Paid</span>
+          <div className="corpinv-stat-icon">
+            <FiCheckCircle />
+          </div>
           <strong>{money(totals.paid)}</strong>
+          <span>Paid</span>
         </div>
-        <div className="corpinv-stat">
-          <span>Balance due</span>
+
+        <div className="corpinv-stat corpinv-stat-due">
+          <div className="corpinv-stat-icon">
+            <FiClock />
+          </div>
           <strong>{money(totals.balance)}</strong>
+          <span>Balance due</span>
         </div>
       </div>
 
+      {/* SEARCH */}
       <div className="corpinv-search">
         <FiSearch />
         <input
@@ -148,8 +170,12 @@ export default function CorporateInvoices() {
         />
       </div>
 
+      {/* LIST */}
       {loading && invoices.length === 0 ? (
-        <div className="corpinv-empty">Loading your invoices...</div>
+        <div className="corpinv-empty">
+          <span className="corpinv-loader" aria-hidden="true" />
+          Loading your invoices...
+        </div>
       ) : filtered.length === 0 ? (
         <div className="corpinv-empty">
           <h3>No invoices found</h3>
@@ -188,18 +214,24 @@ export default function CorporateInvoices() {
 
                 return (
                   <tr key={invoice._id}>
-                    <td className="corpinv-number">{invoice.invoiceNumber}</td>
-                    <td>{formatDate(invoice.invoiceDate || invoice.createdAt)}</td>
-                    <td>{units}</td>
-                    <td>{money(invoice.totalAmount)}</td>
-                    <td>{money(invoice.paidAmount)}</td>
-                    <td>{money(invoice.balanceAmount)}</td>
-                    <td>
-                      <span className={`corpinv-status corpinv-${status.toLowerCase()}`}>
+                    <td className="corpinv-number" data-label="Invoice no.">
+                      {invoice.invoiceNumber}
+                    </td>
+                    <td data-label="Date">
+                      {formatDate(invoice.invoiceDate || invoice.createdAt)}
+                    </td>
+                    <td data-label="Items">{units}</td>
+                    <td data-label="Total">{money(invoice.totalAmount)}</td>
+                    <td data-label="Paid">{money(invoice.paidAmount)}</td>
+                    <td data-label="Balance">{money(invoice.balanceAmount)}</td>
+                    <td data-label="Status">
+                      <span
+                        className={`corpinv-status corpinv-${status.toLowerCase()}`}
+                      >
                         {status}
                       </span>
                     </td>
-                    <td>
+                    <td className="corpinv-actions">
                       <button
                         type="button"
                         className="corpinv-view"

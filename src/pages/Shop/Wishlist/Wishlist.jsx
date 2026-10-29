@@ -664,7 +664,7 @@ const Wishlist = () => {
         <div>
 
           <h2>
-            My Wishlist
+            My <span>Wishlist</span>
           </h2>
 
           <span className="wishlist-count">
@@ -764,6 +764,7 @@ const Wishlist = () => {
                     type="button"
                     className="quick-remove-btn"
                     title="Remove item"
+                    aria-label="Remove from wishlist"
                     onClick={() =>
                       handleRemove(
                         productId

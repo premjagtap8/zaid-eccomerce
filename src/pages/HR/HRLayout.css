@@ -1,27 +1,49 @@
 /* =====================================================
-   HR LAYOUT — responsive (desktop / tablet / mobile)
-   Desktop  (>= 1025px): fixed sidebar, content beside it
-   Tablet + Mobile (<= 1024px): off-canvas drawer + topbar
+   HR LAYOUT — Zaid Infotech (logo-charcoal sidebar + logo-green accent)
+   Desktop  (>= 1025px): fixed sidebar, topbar + content beside it
+   Tablet + Mobile (<= 1024px): off-canvas drawer
 ===================================================== */
 
 :root {
-  --hr-sidebar-w: 260px;
-  --hr-topbar-h: 60px;
+  --hr-sidebar-w: 272px;
+  --hr-topbar-h: 80px;
 
-  --hr-bg: #f7f9fc;
+  /* Page */
+  --hr-bg: #f6f8f4;          /* faint green-tinted neutral, sits with charcoal + green */
   --hr-surface: #ffffff;
-  --hr-border: #e8edf4;
-  --hr-border-soft: #eef1f5;
+  --hr-border: #e3e8de;
+  --hr-text: #383f45;          /* logo charcoal */
+  --hr-text-muted: #6b747d;
 
-  --hr-text: #26364d;
-  --hr-text-muted: #6a7b94;
-  --hr-text-faint: #687891;
+  /* Sidebar (charcoal, taken from the logo's dark colour) */
+  --hr-nav-top: #383f47;
+  --hr-nav-bottom: #262b31;
+  --hr-nav-text: rgba(255, 255, 255, 0.92);
+  --hr-nav-muted: rgba(255, 255, 255, 0.7);
+  --hr-nav-hover: rgba(87, 164, 29, 0.18);
+  --hr-nav-divider: rgba(255, 255, 255, 0.08);
 
-  --hr-hover: #f5f8fc;
-  --hr-active-bg: #edf3fa;
-  --hr-accent: #2563eb;
+  /* Brand green — sampled from the Zaid Infotech logo ("TECH" + wifi icon) */
+  --hr-green: #57a41d;
+  --hr-green-dark: #3f7d14;
+  --hr-green-rgb: 87, 164, 29;   /* same colour as rgb, for soft shadows / glows */
+
+  /* Menu fill: deeper than the logo green so it reads richer on the charcoal sidebar */
+  --hr-nav-active-from: #3f7d14;
+  --hr-nav-active-to: #57a41d;
 
   --hr-ease: cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* Sidebar sizing that scales with the screen HEIGHT, so the logo
+     never pushes the menu out of view on short laptop screens */
+  --hr-item-h: clamp(40px, 5.4vh, 46px);
+
+  /* Logo card: height is capped so the logo never dominates the menu */
+  --hr-logo-h: clamp(48px, 7.2vh, 66px);
+
+  /* Menu icons: soft white at rest, brand-green tint on hover */
+  --hr-icon-rest: rgba(255, 255, 255, 0.72);
+  --hr-icon-hover: #9be15d;
 }
 
 *,
@@ -32,8 +54,6 @@
 
 /* =====================================================
    ROOT
-   (font is inherited from your global CSS so the sidebar
-   matches the rest of the app)
 ===================================================== */
 
 .hr-layout {
@@ -47,39 +67,192 @@
 }
 
 /* =====================================================
-   MOBILE / TABLET TOPBAR (hidden on desktop)
+   TOPBAR
 ===================================================== */
 
 .hr-topbar {
-  display: none;
+  position: fixed;
+  top: 0;
+  left: var(--hr-sidebar-w);
+  right: 0;
+  z-index: 900;
+
+  height: var(--hr-topbar-h);
+  padding: 0 28px;
+
+  display: flex;
+  align-items: center;
+  gap: 20px;
+
+  background: var(--hr-surface);
+  border-bottom: 1px solid var(--hr-border);
+  transition: left 0.28s var(--hr-ease);
 }
 
 .hr-menu-toggle {
   width: 40px;
   height: 40px;
+  flex-shrink: 0;
+
   display: inline-flex;
   align-items: center;
   justify-content: center;
 
-  border: 1px solid var(--hr-border);
+  border: none;
   border-radius: 10px;
-  background: var(--hr-surface);
+  background: transparent;
   color: var(--hr-text);
 
-  font-size: 16px;
+  font-size: 20px;
   cursor: pointer;
   -webkit-tap-highlight-color: transparent;
-  transition: background 0.18s var(--hr-ease), transform 0.12s var(--hr-ease);
+  transition: background 0.18s var(--hr-ease);
 }
 
 .hr-menu-toggle:active {
   transform: scale(0.95);
 }
 
-.hr-topbar-title {
-  font-size: 16px;
-  font-weight: 800;
-  letter-spacing: 0.4px;
+/* Search */
+.hr-search {
+  position: relative;
+  flex: 1;
+  max-width: 450px;
+  min-width: 0;
+}
+
+.hr-search-icon {
+  position: absolute;
+  left: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 15px;
+  color: var(--hr-text-muted);
+  pointer-events: none;
+}
+
+.hr-search input {
+  width: 100%;
+  height: 42px;
+
+  padding: 0 18px 0 42px;
+
+  border: 1px solid var(--hr-border);
+  border-radius: 999px;
+  background: #f2f4f6;
+  color: var(--hr-text);
+
+  font-family: inherit;
+  font-size: 13.5px;
+  outline: none;
+  transition: border-color 0.18s var(--hr-ease), background 0.18s var(--hr-ease),
+    box-shadow 0.18s var(--hr-ease);
+}
+
+.hr-search input::placeholder {
+  color: var(--hr-text-muted);
+}
+
+.hr-search input:focus {
+  background: #fff;
+  border-color: var(--hr-green);
+  box-shadow: 0 0 0 3px rgba(var(--hr-green-rgb), 0.18);
+}
+
+/* Right side */
+.hr-topbar-right {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 22px;
+}
+
+.hr-bell {
+  position: relative;
+  width: 40px;
+  height: 40px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  border: none;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--hr-text);
+
+  font-size: 20px;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.hr-bell-badge {
+  position: absolute;
+  top: 2px;
+  right: 2px;
+
+  min-width: 18px;
+  height: 18px;
+  padding: 0 5px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 999px;
+  background: #ef4444;
+  color: #fff;
+  border: 2px solid #fff;
+
+  font-size: 10px;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.hr-user {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+}
+
+.hr-user-avatar {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+.hr-user-initials {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, var(--hr-green), var(--hr-green-dark));
+  color: #fff;
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.hr-user-meta {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.25;
+}
+
+.hr-user-name {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--hr-text);
+}
+
+.hr-user-role {
+  font-size: 12px;
+  color: var(--hr-text-muted);
+}
+
+.hr-user-chevron {
+  font-size: 11px;
   color: var(--hr-text-muted);
 }
 
@@ -105,38 +278,81 @@
   display: flex;
   flex-direction: column;
 
-  background: var(--hr-surface);
-  border-right: 1px solid var(--hr-border);
+  background: linear-gradient(180deg, var(--hr-nav-top) 0%, var(--hr-nav-bottom) 100%);
+  color: var(--hr-nav-text);
+  overflow: hidden;
 
-  overflow-y: auto;
-  overscroll-behavior: contain;
-  scrollbar-width: thin;
-  scrollbar-color: #d5dce6 transparent;
+  transition: transform 0.28s var(--hr-ease);
+}
+
+/* Decorative green wave near the bottom */
+.hr-sidebar-wave path {
+  stroke: var(--hr-green);   /* overrides the stroke attribute in the JSX */
+}
+
+.hr-sidebar-wave {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 70px;
+  width: 100%;
+  height: 260px;
+  pointer-events: none;
+  z-index: 0;
+  -webkit-mask-image: linear-gradient(to top, #000 35%, transparent 100%);
+  mask-image: linear-gradient(to top, #000 35%, transparent 100%);
+}
+
+.hr-sidebar > *:not(.hr-sidebar-wave) {
+  position: relative;
+  z-index: 1;
 }
 
 .hr-sidebar-header {
-  height: 65px;
-  min-height: 65px;
+  flex-shrink: 0;
 
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  gap: 10px;
 
-  padding: 0 18px;
-  border-bottom: 1px solid var(--hr-border-soft);
+  padding: clamp(14px, 2.4vh, 22px) 16px clamp(10px, 1.6vh, 16px);
 }
 
+/* Light card that holds the logo, so it keeps its original colours */
 .hr-brand {
+  flex: 1;
+  min-width: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 12px 18px;
+
   border: none;
-  background: transparent;
-  padding: 0;
+  border-radius: 16px;
+  background: #ffffff;
+  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.28);
 
-  font-size: 18px;
-  font-weight: 800;
-  letter-spacing: 0.5px;
-  color: var(--hr-text-muted);
-
+  line-height: 0;                /* removes the tiny gap under inline images */
   cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition: transform 0.18s var(--hr-ease), box-shadow 0.18s var(--hr-ease);
+}
+
+.hr-brand:active {
+  transform: scale(0.98);
+}
+
+.hr-logo {
+  display: block;
+  width: auto;                   /* height is the limiter, width follows the aspect ratio */
+  max-width: 100%;               /* never wider than the card */
+  height: auto;
+  max-height: var(--hr-logo-h);  /* one token controls the size (see :root) */
+  object-fit: contain;
+  user-select: none;
+  -webkit-user-drag: none;
 }
 
 /* Close (X) button — only visible inside the drawer */
@@ -144,13 +360,14 @@
   display: none;
   width: 40px;
   height: 40px;
+  flex-shrink: 0;
   align-items: center;
   justify-content: center;
 
   border: none;
   border-radius: 8px;
   background: transparent;
-  color: var(--hr-text-muted);
+  color: var(--hr-nav-text);
 
   font-size: 16px;
   cursor: pointer;
@@ -162,78 +379,83 @@
 ===================================================== */
 
 .hr-menu-title {
-  padding: 18px 16px 10px;
+  margin: 6px 24px 8px;
+  padding: 12px 0 0;
+  border-top: 1px solid var(--hr-nav-divider);
 
   font-size: 12px;
-  font-weight: 800;
-  letter-spacing: 0.7px;
-  color: var(--hr-text-faint);
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--hr-nav-muted);
 }
 
 .hr-sidebar-menu {
   display: flex;
   flex-direction: column;
-  padding: 0 10px 20px;
+  flex: 1 1 auto;
+  min-height: 0;
+  padding: 0 14px 16px;
+
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: none;
+}
+
+.hr-sidebar-menu::-webkit-scrollbar {
+  display: none;
 }
 
 .hr-menu-item {
   position: relative;
-  min-height: 44px;
+  flex-shrink: 0;
+  min-height: var(--hr-item-h);
 
   display: flex;
   align-items: center;
-  gap: 14px;
+  gap: 16px;
 
-  margin: 2px 0;
-  padding: 0 14px;
+  margin: 4px 0;
+  padding: 0 18px;
 
-  border-radius: 8px;
+  border-radius: 10px;
   text-decoration: none;
 
-  color: var(--hr-text-muted);
-  font-size: 15px;
+  color: var(--hr-nav-text);
+  font-size: 15.5px;
   font-weight: 500;
 
   -webkit-tap-highlight-color: transparent;
-  transition: background 0.18s var(--hr-ease), color 0.18s var(--hr-ease);
+  transition: background 0.18s var(--hr-ease), box-shadow 0.18s var(--hr-ease),
+    transform 0.18s var(--hr-ease);
 }
 
 .hr-menu-item.active {
-  background: var(--hr-active-bg);
-  color: var(--hr-text);
+  background: linear-gradient(90deg, var(--hr-nav-active-from) 0%, var(--hr-nav-active-to) 100%);
+  color: #fff;
   font-weight: 600;
-}
-
-/* Small accent bar on the active item */
-.hr-menu-item.active::before {
-  content: "";
-  position: absolute;
-  left: 0;
-  top: 10px;
-  bottom: 10px;
-  width: 3px;
-  border-radius: 0 3px 3px 0;
-  background: var(--hr-accent);
+  box-shadow: 0 6px 18px rgba(var(--hr-green-rgb), 0.3);
 }
 
 .hr-menu-icon {
-  width: 18px;
-  min-width: 18px;
+  width: 22px;
+  min-width: 22px;
 
   display: flex;
   align-items: center;
   justify-content: center;
 
-  font-size: 15px;
-  color: #687b95;
+  font-size: 18px;
+  color: var(--hr-icon-rest);
+  transition: color 0.18s var(--hr-ease), transform 0.18s var(--hr-ease);
 }
 
 .hr-menu-item.active .hr-menu-icon {
-  color: var(--hr-accent);
+  color: #fff;
 }
 
 .hr-menu-label {
-  min-width: 0; /* required for ellipsis to work inside a flex row */
+  min-width: 0;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -245,27 +467,29 @@
 
 .hr-sidebar-footer {
   margin-top: auto;
-  padding: 14px 10px;
-  padding-bottom: calc(14px + env(safe-area-inset-bottom, 0px));
-  border-top: 1px solid var(--hr-border-soft);
+  flex-shrink: 0;                /* logout is never squeezed out on short screens */
+  margin-inline: 14px;
+  border-top: 1px solid var(--hr-nav-divider);
+  padding: 12px 0 0;
+  padding-bottom: calc(18px + env(safe-area-inset-bottom, 0px));
 }
 
 .hr-logout-btn {
   width: 100%;
-  min-height: 44px;
+  min-height: var(--hr-item-h);
 
   display: flex;
   align-items: center;
-  gap: 14px;
+  gap: 16px;
 
-  padding: 0 14px;
+  padding: 0 18px;
 
   border: none;
-  border-radius: 8px;
+  border-radius: 10px;
   background: transparent;
-  color: var(--hr-text-muted);
+  color: var(--hr-nav-text);
 
-  font-size: 15px;
+  font-size: 15.5px;
   font-weight: 500;
   font-family: inherit;
 
@@ -274,26 +498,46 @@
   transition: background 0.18s var(--hr-ease), color 0.18s var(--hr-ease);
 }
 
-/* Hover effects only on devices that really hover (no sticky hover on touch) */
+.hr-logout-btn svg {
+  font-size: 18px;
+  width: 22px;
+}
+
+/* Hover effects only on devices that really hover */
 @media (hover: hover) {
-  .hr-menu-toggle:hover,
-  .hr-sidebar-close:hover {
-    background: var(--hr-hover);
-    color: var(--hr-text);
+  .hr-menu-toggle:hover {
+    background: #f1f3f5;
   }
 
   .hr-menu-item:hover {
-    background: var(--hr-hover);
-    color: var(--hr-text);
+    background: var(--hr-nav-hover);
+    transform: translateX(2px);
+  }
+
+  .hr-menu-item:hover .hr-menu-icon {
+    color: var(--hr-icon-hover);
   }
 
   .hr-menu-item.active:hover {
-    background: var(--hr-active-bg);
+    transform: none;
   }
 
-  .hr-logout-btn:hover {
-    background: #fee2e2;
-    color: #dc2626;
+  .hr-menu-item.active:hover .hr-menu-icon {
+    color: #fff;
+  }
+
+  .hr-brand:hover {
+    box-shadow: 0 10px 26px rgba(0, 0, 0, 0.36);
+  }
+
+  .hr-menu-item.active:hover {
+    background: linear-gradient(90deg, var(--hr-nav-active-from) 0%, var(--hr-nav-active-to) 100%);
+  }
+
+  .hr-logout-btn:hover,
+  .hr-sidebar-close:hover {
+    background: rgba(239, 68, 68, 0.14);
+    color: #fca5a5;
   }
 }
 
@@ -303,12 +547,14 @@
 
 .hr-main {
   flex: 1;
-  min-width: 0; /* lets the flex child shrink so forms/tables never widen the page */
+  min-width: 0;
   min-height: 100vh;
   min-height: 100dvh;
 
   margin-left: var(--hr-sidebar-w);
+  padding-top: var(--hr-topbar-h);
   background: var(--hr-bg);
+  transition: margin-left 0.28s var(--hr-ease);
 }
 
 .hr-main-content {
@@ -316,10 +562,9 @@
   max-width: 1600px;
 
   margin: 0 auto;
-  padding: 28px;
+  padding: 24px 28px;
 }
 
-/* Anything rendered inside <Outlet /> must never exceed the content box */
 .hr-main-content > * {
   max-width: 100%;
 }
@@ -330,6 +575,21 @@
   height: auto;
 }
 
+/* Desktop collapsed state */
+@media (min-width: 1025px) {
+  .hr-layout.is-collapsed .hr-sidebar {
+    transform: translateX(-100%);
+  }
+
+  .hr-layout.is-collapsed .hr-topbar {
+    left: 0;
+  }
+
+  .hr-layout.is-collapsed .hr-main {
+    margin-left: 0;
+  }
+}
+
 /* =====================================================
    FOCUS (keyboard accessibility)
 ===================================================== */
@@ -338,8 +598,9 @@
 .hr-logout-btn:focus-visible,
 .hr-brand:focus-visible,
 .hr-menu-toggle:focus-visible,
-.hr-sidebar-close:focus-visible {
-  outline: 2px solid var(--hr-accent);
+.hr-sidebar-close:focus-visible,
+.hr-bell:focus-visible {
+  outline: 2px solid var(--hr-green);
   outline-offset: 2px;
 }
 
@@ -348,35 +609,25 @@
 ===================================================== */
 
 @media (max-width: 1024px) {
-  /* Topbar */
-  .hr-topbar {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    z-index: 900;
+  :root {
+    --hr-topbar-h: 64px;
+  }
 
+  .hr-topbar {
+    left: 0;
     height: calc(var(--hr-topbar-h) + env(safe-area-inset-top, 0px));
     padding: env(safe-area-inset-top, 0px) 16px 0;
-
-    display: flex;
-    align-items: center;
     gap: 12px;
-
-    background: rgba(255, 255, 255, 0.92);
-    -webkit-backdrop-filter: saturate(180%) blur(10px);
-    backdrop-filter: saturate(180%) blur(10px);
-    border-bottom: 1px solid var(--hr-border);
   }
 
   /* Drawer (closed) */
   .hr-sidebar {
     width: min(300px, 84vw);
     min-width: 0;
-    padding-top: env(safe-area-inset-top, 0px); /* keep header clear of the notch */
+    padding-top: env(safe-area-inset-top, 0px);
 
     transform: translateX(-100%);
-    visibility: hidden; /* removes hidden links from tab order / screen readers */
+    visibility: hidden;
     transition: transform 0.28s var(--hr-ease), visibility 0s linear 0.28s;
   }
 
@@ -385,7 +636,7 @@
     transform: translateX(0);
     visibility: visible;
     transition: transform 0.28s var(--hr-ease), visibility 0s;
-    box-shadow: 0 20px 40px rgba(15, 23, 42, 0.18);
+    box-shadow: 0 20px 40px rgba(2, 8, 20, 0.45);
   }
 
   .hr-sidebar-close {
@@ -399,7 +650,7 @@
     inset: 0;
     z-index: 950;
 
-    background: rgba(15, 23, 42, 0.45);
+    background: rgba(15, 23, 42, 0.5);
     opacity: 0;
     pointer-events: none;
     transition: opacity 0.25s var(--hr-ease);
@@ -410,7 +661,6 @@
     pointer-events: auto;
   }
 
-  /* Content takes the full width, below the topbar */
   .hr-main {
     margin-left: 0;
     width: 100%;
@@ -418,23 +668,12 @@
   }
 
   .hr-main-content {
-    padding: 22px;
+    padding: 20px;
   }
 
-  /* Stop the page behind the drawer from scrolling */
   html:has(body.hr-no-scroll),
   body.hr-no-scroll {
     overflow: hidden;
-  }
-}
-
-/* =====================================================
-   TABLET (641px – 1024px)
-===================================================== */
-
-@media (min-width: 641px) and (max-width: 1024px) {
-  .hr-main-content {
-    padding: 26px 28px;
   }
 }
 
@@ -448,6 +687,20 @@
     padding-right: 12px;
   }
 
+  .hr-topbar-right {
+    gap: 10px;
+  }
+
+  .hr-user-meta,
+  .hr-user-chevron {
+    display: none;
+  }
+
+  .hr-user-avatar {
+    width: 38px;
+    height: 38px;
+  }
+
   .hr-main-content {
     padding: 16px 14px 28px;
     padding-bottom: calc(28px + env(safe-area-inset-bottom, 0px));
@@ -455,7 +708,7 @@
 
   .hr-menu-item,
   .hr-logout-btn {
-    min-height: 48px; /* comfortable touch target */
+    min-height: 48px;
   }
 }
 
@@ -475,11 +728,38 @@
 
 @media (min-width: 1600px) {
   :root {
-    --hr-sidebar-w: 280px;
+    --hr-sidebar-w: 288px;
   }
 
   .hr-main-content {
-    padding: 36px 40px;
+    padding: 32px 40px;
+  }
+}
+
+/* =====================================================
+   SHORT SCREENS (laptops <= 760px tall, not phones)
+===================================================== */
+
+@media (max-height: 760px) and (min-width: 641px) {
+  :root {
+    --hr-item-h: 40px;
+  }
+
+  .hr-brand {
+    padding: 8px 14px;
+  }
+
+  .hr-menu-item,
+  .hr-logout-btn {
+    font-size: 15px;
+  }
+
+  .hr-menu-item {
+    margin: 2px 0;
+  }
+
+  .hr-sidebar-footer {
+    padding-bottom: 12px;
   }
 }
 
@@ -490,9 +770,17 @@
 @media (prefers-reduced-motion: reduce) {
   .hr-sidebar,
   .hr-overlay,
+  .hr-topbar,
+  .hr-main,
   .hr-menu-item,
   .hr-logout-btn,
-  .hr-menu-toggle {
+  .hr-menu-toggle,
+  .hr-brand,
+  .hr-menu-icon {
     transition: none !important;
+  }
+
+  .hr-menu-item:hover {
+    transform: none !important;
   }
 }

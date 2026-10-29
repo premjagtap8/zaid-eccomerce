@@ -198,11 +198,13 @@ export default function MyOrders() {
   return (
     <div className="mo-page">
 
-      {/* HEADER */}
+      {/* HERO (title + primary action) */}
 
-      <div className="mo-header">
-        <div>
-          <h2 className="mo-title">My orders</h2>
+      <section className="mo-hero">
+        <div className="mo-hero-text">
+          <h2 className="mo-title">
+            My <span>orders</span>
+          </h2>
 
           <p className="mo-subtitle">
             Track every order your company has placed
@@ -217,7 +219,7 @@ export default function MyOrders() {
           <FaPlus className="mo-btn-icon" />
           New order
         </button>
-      </div>
+      </section>
 
 
       {/* TOOLBAR */}
@@ -244,6 +246,7 @@ export default function MyOrders() {
 
           <input
             type="text"
+            aria-label="Search orders"
             placeholder="Search by order ID or laptop"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
@@ -254,7 +257,15 @@ export default function MyOrders() {
 
       {/* ORDERS TABLE */}
 
-      <div className="mo-card">
+      <section className="mo-card">
+        <div className="mo-card-header">
+          <h3 className="mo-card-title">Order history</h3>
+
+          <p className="mo-card-sub">
+            Select an order to see its items, delivery address and tracking
+          </p>
+        </div>
+
         {loading ? (
           <p className="mo-empty">Loading your orders…</p>
         ) : error ? (
@@ -293,7 +304,9 @@ export default function MyOrders() {
                   return (
                     <React.Fragment key={order._id}>
                       <tr
-                        className="mo-row-click"
+                        className={`mo-row-click ${
+                          isOpen ? "mo-row-open" : ""
+                        }`}
                         onClick={() => toggleRow(order._id)}
                       >
                         <td className="mo-cell-strong">
@@ -334,6 +347,7 @@ export default function MyOrders() {
                           <button
                             type="button"
                             className="mo-expand-btn"
+                            aria-expanded={isOpen}
                             aria-label={
                               isOpen ? "Hide details" : "Show details"
                             }
@@ -441,7 +455,7 @@ export default function MyOrders() {
             </table>
           </div>
         )}
-      </div>
+      </section>
 
     </div>
   );
