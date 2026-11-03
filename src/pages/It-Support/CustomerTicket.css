@@ -226,6 +226,18 @@
   border-color: var(--rc-primary);
 }
 
+/* Full-width select (used inside form fields, e.g. Customer Source) */
+.rc-select-full {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 0.6rem 0.75rem;
+}
+
+/* Make a form field span both columns of a 2-column grid */
+.rc-col-span-2 {
+  grid-column: span 2;
+}
+
 /* Modern Data Table */
 .rc-table-scroll {
   width: 100%;
@@ -655,6 +667,11 @@
   gap: 0.35rem;
 }
 
+.rc-date-row strong {
+  color: var(--rc-text-main);
+  font-weight: 600;
+}
+
 .rc-note-card {
   background: #f8fafc;
   border-left: 3px solid var(--rc-primary);
@@ -698,6 +715,10 @@
 
   .rc-grid-2 {
     grid-template-columns: 1fr;
+  }
+
+  .rc-col-span-2 {
+    grid-column: auto;
   }
 
   .rc-card-toolbar {

@@ -40,14 +40,6 @@
     gap:20px;
 }
 
-/* .product-card{
-    border:1px solid #ddd;
-    border-radius:10px;
-    padding:15px;
-    text-align:center;
-    transition:.3s;
-} */
-
 .product-card{
     display:flex;
     flex-direction:column;
@@ -62,7 +54,6 @@
     transition:.3s;
     overflow:hidden;
 }
-
 
 .product-card:hover{
     transform:translateY(-4px);
@@ -145,6 +136,18 @@
     border-radius:6px;
 }
 
+/* Customer source label (NEW) */
+.right-side .source-label{
+    display:block;
+    font-size:14px;
+    margin-bottom:6px;
+    color:#333;
+}
+
+.right-side .required-star{
+    color:#dc2626;
+}
+
 .place-order-btn{
     width:100%;
     padding:14px;
@@ -160,3 +163,7 @@
     background:#15803d;
 }
 
+.place-order-btn:disabled{
+    background:#9ca3af;
+    cursor:not-allowed;
+}

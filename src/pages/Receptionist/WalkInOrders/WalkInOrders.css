@@ -169,6 +169,46 @@
     font-size:18px;
 }
 
+/* =====================================================
+   CUSTOMER SOURCE
+   "How did the customer come to know about us?"
+===================================================== */
+
+.source-cell{
+    display:flex;
+    flex-direction:column;
+    align-items:flex-start;
+    gap:4px;
+    min-width:130px;
+    max-width:220px;
+}
+
+.source-badge{
+    display:inline-flex;
+    align-items:center;
+    padding:4px 10px;
+    border-radius:6px;
+    background:#eef2ff;
+    border:1px solid #c7d2fe;
+    color:#3730a3;
+    font-size:13px;
+    font-weight:600;
+    line-height:1.3;
+    white-space:normal;
+}
+
+.source-cell small{
+    color:#64748b;
+    font-size:12px;
+    line-height:1.3;
+    white-space:normal;
+    word-break:break-word;
+}
+
+.source-empty{
+    color:#9ca3af;
+}
+
 @media(max-width:992px){
 
     .summary-box{

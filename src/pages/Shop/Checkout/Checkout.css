@@ -59,3 +59,67 @@ cursor:pointer;
 border-radius:8px;
 
 }
+
+/* ===== NEW: customer source ("How did you come to know about us?") ===== */
+
+.checkout-source{
+
+margin:15px 0 5px;
+
+}
+
+.checkout-source label{
+
+display:block;
+
+font-size:14px;
+
+font-weight:500;
+
+margin-bottom:6px;
+
+}
+
+.checkout-source .required-star{
+
+color:#dc3545;
+
+}
+
+.checkout-source select,
+
+.checkout-source .source-other-input{
+
+width:100%;
+
+padding:10px 12px;
+
+font-size:14px;
+
+border:1px solid #ccc;
+
+border-radius:8px;
+
+background:#fff;
+
+color:inherit;
+
+box-sizing:border-box;
+
+}
+
+.checkout-source .source-other-input{
+
+margin-top:10px;
+
+}
+
+.checkout-source select:focus,
+
+.checkout-source .source-other-input:focus{
+
+outline:none;
+
+border-color:#0d6efd;
+
+}
