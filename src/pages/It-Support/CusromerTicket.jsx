@@ -240,7 +240,7 @@ const initialForm = {
 
   jobDate: getTodayLocalDate(),
 
-  // How did the customer come to know about ZAID Infotech?
+  // How did the customer come to know about ZAID Infotech? (OPTIONAL)
   customerSource: "",
   customerSourceOther: "",
 
@@ -558,29 +558,8 @@ const CusromerTicket = () => {
     }
 
 
-    // =================================================
-    // CUSTOMER SOURCE CHECK
-    // "How did you come to know about ZAID Infotech?"
-    // =================================================
-
-    if (!form.customerSource) {
-
-      return toast.error(
-        "Please tell us how the customer came to know about ZAID Infotech"
-      );
-
-    }
-
-    if (
-      form.customerSource === "OTHER" &&
-      form.customerSourceOther.trim().length < 2
-    ) {
-
-      return toast.error(
-        "Please tell us how the customer came to know about us"
-      );
-
-    }
+    // NOTE: "How did you come to know about ZAID Infotech?" is OPTIONAL,
+    // so there is intentionally no validation for customerSource here.
 
 
     try {
@@ -629,16 +608,6 @@ const CusromerTicket = () => {
         remarks:
           form.remarks.trim(),
 
-        // customer source tracking
-        customerSource:
-          form.customerSource,
-
-        // sent only when "Other" is selected
-        customerSourceOther:
-          form.customerSource === "OTHER"
-            ? form.customerSourceOther.trim()
-            : "",
-
       };
 
 
@@ -659,6 +628,31 @@ const CusromerTicket = () => {
 
         payload.customerEmail =
           email;
+
+      }
+
+
+      // =================================================
+      // CUSTOMER SOURCE OPTIONAL
+      //
+      // Only sent when the user actually selected something.
+      // If left empty, the field is not sent at all.
+      // =================================================
+
+      if (form.customerSource) {
+
+        payload.customerSource =
+          form.customerSource;
+
+        if (
+          form.customerSource === "OTHER" &&
+          form.customerSourceOther.trim()
+        ) {
+
+          payload.customerSourceOther =
+            form.customerSourceOther.trim();
+
+        }
 
       }
 
@@ -2111,7 +2105,7 @@ const CusromerTicket = () => {
 
 
                   {/* =========================================
-                      CUSTOMER SOURCE
+                      CUSTOMER SOURCE (OPTIONAL)
                       How did you come to know about ZAID Infotech?
                   ========================================= */}
 
@@ -2119,7 +2113,14 @@ const CusromerTicket = () => {
 
                     <label htmlFor="customerSource">
                       How did the customer come to know about ZAID Infotech?{" "}
-                      <span>*</span>
+                      <span
+                        style={{
+                          fontWeight: "400",
+                          color: "#64748b",
+                        }}
+                      >
+                        (Optional)
+                      </span>
                     </label>
 
                     <select
@@ -2128,7 +2129,6 @@ const CusromerTicket = () => {
                       className="rc-select rc-select-full"
                       value={form.customerSource}
                       onChange={handleChange}
-                      required
                     >
 
                       <option value="">
@@ -2156,7 +2156,15 @@ const CusromerTicket = () => {
                     <div className="rc-input-field rc-col-span-2">
 
                       <label htmlFor="customerSourceOther">
-                        Please specify <span>*</span>
+                        Please specify{" "}
+                        <span
+                          style={{
+                            fontWeight: "400",
+                            color: "#64748b",
+                          }}
+                        >
+                          (Optional)
+                        </span>
                       </label>
 
                       <input
@@ -2167,7 +2175,6 @@ const CusromerTicket = () => {
                         onChange={handleChange}
                         maxLength={200}
                         placeholder="Please tell us how the customer came to know about us"
-                        required
                       />
 
                     </div>

@@ -13,7 +13,7 @@ const API = import.meta.env.VITE_API_URL;
 
 
 // =================================
-// NEW: CUSTOMER SOURCE OPTIONS
+// CUSTOMER SOURCE OPTIONS (OPTIONAL)
 // "How did you come to know about ZAID Infotech?"
 // value = saved in database (must match backend customerSource.js keys)
 // label = shown in the dropdown
@@ -87,7 +87,7 @@ const Checkout = () => {
 
     const [termsAccepted, setTermsAccepted] = useState(false);
 
-    // NEW: customer source tracking
+    // Customer source tracking (OPTIONAL)
     // customerSource = key of the selected option (e.g. GOOGLE, OTHER)
     // customerSourceOther = free text, used only when key is OTHER
     const [customerSource, setCustomerSource] = useState("");
@@ -311,31 +311,11 @@ const Checkout = () => {
 
 
         // =================================
-        // NEW: CUSTOMER SOURCE CHECK
-        // "How did you come to know about ZAID Infotech?"
+        // CUSTOMER SOURCE
+        // Optional: no validation here. It is sent
+        // to the backend only when the customer
+        // selects an option.
         // =================================
-
-        if (!customerSource) {
-
-            toast.error(
-                "Please tell us how you came to know about ZAID Infotech"
-            );
-
-            return;
-        }
-
-
-        if (
-            customerSource === "OTHER" &&
-            customerSourceOther.trim().length < 2
-        ) {
-
-            toast.error(
-                "Please tell us how you came to know about us"
-            );
-
-            return;
-        }
 
 
         // =================================
@@ -566,18 +546,30 @@ const Checkout = () => {
                 Number(grandTotal),
 
             orderSource:
-                "ONLINE",
-
-            // NEW: customer source tracking
-            customerSource:
-                customerSource,
-
-            // sent only when "Other" is selected
-            customerSourceOther:
-                customerSource === "OTHER"
-                    ? customerSourceOther.trim()
-                    : ""
+                "ONLINE"
         };
+
+
+        // Customer source is OPTIONAL: add it to the request
+        // only when the customer selected something.
+        if (customerSource) {
+
+            orderData.customerSource =
+                customerSource;
+
+            // free text is sent only when "Other" is selected
+            // and the customer actually typed something
+            if (
+                customerSource === "OTHER" &&
+                customerSourceOther.trim()
+            ) {
+
+                orderData.customerSourceOther =
+                    customerSourceOther.trim();
+
+            }
+
+        }
 
 
         console.log(
@@ -1099,7 +1091,7 @@ const Checkout = () => {
 
 
                         {/* =================================
-                            NEW: CUSTOMER SOURCE
+                            CUSTOMER SOURCE (OPTIONAL)
                             How did you come to know about ZAID Infotech?
                         ================================= */}
 
@@ -1108,7 +1100,7 @@ const Checkout = () => {
                             <label htmlFor="customerSource">
                                 How did you come to know about ZAID Infotech?
                                 {" "}
-                                <span className="required-star">*</span>
+                                (optional)
                             </label>
 
                             <select

@@ -142,7 +142,7 @@ const PAYMENT_METHODS = [
   { value: "ONLINE", label: "Online" },
 ];
 
-// NEW: CUSTOMER SOURCE OPTIONS
+// CUSTOMER SOURCE OPTIONS (OPTIONAL FIELD)
 // "How did you come to know about ZAID Infotech?"
 // value = saved in database (must match backend customerSource keys)
 // label = shown in the dropdown
@@ -516,7 +516,7 @@ function WalkInRental() {
 
   const [conditionPhotos, setConditionPhotos] = useState({});
 
-  // NEW: customer source tracking
+  // Customer source tracking (OPTIONAL)
   // customerSource = key of the selected option (e.g. GOOGLE, OTHER)
   // customerSourceOther = free text, used only when key is OTHER
   const [customerSource, setCustomerSource] = useState("");
@@ -815,7 +815,7 @@ function WalkInRental() {
     setConditionPhotos({});
     setNegotiations({});
 
-    // NEW: reset customer source
+    // reset customer source
     setCustomerSource("");
     setCustomerSourceOther("");
 
@@ -1162,24 +1162,9 @@ function WalkInRental() {
       return false;
     }
 
-    // NEW: customer source check
-    // "How did you come to know about ZAID Infotech?"
-    if (!customerSource) {
-      toast.error(
-        "Please select how the customer came to know about ZAID Infotech."
-      );
-      return false;
-    }
-
-    if (
-      customerSource === "OTHER" &&
-      customerSourceOther.trim().length < 2
-    ) {
-      toast.error(
-        "Please tell us how the customer came to know about us."
-      );
-      return false;
-    }
+    // NOTE: "How did you come to know about ZAID Infotech?"
+    // is OPTIONAL, so there is intentionally no validation
+    // for customerSource here.
 
     if (
       depositPaid &&
@@ -1423,16 +1408,21 @@ function WalkInRental() {
 
         notes: handoverDescription.trim(),
         handoverNotes: handoverDescription.trim(),
-
-        // NEW: customer source tracking
-        customerSource,
-
-        // sent only when "Other" is selected
-        customerSourceOther:
-          customerSource === "OTHER"
-            ? customerSourceOther.trim()
-            : "",
       };
+
+      // CUSTOMER SOURCE IS OPTIONAL
+      // Only sent when the user actually selected something.
+      if (customerSource) {
+        payload.customerSource = customerSource;
+
+        if (
+          customerSource === "OTHER" &&
+          customerSourceOther.trim()
+        ) {
+          payload.customerSourceOther =
+            customerSourceOther.trim();
+        }
+      }
 
       console.log("WALK-IN RENTAL PAYLOAD", payload);
 
@@ -2251,7 +2241,7 @@ function WalkInRental() {
               )}
             </section>
 
-            {/* NEW: CUSTOMER SOURCE
+            {/* CUSTOMER SOURCE (OPTIONAL)
                 How did you come to know about ZAID Infotech? */}
 
             <section className="wir-card wir-customer-source-section">
@@ -2270,8 +2260,13 @@ function WalkInRental() {
                 <div className="wir-form-group wir-form-group-full">
                   <label htmlFor="wirCustomerSource">
                     How did you come to know about ZAID Infotech?{" "}
-                    <span style={{ color: "#dc2626", fontWeight: 700 }}>
-                      *
+                    <span
+                      style={{
+                        fontWeight: 400,
+                        color: "#64748b",
+                      }}
+                    >
+                      (Optional)
                     </span>
                   </label>
 
@@ -2304,8 +2299,13 @@ function WalkInRental() {
                   <div className="wir-form-group wir-form-group-full">
                     <label htmlFor="wirCustomerSourceOther">
                       Please specify{" "}
-                      <span style={{ color: "#dc2626", fontWeight: 700 }}>
-                        *
+                      <span
+                        style={{
+                          fontWeight: 400,
+                          color: "#64748b",
+                        }}
+                      >
+                        (Optional)
                       </span>
                     </label>
 

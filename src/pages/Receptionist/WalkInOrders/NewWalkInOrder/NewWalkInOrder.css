@@ -136,7 +136,7 @@
     border-radius:6px;
 }
 
-/* Customer source label (NEW) */
+/* Customer source label */
 .right-side .source-label{
     display:block;
     font-size:14px;
@@ -144,8 +144,10 @@
     color:#333;
 }
 
-.right-side .required-star{
-    color:#dc2626;
+/* "(Optional)" hint next to the customer source label */
+.right-side .optional-text{
+    color:#64748b;
+    font-weight:400;
 }
 
 .place-order-btn{
