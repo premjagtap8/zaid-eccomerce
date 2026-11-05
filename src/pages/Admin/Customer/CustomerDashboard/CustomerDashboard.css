@@ -47,7 +47,13 @@
 
   /* Sidebar sizing follows screen HEIGHT so all items stay usable on laptops */
   --cd-item-h: clamp(38px, 5vh, 46px);
-  --cd-logo-h: clamp(48px, 7.2vh, 66px);
+
+  /* Target logo height. The logo WIDTH is derived from it (height x 1.93)
+     and capped to the card, so the 1742 x 903 shape never changes. */
+  --cd-logo-h: clamp(84px, 12vh, 116px);
+
+  /* Horizontal optical-centring offset for the logo artwork (see .customer-dashboard-logo) */
+  --cd-logo-nudge: -2.5%;
 
   min-height: 100vh;
   min-height: 100dvh;
@@ -292,7 +298,8 @@ body.customer-dashboard-sidebar-open {
   align-items: center;
   justify-content: center;
 
-  padding: 12px 18px;
+  /* small padding: the PNG already has built-in empty margin */
+  padding: 6px 10px;
 
   border-radius: 16px;
   background: #ffffff;
@@ -300,12 +307,24 @@ body.customer-dashboard-sidebar-open {
   line-height: 0;
 }
 
+/* Official logo: original file, original shape.
+   SIZE IS DRIVEN BY WIDTH, HEIGHT IS ALWAYS auto:
+   - width = the target height x (1742 / 903), but never wider than the card
+   - height: auto lets the browser keep the ratio (~1.93) in every case
+   Never set a fixed width AND a fixed height here. */
 .customer-dashboard-logo {
   display: block;
-  width: auto;
-  max-width: 100%;
+  width: min(100%, calc(var(--cd-logo-h) * 1742 / 903));
   height: auto;
-  max-height: var(--cd-logo-h);
+  margin-inline: auto;          /* image box is centred in the card */
+
+  /* Optical centring: the artwork inside the PNG sits slightly right of
+     its own centre, so the image is nudged left by a % of its width.
+     Positioning only; the file and its ratio are untouched.
+     Tune it: more negative = more left (0% = no nudge). */
+  translate: var(--cd-logo-nudge) 0;
+
+  aspect-ratio: 1742 / 903;
   object-fit: contain;
   user-select: none;
   -webkit-user-drag: none;
@@ -1490,7 +1509,7 @@ body.customer-dashboard-sidebar-open {
   }
 
   .customer-dashboard-brand-card {
-    padding: 8px 14px;
+    padding: 4px 8px;
   }
 
   .customer-dashboard-menu-item,

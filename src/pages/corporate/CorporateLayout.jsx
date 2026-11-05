@@ -27,8 +27,9 @@ import {
 
 import { getMyNotifications } from "../../services/notificationService";
 
-// Full-colour logo (same file the HR layout uses)
-import logo from "../../assets/images/zaidlogo-light.png";
+// Official Zaid Infotech logo (the exact file supplied by the client).
+// Original size: 1742 x 903 px (aspect ratio ~1.93). Never edit or recreate it.
+import logo from "../../assets/images/zaidinfotechlogo.png";
 
 import "./CorporateLayout.css";
 
@@ -342,7 +343,8 @@ export default function CorporateLayout() {
         </svg>
 
         <div className="corp-sidebar-header">
-          {/* Logo sits on a light card so it keeps its original colours */}
+          {/* Official logo on a light card. Size comes from CSS (width-driven,
+              height: auto), so the original 1742x903 shape is preserved. */}
           <button
             type="button"
             className="corp-brand"
@@ -353,8 +355,8 @@ export default function CorporateLayout() {
               src={logo}
               alt="Zaid Infotech"
               className="corp-logo"
-              width="1332"
-              height="446"
+              width="1742"
+              height="903"
               decoding="async"
               draggable={false}
             />

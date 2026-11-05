@@ -24,6 +24,12 @@
 }
 
 .wkinv-container {
+    /* Client-mandated logo aspect ratio (width : height) = 1.93 : 1.
+       Defined on the container (not the overlay) because the print iframe
+       clones only .wkinv-container. Change it here only. */
+    --wkinv-logo-ratio: 1.93;
+    --wkinv-logo-width: 170px;
+
     width: min(100%, 1040px);
     min-width: 0;
     margin: 0 auto 30px;
@@ -90,29 +96,33 @@
 .wkinv-company-left {
     min-width: 0;
     display: grid;
-    grid-template-columns: 105px minmax(0, 1fr);
-    gap: 12px;
+    /* Column 1 = logo width, column 2 = text. Logo column is fixed so the
+       text block always starts at the same x-position. */
+    grid-template-columns: var(--wkinv-logo-width) minmax(0, 1fr);
+    gap: 16px;
     align-items: center;
-    padding: 14px 14px;
+    padding: 14px 16px;
     border-right: 1px solid #222;
 }
 
+/* Logo box: width is set, height is DERIVED from aspect-ratio.
+   170px / 1.93 = ~88px. Never set a fixed height here. */
 .wkinv-logo-wrap {
-    width: 100px;
-    height: 88px;
+    width: 100%;
+    aspect-ratio: var(--wkinv-logo-ratio) / 1;
     display: flex;
     align-items: center;
     justify-content: center;
     overflow: hidden;
 }
 
+/* Image fills the 1.93:1 box; object-fit keeps the artwork undistorted. */
 .wkinv-company-logo {
     display: block;
-    width: 96px;
-    max-width: 100%;
-    height: 78px;
+    width: 100%;
+    height: 100%;
     object-fit: contain;
-    object-position: center;
+    object-position: left center;
 }
 
 .wkinv-company-details {
@@ -685,20 +695,14 @@
 }
 
 @media (max-width: 560px) {
+    /* Only the width changes; height follows from the 1.93 ratio. */
+    .wkinv-container {
+        --wkinv-logo-width: 120px;
+    }
+
     .wkinv-company-left {
-        grid-template-columns: 80px minmax(0, 1fr);
         padding: 10px;
-        gap: 8px;
-    }
-
-    .wkinv-logo-wrap {
-        width: 76px;
-        height: 70px;
-    }
-
-    .wkinv-company-logo {
-        width: 72px;
-        height: 62px;
+        gap: 10px;
     }
 
     .wkinv-company-name {
@@ -746,6 +750,13 @@
 
     .wkinv-container {
         box-shadow: none !important;
+    }
+
+    /* Keep the logo's ratio and colours exact when printing. */
+    .wkinv-logo-wrap,
+    .wkinv-company-logo {
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
     }
 
     @page {

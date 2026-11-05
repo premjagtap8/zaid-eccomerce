@@ -38,8 +38,12 @@
      never pushes the menu out of view on short laptop screens */
   --hr-item-h: clamp(40px, 5.4vh, 46px);
 
-  /* Logo card: height is capped so the logo never dominates the menu */
-  --hr-logo-h: clamp(48px, 7.2vh, 66px);
+  /* Target logo height. The logo WIDTH is derived from it (height x 1.93)
+     and capped to the card, so the 1742 x 903 shape never changes. */
+  --hr-logo-h: clamp(100px, 14vh, 116px);
+
+  /* Horizontal optical-centring offset for the logo artwork (see .hr-logo) */
+  --hr-logo-nudge: -4%;
 
   /* Menu icons: soft white at rest, brand-green tint on hover */
   --hr-icon-rest: rgba(255, 255, 255, 0.72);
@@ -327,7 +331,8 @@
   align-items: center;
   justify-content: center;
 
-  padding: 12px 18px;
+  /* small padding: the PNG already has built-in empty margin */
+  padding: 6px 10px;
 
   border: none;
   border-radius: 16px;
@@ -344,12 +349,24 @@
   transform: scale(0.98);
 }
 
+/* Official logo: original file, original shape.
+   SIZE IS DRIVEN BY WIDTH, HEIGHT IS ALWAYS auto:
+   - width = the target height x (1742 / 903), but never wider than the card
+   - height: auto lets the browser keep the ratio (~1.93) in every case
+   Never set a fixed width AND a fixed height here. */
 .hr-logo {
   display: block;
-  width: auto;                   /* height is the limiter, width follows the aspect ratio */
-  max-width: 100%;               /* never wider than the card */
+  width: min(100%, calc(var(--hr-logo-h) * 1742 / 903));
   height: auto;
-  max-height: var(--hr-logo-h);  /* one token controls the size (see :root) */
+  margin-inline: auto;          /* image box is centred in the card */
+
+  /* Optical centring: the artwork inside the PNG sits slightly right of
+     its own centre, so the image is nudged left by a % of its width.
+     Positioning only; the file and its ratio are untouched.
+     Tune it: more negative = more left (0% = no nudge). */
+  translate: var(--hr-logo-nudge) 0;
+
+  aspect-ratio: 1742 / 903;
   object-fit: contain;
   user-select: none;
   -webkit-user-drag: none;
@@ -743,10 +760,11 @@
 @media (max-height: 760px) and (min-width: 641px) {
   :root {
     --hr-item-h: 40px;
+    --hr-logo-h: 104px;  /* HR has only 10 menu items, so there is room even on short laptops */
   }
 
   .hr-brand {
-    padding: 8px 14px;
+    padding: 4px 8px;
   }
 
   .hr-menu-item,

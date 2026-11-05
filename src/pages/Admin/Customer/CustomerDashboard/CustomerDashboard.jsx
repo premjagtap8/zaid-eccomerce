@@ -38,10 +38,11 @@ import {
   markAllNotificationsAsRead,
 } from "../../../../services/notificationService";
 
-// Full-colour logo (same file the Corporate / HR layouts use).
+// Official Zaid Infotech logo (the exact file supplied by the client).
+// Original size: 1742 x 903 px (aspect ratio ~1.93). Never edit or recreate it.
 // NOTE: path assumes this file sits 4 folders below /src, like the
 // services import above. Adjust if your assets folder is elsewhere.
-import logo from "../../../../assets/images/zaidlogo-light.png";
+import logo from "../../../../assets/images/zaidinfotechlogo.png";
 
 // =====================================================
 // API (sirf .env se: VITE_API_URL)
@@ -713,12 +714,15 @@ const CustomerDashboard = () => {
         <div className="customer-dashboard-sidebar-header">
 
           <div className="customer-dashboard-brand">
-            {/* Logo sits on a light card so it keeps its colours */}
+            {/* Official logo on a light card. Size comes from CSS (width-driven,
+                height: auto), so the original 1742x903 shape is preserved. */}
             <div className="customer-dashboard-brand-card">
               <img
                 src={logo}
                 alt="Zaid Infotech"
                 className="customer-dashboard-logo"
+                width="1742"
+                height="903"
                 decoding="async"
                 draggable={false}
               />
