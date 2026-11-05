@@ -3,6 +3,10 @@ import "./WalkInOrders.css";
 import {
     getAllOrders
 } from "../../../services/orderService";
+import {
+    getInvoiceByOrderId
+} from "../../../services/invoiceService";
+import WalkInInvoice from "./WalkInInvoice/WalkInInvoice";
 
 
 // ======================================
@@ -73,6 +77,9 @@ function WalkInOrders() {
     const [search, setSearch] = useState("");
 
     const [loading, setLoading] = useState(true);
+
+    // Invoice (or order) shown in the modal
+    const [selectedOrder, setSelectedOrder] = useState(null);
 
     useEffect(() => {
 
@@ -233,31 +240,38 @@ function WalkInOrders() {
 
     // ======================================
     // VIEW ORDER
+    // Fetch the saved invoice for this order and
+    // show it in the invoice modal.
+    // If no invoice exists, fall back to the order.
     // ======================================
 
-    const viewOrder = (order) => {
+    const viewOrder = async (order) => {
 
-        console.log(order);
+        try {
 
-        // Next Part me Invoice Modal open hoga
+            const res = await getInvoiceByOrderId(order._id);
+
+            console.log("INVOICE BY ORDER :", res);
+
+            const invoice =
+                res?.invoice ||
+                res?.data ||
+                res;
+
+            setSelectedOrder(invoice || order);
+
+        }
+
+        catch (error) {
+
+            console.log(error);
+
+            setSelectedOrder(order);
+
+        }
 
     };
 
-    // ======================================
-    // PRINT INVOICE
-    // ======================================
-
-    const printInvoice = (order) => {
-
-        window.open(
-
-            `/walkin-invoice/${order._id}`,
-
-            "_blank"
-
-        );
-
-    };
 
     // ======================================
     // RETURN JSX
@@ -632,21 +646,7 @@ function WalkInOrders() {
 
                                             </button>
 
-                                            <button
-
-                                                className="print-btn"
-
-                                                onClick={()=>
-
-                                                    printInvoice(order)
-
-                                                }
-
-                                            >
-
-                                                Print
-
-                                            </button>
+                                           
 
                                         </div>
 
@@ -665,6 +665,26 @@ function WalkInOrders() {
                 </table>
 
             </div>
+
+            {/* ======================================
+                INVOICE MODAL
+            ====================================== */}
+
+            {selectedOrder && (
+
+                <WalkInInvoice
+
+                    order={selectedOrder}
+
+                    onClose={() =>
+
+                        setSelectedOrder(null)
+
+                    }
+
+                />
+
+            )}
 
         </div>
 
